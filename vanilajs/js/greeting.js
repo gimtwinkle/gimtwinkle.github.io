@@ -1,42 +1,42 @@
 /****************************/
-/****   »ç¿ëÀÚÀÌ¸§ ÀúÀå JS   ****/
+/****   ì‚¬ìš©ìì´ë¦„ ì €ì¥ JS   ****/
 /****************************/
 
 const loginForm = document.querySelector("#login-form");
-const loginInput = document.querySelector("#login-form input"); //ÀÎÇ² µÎ°³ÀÏ°æ¿ì º¯¼ö´Â input ÇÏ³ª·Î ÁöÁ¤ ÈÄ ÀÌº¥Æ® Æ®¸®°Å·Î ¿ªÇÒºĞ¸® 
+const loginInput = document.querySelector("#login-form input"); //ì¸í’‹ ë‘ê°œì¼ê²½ìš° ë³€ìˆ˜ëŠ” input í•˜ë‚˜ë¡œ ì§€ì • í›„ ì´ë²¤íŠ¸ íŠ¸ë¦¬ê±°ë¡œ ì—­í• ë¶„ë¦¬ 
 const greeting = document.querySelector("#greeting");
 
-//stringÀ» ¹İº¹ÇÒ °æ¿ì ¿ÀÅ¸ ¹æÁö¸¦ À§ÇØ ´ë¹®ÀÚ º¯¼ö·Î °øÅë»ç¿ë
+//stringì„ ë°˜ë³µí•  ê²½ìš° ì˜¤íƒ€ ë°©ì§€ë¥¼ ìœ„í•´ ëŒ€ë¬¸ì ë³€ìˆ˜ë¡œ ê³µí†µì‚¬ìš©
 const HIDDEN_CLASSNAME = "hidden"; 
 const USERNAME_KEY = "username";
 
-//Æû ÃÖÃÊ Á¦Ãâ½Ã function
+//í¼ ìµœì´ˆ ì œì¶œì‹œ function
 function onLoginSubmit(event){
     event.preventDefault();
     loginForm.classList.add(HIDDEN_CLASSNAME);
 
     const username = loginInput.value;
 
-    greeting.innerText = `Hello ${username}`; //¹éÄõÆ®·Î ÀüÃ¼ ¹®ÀÚÀÔ·Â °¡´É 
+    greeting.innerText = `Hello ${username}`; //ë°±ì¿¼íŠ¸ë¡œ ì „ì²´ ë¬¸ìì…ë ¥ ê°€ëŠ¥ 
     greeting.classList.remove(HIDDEN_CLASSNAME);
 
     localStorage.setItem(USERNAME_KEY,username);
 }
 
-//Æû ±âÁ¦Ãâ½Ã function
+//í¼ ê¸°ì œì¶œì‹œ function
 function paintGreetings(username){
   greeting.innerText = `Hello ${username}`; 
   greeting.classList.remove(HIDDEN_CLASSNAME);
   
 }
 
-const savedUserName = localStorage.getItem(USERNAME_KEY);//·ÎÄÃ½ºÅä¸®Áö ÀúÀå°ª(»ç¿ëÀÚÀÌ¸§) °¡Á®¿À±â
+const savedUserName = localStorage.getItem(USERNAME_KEY);//ë¡œì»¬ìŠ¤í† ë¦¬ì§€ ì €ì¥ê°’(ì‚¬ìš©ìì´ë¦„) ê°€ì ¸ì˜¤ê¸°
 if(savedUserName === null){
-  //·ÎÄÃ ½ºÅä¸®Áö ÀúÀå°ª(»ç¿ëÀÚÀÌ¸§) ÀÖÀ»½Ã
+  //ë¡œì»¬ ìŠ¤í† ë¦¬ì§€ ì €ì¥ê°’(ì‚¬ìš©ìì´ë¦„) ìˆì„ì‹œ
   loginForm.classList.remove(HIDDEN_CLASSNAME);
   loginForm.addEventListener("submit",onLoginSubmit);
 }else{
-  //·ÎÄÃ ½ºÅä¸®Áö ÀúÀå°ª(»ç¿ëÀÚÀÌ¸§) ¾øÀ»½Ã
+  //ë¡œì»¬ ìŠ¤í† ë¦¬ì§€ ì €ì¥ê°’(ì‚¬ìš©ìì´ë¦„) ì—†ì„ì‹œ
   paintGreetings(savedUserName);
 }
 
