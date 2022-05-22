@@ -1,1 +1,50 @@
-.hidden{display:none;}
+
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,200;0,300;0,400;0,500;1,400&family=Noto+Sans+KR:wght@100;300;400;500&display=swap');
+
+*{margin:0 auto;}
+body,html {font-family:'Montserrat', 'Noto Sans KR', sans-serif;}
+.hidden{opacity:0 !important;visibility:hidden !important;}
+.background{position:absolute;top:0;left:0;width:100%;height:100%;z-index:-1;}
+
+h1{text-shadow:2px 2px 4px rgba(0, 0, 0 ,0.2);font-size: 45px;}
+
+#wrap{width:1300px;height: calc(100vh - 120px);padding:60px 0;}
+
+#login{background:radial-gradient(white, transparent);border-radius:220px;width:266px;text-align:center;padding:63px 0 74px 0;position:Absolute;top:50%;left:50%;}
+#login>i{font-size:45px;}
+#login>p{font-size:27px;font-weight:bold;margin:12px 0 10px 0;}
+#login-form button{border:0;background:none;vertical-align:middle;margin-top:4px;padding-left:5px;}
+#login-form input{background:none;border:0;border-bottom:1px solid #232323;}
+
+#time{background:rgba(255,255,255,0.6);border-radius:5px;padding:20px;}
+#time .date{font-size:20px;display:flex;align-items:flex-end;justify-content:left;margin: 0;width: 100%;}
+#time .clock{font-size:40px;display:flex;align-items:flex-end;justify-content:right;margin-top:20px;margin-left: 20px;}
+
+#quotes{background:rgba(255,255,255,0.6);border-radius:5px;padding:20px;position:relative;}
+#quotes span:first-child{font-size: 18px;line-height: 23px;display:flex;align-items:flex-end;justify-content:left;margin: 0;width: 100%;;word-break: keep-all;}
+#quotes span:last-child{font-size:18px;display:flex;align-items:flex-end;justify-content:right;margin-top:10px;position: Absolute;bottom: 24px;
+right: 30px;}
+
+#weathers{background:rgba(255,255,255,0.6);border-radius:5px;padding:20px;}
+#weathers span:first-child{font-size:20px;display:flex;align-items:flex-end;justify-content:left;margin: 0;width: 100%;}
+#weathers span:last-child{font-size:40px;display:flex;align-items:flex-end;justify-content:right;margin-top:20px;margin-left: 20px;}
+
+.flex{display:flex;margin-top:15px;}
+.flex:first-child{margin:0;}
+.flex>div{width:100%;margin-right:15px;}
+.flex>div>i{display: inline-block;font-size:25px;margin-bottom:10px;text-shadow:2px 2px 4px rgba(0, 0, 0 ,0.2);}
+.flex>div:last-child{margin-right:0;}
+
+#todo {background:rgba(255,255,255,0.6);border-radius:5px;padding:70px;align-items: center;height:calc(100% - 420px);flex-direction: column;position:relative;}
+#todo-form{padding-bottom:20px;width:60%;}
+#todo-form input[type="text"]{border:0;background: rgba(255,255,255,0.7);font-size: 17px;width:88%;box-shadow: 5px 5px 5px rgb(0 0 0 / 10%);border-radius: 35px;padding:11px;}
+#todo-form input[type="text"]::placeholder{opacity:0.3;color:#000;font-family:'Montserrat',}
+#todo-form button{background:transparent;border:0;font-size:30px;vertical-align: middle;}
+
+#todo-list {text-align:center;padding:0;transition:all ease .4s;opacity:1;visibility:visible;height:300px;overflow:auto;padding-right: 25px;margin-top:40px;}
+#todo-list li{font-size:25px;list-style:none;margin-bottom:3px;}
+#todo-list li button{background:transparent;border:0;font-size:17px;padding:0;margin-left: 15px;}
+
+i.fa-heart{color:#c90303;font-size: 23px;vertical-align: middle;margin:10px 0 20px 0;text-shadow: 2px 2px 4px rgba(0, 0, 0 ,0.2);}
+
+#empty{transition:all ease .6s;opacity:1;visibility:visible;text-align: center;font-size:26px;position: absolute;top: 50%;left:unset;}

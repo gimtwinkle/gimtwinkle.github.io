@@ -6,34 +6,74 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Momentum - twinkle</title>
     <link rel="stylesheet" href="./css/style.css" >
+    <script src="https://kit.fontawesome.com/d83848f4f6.js" crossorigin="anonymous"></script>
 </head>
 <body>
-    <form id="login-form" class="hidden">
-        <input type="text"
-        required
-        maxlength="15"
-        placeholder="What is your name?">
-        <input type="submit" value="Log In">
-    </form> 
-    
-    <h1 id="greeting" class="hidden" ></h1>
-    <div class="date"></div>
-    <div class="clock">00:00:00</div>
-
-    <div>
-        <div></div>
-        <ul>
-            <li>
-                <form action="">
-                    <input type="text">
-                    <button></button>
-                </form>
-            </li>
-        </ul>
+    <div id="login">
+        <i class="fa-solid fa-person-circle-question"></i>
+        <p>Hi! there.</p>
+      
+        <form id="login-form" class="hidden">
+            <input type="text"
+            required
+            maxlength="15"
+            placeholder="What should I call you?">
+            <button><i class="fa-solid fa-arrow-right-to-bracket"></i></button>
+        </form> 
     </div>
 
+    <div id="wrap" class="hidden">
+        <h1 id="greeting">
+            <i class="fa-solid fa-heart fa-beat" style="--fa-animation-duration: 2s;"></i>
+            <span></span>
+        </h1>
+        
+        <div class="flex">
+            <div id="time">
+                <i class="fa-regular fa-clock fa-shake" style="--fa-animation-duration: 2s;"></i>
+                <div class="flex"> 
+                    <div class="date"></div>
+                    <div class="clock">00:00:00</div>
+                </div>
+            </div>
+            
+            <div id="weathers">
+                <i class="fa-solid fa-temperature-high fa-bounce" style="--fa-animation-duration: 4s;"></i>
+                <div id ="weather" class="flex">
+                    <span class="location"></span>
+                    <span class="weather"></span>
+                </div>
+            </div>
+            
+            <div id="quotes">
+                <i class="fa-solid fa-quote-left fa-shake" style="--fa-animation-duration: 5s;"></i>
+                <div id="quote">
+                    <span></span>
+                    <span></span>
+                </div>
+            </div>
+        </div>
+
+        <div id="todo" class="flex">
+            <!-- <div class="title"><i class="fa-solid fa-list-check"></i></div> -->
+
+            <form id="todo-form">
+                <input type="text" placeholder="Write and Enter">
+                <button><i class="fa-regular fa-pen-to-square"></i></button>
+            </form>
+
+            <ul id="todo-list" class="hidden"></ul>
+
+            <div id="empty" class="hidden">Do you have anything to do?</div>
+            
+        </div>
+        
+    </div>
+    <script src="./js/quotes.js"></script>
     <script src="./js/greeting.js"></script>
     <script src="./js/clock.js"></script>
     <script src="./js/weather.js"></script>
+    <script src="./js/todo.js"></script>
+    <script src="./js/background.js"></script>
 </body>
 </html>
