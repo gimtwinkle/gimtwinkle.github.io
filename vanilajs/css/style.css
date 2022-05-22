@@ -14,7 +14,7 @@ h1{text-shadow:2px 2px 4px rgba(0, 0, 0 ,0.2);font-size: 45px;}
 #login>i{font-size:45px;}
 #login>p{font-size:27px;font-weight:bold;margin:12px 0 10px 0;}
 #login-form button{border:0;background:none;vertical-align:middle;margin-top:4px;padding-left:5px;}
-#login-form input{background:none;border:0;border-bottom:1px solid #232323;}
+#login-form input{background:none;border:0;border-bottom:1px solid #232323;font-family:'Montserrat'}
 
 #time{background:rgba(255,255,255,0.6);border-radius:5px;padding:20px;}
 #time .date{font-size:20px;display:flex;align-items:flex-end;justify-content:left;margin: 0;width: 100%;}
