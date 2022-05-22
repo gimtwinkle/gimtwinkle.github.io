@@ -10,7 +10,7 @@ h1{text-shadow:2px 2px 4px rgba(0, 0, 0 ,0.2);font-size: 45px;}
 
 #wrap{width:1300px;height: calc(100vh - 120px);padding:60px 0;}
 
-#login{background:radial-gradient(white, transparent);border-radius:220px;width:266px;text-align:center;padding:63px 0 74px 0;position:Absolute;top:50%;left:50%;}
+#login{background:radial-gradient(white, transparent);border-radius:220px;width:266px;text-align:center;padding:63px 0 74px 0;position:Absolute;top:50%;left:50%;transform: translate(-50%,-50%);}
 #login>i{font-size:45px;}
 #login>p{font-size:27px;font-weight:bold;margin:12px 0 10px 0;}
 #login-form button{border:0;background:none;vertical-align:middle;margin-top:4px;padding-left:5px;}
