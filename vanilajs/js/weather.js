@@ -14,7 +14,8 @@ function onGeoOk(position){
         const city = document.querySelector(".location");
         const minTemp = parseInt(data.main.temp_min);
         const maxTemp = parseInt(data.main.temp_max);
-        city.innerText = `${data.name}, 최저 ${minTemp}°C, 최고 ${maxTemp}°C`;
+        city.innerText = `${data.name},
+         최저 ${minTemp}°C, 최고 ${maxTemp}°C`;
         weather.innerHTML = `${data.weather[0].main}`; });
         
 }

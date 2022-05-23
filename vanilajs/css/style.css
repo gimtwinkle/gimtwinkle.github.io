@@ -47,4 +47,5 @@ right: 30px;}
 
 i.fa-heart{color:#c90303;font-size: 23px;vertical-align: middle;margin:10px 0 20px 0;text-shadow: 2px 2px 4px rgba(0, 0, 0 ,0.2);}
 
-#empty{transition:all ease .6s;opacity:1;visibility:visible;text-align: center;font-size:26px;position: absolute;top: 50%;left:unset;}
+#empty{transition:all ease .6s;opacity:1;visibility:visible;text-align: center;font-size:26px;position: absolute;top: 50%;left:unset;transform: translate(0, -50%);
+}
