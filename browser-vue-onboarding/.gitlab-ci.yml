@@ -1,0 +1,12 @@
+master:
+  environment:
+    name: master
+  stage: deploy
+  tags:
+    - onboarding
+  only:
+    - master
+  script:
+    - rm -rf /service/www/shopby-admin-onboarding
+    - mkdir -p /service/www/shopby-admin-onboarding
+    - cp -r ./ /service/www/shopby-admin-onboarding

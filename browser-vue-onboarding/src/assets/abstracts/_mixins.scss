@@ -1,0 +1,164 @@
+@mixin background(
+  $name,
+  $repeat: no-repeat,
+  $x: center,
+  $y: top,
+  $color: null
+) {
+  background: url($name) $repeat $x $y;
+}
+
+// ===================================
+// position
+// ===================================
+@mixin position(
+  $position,
+  $top: null,
+  $right: null,
+  $bottom: null,
+  $left: null
+) {
+  position: $position;
+  top: $top;
+  right: $right;
+  bottom: $bottom;
+  left: $left;
+}
+
+@mixin fixed($args...) {
+  @include position(fixed, $args...);
+}
+
+@mixin absolute($args...) {
+  @include position(absolute, $args...);
+}
+
+@mixin relative($args...) {
+  @include position(relative, $args...);
+}
+
+// ===================================
+// size
+// ===================================
+@mixin size($w: null, $h: $w) {
+  width: $w;
+  height: $h;
+}
+
+// ===================================
+// a11y
+// ===================================
+@mixin a11y {
+  @include absolute($left: -9999em);
+  @include size(1px);
+
+  overflow: hidden;
+  margin: -1px;
+  clip: rect(0, 0, 0, 0);
+}
+
+// ===================================
+// font face
+// use: @include font-face(nbg, '~@/assets/fonts/NanumBarunGothic', normal);
+// ===================================
+@mixin font-face(
+  $name,
+  $font-path,
+  $weight: null,
+  $style: normal,
+  $exts: (eot, woff2, woff, ttf)
+) {
+  $src: null;
+  $formats: (
+    otf: "openType",
+    ttf: "trueType",
+  );
+
+  @each $ext in $exts {
+    $format: if(map-has-key($formats, $ext), map-get($formats, $ext), $ext);
+    $src: append(
+      $src,
+      url(quote($font-path + "." + $ext)) format(quote($format)),
+      $separator: comma
+    );
+  }
+  //@debug $src;
+
+  @font-face {
+    font-family: quote($name);
+    font-weight: $weight;
+    font-style: $style;
+    src: $src;
+  }
+}
+
+/*=======================
+pagination
+=======================*/
+@mixin pagination {
+  margin: 20px 0;
+  display: flex;
+  justify-content: center;
+  .pagination__btn {
+    display: block;
+    width: 27px;
+    height: 27px;
+    line-height: 27px;
+    text-align: center;
+    &:hover {
+      font-weight: bold;
+    }
+  }
+  .pagination__btn--arrow {
+    border: 1px solid #e5e5e5;
+    color: #767676;
+    letter-spacing: -3px;
+    margin: 0 5px;
+    font-size: 0;
+    &:before {
+      font-size: 20px;
+    }
+  }
+  .pagination__list {
+    display: flex;
+  }
+}
+
+@mixin tableCommon(
+  $align,
+  $thFontWeight,
+  $tdFontWeight,
+  $thBorderTop,
+  $tdBorderTop
+) {
+  width: 100%;
+  margin: 20px 0;
+  th {
+    background-color: #fbfbfb;
+    border-top: $thBorderTop;
+    padding: 20px;
+    font-weight: $thFontWeight;
+    text-align: $align;
+  }
+  tbody > tr {
+    &:last-child {
+      border-bottom: 2px solid #dfdfdf;
+    }
+    td {
+      padding: 20px;
+      border-top: $tdBorderTop;
+      text-align: $align;
+      font-weight: $tdFontWeight;
+    }
+    .board-date,
+    .board-count {
+      font-weight: normal;
+      color: #8f8f8f;
+    }
+  }
+}
+
+@mixin inputDefault() {
+  width: 100%;
+  padding: 5px;
+}
