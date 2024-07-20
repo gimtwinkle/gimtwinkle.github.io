@@ -1,0 +1,651 @@
+
+<!DOCTYPE html>
+<!-- saved from url=(0131) -->
+<html lang="ko"><head><meta http-equiv="Content-Type" content="text/html; charset=EUC-KR">
+    
+    <title>고도:마케팅</title>
+    <script type="text/javascript" src="https://code.jquery.com/jquery-1.11.1.min.js"></script>
+    <script type="text/javascript" src="https://static.godo.co.kr/extern/jquery-cookie/jquery.cookie-1.4.1.min.js"></script>
+    <!-- Add the slick-theme.css if you want default styling -->
+    <script type="text/javascript" src="js/slick.min.js"></script>
+    <style>
+        *{margin:0;padding:0;}
+        li{list-style:none;}
+        a{color:#000;text-decoration:none;outline:0;}
+        .h3-title-wrap{width:1200px;margin:0 auto;}
+
+        /*마케팅 - 서브메인 kbn 진행중*/
+        .marketing-wrap{overflow: hidden;}
+        .marketing-wrap .marketing-contents .marketing-top{background: url('img/img_topbg_marketing.png') center top no-repeat;height:480px;background-size:auto 100%;}
+        .marketing-wrap .marketing-contents .text-1{display:block;font-size:38px;font-weight:bold;line-height:normal;letter-spacing:-0.3px;color:#111111;position:relative;}
+        .marketing-wrap .marketing-contents .text-1.big{font-size:50px;}
+        .marketing-wrap .marketing-contents .text-1-sub{font-size:26px;font-weight:normal;color:#111111;margin:20px 0 0 0;}
+        .marketing-wrap .marketing-contents .text-2{display:block;font-size:18px;font-weight:300;line-height:1.56;letter-spacing:-0.3px;color:#454545;margin:20px 0 0 0;position:relative;}
+        .marketing-wrap .marketing-contents .text-2.big{font-size:20px;}
+        .marketing-wrap .marketing-contents .slick-slide,.marketing-wrap .marketing-contents .slick-slide a {border:0 !important;outline:0 !important;}
+        .marketing-wrap .marketing-contents .marketing-top{text-align:center;position:relative;}
+        .marketing-wrap .marketing-contents .marketing-top h2{font-size:50px;font-weight:bold;color:#ffffff;text-shadow:2px 2px 2px rgba(0, 0, 0, 0.3);padding:140px 0 0 0;}
+        .marketing-wrap .marketing-contents .marketing-top .h2-sub{font-size:20px;color:#ffffff;text-shadow:2px 2px 2px rgba(0, 0, 0, 0.3);font-weight:300;margin:25px 0 0 0;}
+        .marketing-wrap .marketing-contents .marketing-top .recently-notice{background:rgba(39,43,58,0.6);position:Absolute;bottom:0;left:50%;width:800px;padding:20px 0;margin:0 0 0 -400px;text-align:left;}
+        .marketing-wrap .marketing-contents .marketing-top .recently-notice> *{display:inline-block;}
+        .marketing-wrap .marketing-contents .marketing-top .recently-notice strong{font-size:16px;color:#ffffff;display:inline-block;padding:0 0 0 40px}
+        .marketing-wrap .marketing-contents .marketing-top .recently-notice .recently-date{font-size:14px;color:#ffffff;opacity:0.8;padding:0 0 0 30px}
+        .marketing-wrap .marketing-contents .marketing-top .recently-notice .recently-title{font-size:15px;color:#ffffff;opacity:0.8;padding:0 0 0 20px}
+        .marketing-wrap .marketing-contents .marketing-top .recently-notice a.more-list{font-size:15px;color:#ffffff;border-bottom:1px solid #ffffff;position:Absolute;top:50%;right:50px;margin:-10px 0 0 0;}
+
+        .marketing-wrap .marketing-contents .section-1 {margin:100px 0 0 0;}
+        .marketing-wrap .marketing-contents .section-1 .marketing-list-wrap {width:1200px;margin:0 auto;padding:70px 0 0 80px;height:450px;background:#eeeff4 url('img/img_bg_info.png') no-repeat 230px bottom;background-size:474px auto;box-sizing:border-box;position:Relative;}                    
+        .marketing-wrap .marketing-contents .section-1 .marketing-list-wrap .marketing-list {width:740px;position:absolute;top:70px;right:55px;text-align:right;}
+        .marketing-wrap .marketing-contents .section-1 .marketing-list-wrap .marketing-list li {display:inline-block;vertical-align:top;font-weight:600;width:230px;border-radius:4px;box-shadow:18px 18px 13px 0 rgba(0, 0, 0, 0.07);background-color:#ffffff;box-sizing:border-box;padding:30px 0;margin:0 0 20px 20px;text-align:center;position:relative;top:10px;opacity:0;transition:all ease .8s;}                                        
+        .marketing-wrap .marketing-contents .section-1 .marketing-list-wrap .marketing-list li.on {top:0;opacity:1;}
+        .marketing-wrap .marketing-contents .section-1 .marketing-list-wrap .marketing-list li strong{font-size:20px;font-weight:500;line-height:1.25;letter-spacing:-0.4px;text-align:center;color:#272b3a;display:block;margin:10px 0;}
+        .marketing-wrap .marketing-contents .section-1 .marketing-list-wrap .marketing-list li div{font-size:15px;font-weight:300;line-height:1.67;letter-spacing:-0.3px;text-align:center;color:#111111;}
+
+        .marketing-wrap .marketing-contents .section-2{margin:190px 0 0 0;}
+        .marketing-wrap .marketing-contents .section-2 .title-box{width: 2240px;border-bottom: 1px solid #111;padding-bottom: 40px;}
+        .marketing-wrap .marketing-contents .section-2 .info-box{position:Relative;max-width:1080px;width:100%;margin:110px auto 0;}
+        .marketing-wrap .marketing-contents .section-2 .info-box:after{content:"";display:block;clear:both;} 
+        .marketing-wrap .marketing-contents .section-2 .info-box + .info-box{margin:120px auto 0 auto;}
+        .marketing-wrap .marketing-contents .section-2 .info-box.reverse .info-img{float:right;}
+        .marketing-wrap .marketing-contents .section-2 .info-box.reverse .info-txt{padding:30px 0 0 0;}
+        .marketing-wrap .marketing-contents .section-2 .info-box .info-img{width:500px;float:left;}
+        .marketing-wrap .marketing-contents .section-2 .info-box .info-txt{width:calc(100% - 500px);float:left;box-sizing:border-box;padding:30px 0 0 40px;}
+        .marketing-wrap .marketing-contents .section-2 .info-box .info-txt:first-of-type{float:none;padding:0 0 0 0;width:415px;}
+        .marketing-wrap .marketing-contents .section-2 .info-box .info-txt .text-1{position:Relative;display:inline-block;}
+        .marketing-wrap .marketing-contents .section-2 .info-box .info-txt .text-1 + em{font-size:26px;color:#111111;display:inline-block;margin:0 0 0 10px;}
+        .marketing-wrap .marketing-contents .section-2 .info-box .info-txt .text-1.mark:after{content:"";display:block;position:Absolute;top:-12px;left:190px;background:url('img/img_supoort_mark.png') no-repeat 0 0;width:255px;height:76px;background-size:contain;}
+        .marketing-wrap .marketing-contents .section-2 .info-box .info-txt .text-2{margin:20px 0 30px 0;}
+        .marketing-wrap .marketing-contents .section-2 .info-box .arw-btn .btn-red{margin:20px 0 0 0;font-size:15px;font-weight:400;font-stretch:normal;font-style:normal;line-height:normal;letter-spacing:-0.3px;color:#f7444e;display:block;}
+        .marketing-wrap .marketing-contents .section-2 .info-box .arw-btn .btn-red:after{content:"";display:inline-block;margin:0 0 0 6px;vertical-align:2px;background:url('img/img_red_arw.png') no-repeat 0 0;width:16px;height:7px;background-size:cover;position:Relative;right:0;transition:all ease .5s;}
+        .marketing-wrap .marketing-contents .section-2 .info-box .arw-btn .btn-red:hover:after{right:-8px}
+
+        .marketing-wrap .marketing-contents .section-2 .info-logo{width:1080px;margin:50px auto 0;text-align:Center;}
+        .marketing-wrap .marketing-contents .section-2 .info-logo:after{content:"";display:block;clear:both;}
+        .marketing-wrap .marketing-contents .section-2 .info-logo li{float:left;width:200px;height:60px;padding:16px 14px;border:1px solid #e6e6e6;margin:0 20px 20px 0;box-sizing:border-box;background:#ffffff;}
+        .marketing-wrap .marketing-contents .section-2 .info-logo li:nth-child(5n){margin:0 0 20px 0;}
+        .marketing-wrap .marketing-contents .section-2 .info-logo li img{width:100%;}
+
+        .marketing-wrap .marketing-contents .section-2 .motion-01{height:279px;position:Relative;box-sizing:border-box;margin:15px 0 0 0;}
+        .marketing-wrap .marketing-contents .section-2 .motion-01 .motion{opacity:0;top:200px;transition:all ease .8s;left:50%}
+        .marketing-wrap .marketing-contents .section-2 .motion-01 .motion.on{opacity:1;}
+        .marketing-wrap .marketing-contents .section-2 .motion-01 .motion img{height:100%;display:block;width:auto;}
+        .marketing-wrap .marketing-contents .section-2 .motion-01 .mot01-bg{height:278px;margin:0 0 0 200px;}
+        .marketing-wrap .marketing-contents .section-2 .motion-01 .mot01-bg.on{height:278px;margin:0 0 0 127px;}
+        .marketing-wrap .marketing-contents .section-2 .motion-01 .mot01-bg img{height:100%;}
+        .marketing-wrap .marketing-contents .section-2 .motion-01 .mot01-img01.on{height:60px;position:absolute;top:88px;left:0;}
+        .marketing-wrap .marketing-contents .section-2 .motion-01 .mot01-img02.on{height:60px;position:absolute;top:162px;left:85px;}
+        .marketing-wrap .marketing-contents .section-2 .motion-01 .mot01-img03.on{height:60px;position:absolute;top:27px;left:155px;}
+        .marketing-wrap .marketing-contents .section-2 .motion-01 .mot01-img04.on{height:60px;position:absolute;top:0;left:380px;}
+
+        .marketing-wrap .marketing-contents .section-2 .motion-02{height:254px;position:relative;box-sizing:border-box;margin:15px 0 30px 0;}
+        .marketing-wrap .marketing-contents .section-2 .motion-02 .motion{opacity:0;top:200px;}
+        .marketing-wrap .marketing-contents .section-2 .motion-02 .motion.on{opacity:1;transform:scale(1)}
+        .marketing-wrap .marketing-contents .section-2 .motion-02 .motion img{height:100%;display:block}
+        .marketing-wrap .marketing-contents .section-2 .motion-02 .mot02-img01.on{height:254px;margin:0 0 0 60px;transition:all ease .8s;}
+        .marketing-wrap .marketing-contents .section-2 .motion-02 .mot02-img02.on{height:229px;position:Absolute;top:30px;left:-45px;transition:all ease .8s;}
+        .marketing-wrap .marketing-contents .section-2 .motion-02 .mot02-img03.on{height:226px;position:Absolute;top:76px;right:-20px;transition:all ease .8s;}
+        .marketing-wrap .marketing-contents .section-2 .motion-02 .mot02-img04{height:161px;position:absolute;top:43px;left:95px;transform:scale(1.5);transition:all ease .4s;}
+        .marketing-wrap .marketing-contents .section-2 .motion-02 .mot02-img05{height:81px;position:absolute;top:145px;left:10px;transform:scale(1.5);transition:all ease .4s;}
+        .marketing-wrap .marketing-contents .section-2 .motion-02 .mot02-img06{height:96px;position:absolute;bottom:-20px;right:12px;transform:scale(1.5);top:inherit !important;transition:all ease .4s;}
+
+        .marketing-wrap .marketing-contents .section-2 .motion-03{height:246px !important;width:500px;position:relative;margin:45px 0 10px 0;}
+        .marketing-wrap .marketing-contents .section-2 .motion-03 .motion{opacity:0;top:100px;bottom:100px;transition:all ease .5s;}
+        .marketing-wrap .marketing-contents .section-2 .motion-03 .motion.on{opacity:1;}
+        .marketing-wrap .marketing-contents .section-2 .motion-03 .motion img{height:100%;display:block}
+        .marketing-wrap .marketing-contents .section-2 .motion-03 .mot03-bg{height:246px;width:0;overflow:hidden;transition:width ease-in 1.5s;}
+        .marketing-wrap .marketing-contents .section-2 .motion-03 .mot03-bg.on{width:508px;}
+        .marketing-wrap .marketing-contents .section-2 .motion-03 .mot03-img01.on{height:94px;position:absolute;bottom:-15px;left:-10px;top:inherit !important;}
+        .marketing-wrap .marketing-contents .section-2 .motion-03 .mot03-img02.on{height:75px;position:absolute;top:55px;left:80px;bottom:inherit !important;}
+        .marketing-wrap .marketing-contents .section-2 .motion-03 .mot03-img03.on{height:100px;position:absolute;top:20px;left:200px;bottom:inherit !important;}
+        .marketing-wrap .marketing-contents .section-2 .motion-03 .mot03-img04.on{height:75px;position:absolute;bottom:50px;left:290px;top:inherit !important;}
+        .marketing-wrap .marketing-contents .section-2 .motion-03 .mot03-img05.on{height:75px;position:absolute;top:-30px;left:360px;bottom:inherit !important;}
+        .marketing-wrap .marketing-contents .section-2 .motion-03 .mot03-img06.on{height:26px;position:absolute;top:70px;left:450px;bottom:inherit !important;}
+
+        .marketing-wrap .marketing-contents .section-2 .motion-04{height:266px !important;width:500px;position:relative;margin:30px 0 -35px 0;}
+        .marketing-wrap .marketing-contents .section-2 .motion-04 .motion{transition:all ease .5s;opacity:0;top:50px;bottom:50px;}
+        .marketing-wrap .marketing-contents .section-2 .motion-04 .motion.on{opacity:1;}
+        .marketing-wrap .marketing-contents .section-2 .motion-04 .motion img{height:100%;display:block}
+        .marketing-wrap .marketing-contents .section-2 .motion-04 .mot04-img01.on{height:266px;position:absolute;bottom:-15px;left:160px;top:inherit !important;}
+        .marketing-wrap .marketing-contents .section-2 .motion-04 .mot04-img02.on{height:181px;position:absolute;top:-20px;left:70px;bottom:inherit !important;}
+        .marketing-wrap .marketing-contents .section-2 .motion-04 .mot04-img03.on{height:196px;position:absolute;bottom:-60px;right:-35px;top:inherit !important;}
+        .marketing-wrap .marketing-contents .section-2 .motion-04 .mot04-img04.on{height:86px;position:absolute;bottom:-50px;left:50px;top:inherit !important;}
+        .marketing-wrap .marketing-contents .section-2 .motion-04 .mot04-img05.on{height:110px;position:absolute;top:-30px;left:360px;bottom:inherit !important;}
+
+        .marketing-wrap .marketing-contents .section-2 .info-list {display:block;clear:both;content:"";}
+        .marketing-wrap .marketing-contents .section-2 .info-list li{padding:16px 16px 16px 30px;width:165px;border:1px solid #e6e6e6;display:inline-block;margin:0 20px 0 0;box-sizing:border-box;}
+        .marketing-wrap .marketing-contents .section-2 .info-list li>img{display:inline-block;vertical-align:middle;height:24px;}
+        .marketing-wrap .marketing-contents .section-2 .info-list li>span{font-size:18px;color:#111111;margin:0 0 0 15px;display:inline-block;vertical-align:middle;}
+
+        .marketing-wrap .marketing-contents .section-3 {text-align:Center;background:#f7f7f7;padding:100px 0;margin:140px 0 0 0;}
+        .marketing-wrap .marketing-contents .section-3 .product-list{max-width:1200px;width:100%;margin:30px auto 0;}
+        .marketing-wrap .marketing-contents .section-3 .product-list li {position:relative;opacity:0;transition:all ease .4s;top:15px;border:2px solid #efefef;background:#ffffff;display:inline-block;margin:24px 24px 0 0;text-align:left;border-radius:4px;}
+        .marketing-wrap .marketing-contents .section-3 .product-list li:hover{border:2px solid #111111;box-shadow:0 13px 21px 0 rgba(0, 0, 0, 0.09);}
+        .marketing-wrap .marketing-contents .section-3 .product-list li a{width:248px;padding:28px 0 28px 39px;box-sizing:border-box;display:block;}
+        .marketing-wrap .marketing-contents .section-3 .product-list li.on{top:0;opacity:1;}
+        .marketing-wrap .marketing-contents .section-3 .product-list li:nth-child(4n){margin: 0 0 0 0;}
+        .marketing-wrap .marketing-contents .section-3 .product-list li .icon{width:70px;display:inline-block;vertical-align:middle;margin:0 15px 0 0;}
+        .marketing-wrap .marketing-contents .section-3 .product-list li .icon img{width:100%;}
+        .marketing-wrap .marketing-contents .section-3 .product-list li .exp{display:inline-block;vertical-align:middle;font-size:18px;}
+
+        .marketing-wrap .marketing-contents  .section-4{margin:100px 0 0 0;}
+        .marketing-wrap .marketing-contents  .section-4 .banner-wrap{max-width:1200px;width:100%;margin:0 auto;overflow: hidden;position:relative;}
+        .marketing-wrap .marketing-contents  .section-4 .banner-wrap .banner{display:inline-block;width:1200px;height:360px;}
+        .marketing-wrap .marketing-contents  .section-4 .banner-wrap .banner img{width:100%;}
+        .marketing-wrap .marketing-contents  .section-4 .slick-dots {position:absolute;bottom:50px;left:80px;z-index:1000;}
+        .marketing-wrap .marketing-contents  .section-4 .slick-dots li{text-indent:-9999px;font-size:0;line-height:0;box-sizing:border-box;width:12px;height:12px;background:none;border:1px solid #7b7aad;border-radius:6px;display:inline-block;margin:0 10px 0 0;}
+        .marketing-wrap .marketing-contents  .section-4 .slick-dots li.slick-active{background:#ffffff;border:0;}
+
+        .marketing-wrap .marketing-contents .section-5{position:relative;text-align:center;padding:100px 0;}
+        .marketing-wrap .marketing-contents .section-5 .text-1{transition:all ease .4s;}
+        .marketing-wrap .marketing-contents .section-5 .cnt-unit{transition:All ease .8s;opacity:0;visibility:hidden;}
+        .marketing-wrap .marketing-contents .section-5 .cnt-unit.on{opacity:1;visibility: visible;}
+        .marketing-wrap .marketing-contents .section-5 .partners-wrap{position:relative;left:50%;height:400px;top:0;max-width:1200px;width:100%;margin:60px 0 0 -600px;overflow:hidden;}
+        .marketing-wrap .marketing-contents .section-5 .partners-wrap:after {content:"";display:block;clear:both;}
+        .marketing-wrap .marketing-contents .section-5 .partners-wrap .partners-group{width:1200px;margin:0 auto;display:inline-block;} 
+        .marketing-wrap .marketing-contents .section-5 .partners-wrap .partners-logo{width:180px;height:180px;position:relative;display:inline-block;border-radius:153px;margin:0 24px 24px 0;border:solid 1px #e6e6e6;background-color:#ffffff;text-align:center;outline:0;}
+        .marketing-wrap .marketing-contents .section-5 .partners-wrap .partners-logo:hover{box-shadow:0 15px 22px 0 rgba(0, 0, 0, 0.09);}
+        .marketing-wrap .marketing-contents .section-5 .partners-wrap .partners-logo:hover span{display:block;}
+        .marketing-wrap .marketing-contents .section-5 .partners-wrap .partners-logo:nth-child(5n){margin:0 0 24px 0;}
+        .marketing-wrap .marketing-contents .section-5 .partners-wrap .partners-logo img{position:absolute;left:50%;top:50%;transform:scale(0.5) translate(-100%, -100%);}
+        .marketing-wrap .marketing-contents .section-5 .partners-wrap .partners-logo span{position:absolute;z-index:1;bottom:-10px;left:50%;transform:translate(-50%,0);width:101px;height:34px;border-radius:17px;background-color:#f7444e;letter-spacing:-0.3px;text-align:center;color:#ffffff;line-height:2.2;display:none;}
+        .marketing-wrap .marketing-contents .section-5 .partners-wrap .slick-arrow{display:block;width:50px;height:51px;position:absolute;top:50%;font-size:0;cursor:pointer;z-index:10;outline:0;border:0;}
+        .marketing-wrap .marketing-contents .section-5 .partners-wrap .slick-prev{background:url('img/btn_pf_prev.png') no-repeat 0 0;left:0;margin-top:-40px;}
+        .marketing-wrap .marketing-contents .section-5 .partners-wrap .slick-next{background:url('img/btn_pf_next.png') no-repeat 0 0;right:0;margin-top:-40px;}
+        .marketing-wrap .marketing-contents .section-5 .partners-wrap .slick-prev:hover{background:url('img/btn_pf_prev_on.png') no-repeat 0 0;}
+        .marketing-wrap .marketing-contents .section-5 .partners-wrap .slick-next:hover{background:url('img/btn_pf_next_on.png') no-repeat 0 0;}
+
+        .marketing-wrap .marketing-contents .section-6{text-align:center;background:#f7f7f7;padding:80px 0 90px 0;}
+        .marketing-wrap .marketing-contents .section-6 .img-visual-wrap{width:345px;margin:0 auto;}
+        .marketing-wrap .marketing-contents .section-6 .img-visual-wrap img{width:100%;}
+        .marketing-wrap .marketing-contents .section-6 .text-wrap{margin:-70px 0 0 0;}
+        .marketing-wrap .marketing-contents .section-6 .text-wrap .text-tel{font-size:16px;color:#4da8ae;font-family:'Montserrat';font-weight:600;margin:30px 0 0 0;letter-spacing:1.3px;}
+        .marketing-wrap .marketing-contents .section-6 .text-wrap .text-tel:before{content:"";display:inline-block;width:20px;height:20px;background:url('img/icon_mkt_tel.png') no-repeat 0 0;background-size:contain;vertical-align:middle;margin:0 5px 0 0;}
+        .marketing-wrap .marketing-contents .section-6 .text-wrap .text-email{font-size:16px;color:#999999;font-family:'Montserrat';font-weight:600;margin:10px 0 0 0;letter-spacing:1.3px;}
+
+        .btn-counsel{display:none;}
+        .btn-counsel.fixed{display:block;position:fixed;bottom:127px;right:50%;margin-right: -745px;width:120px;height:48px;font-size:15px;font-weight:300;background:#373737 none ;color:#ffffff;text-align: center;padding:15px;box-sizing:border-box;border-radius:24px;transition:box-shadow ease .2s;}
+        .btn-counsel.fixed.bottom{position:Absolute;bottom:120px;}
+        .btn-counsel:hover{box-shadow:1px 2px 6px rgba(0,0,0,0.5);background:#202020;}
+        .btn-counsel:before{content:"";display:inline-block;width:18px;height:18px;background:url('img/icon_btn_counsel.png') no-repeat 0 0;background-size:contain;vertical-align:middle;margin:-3px 6px 0 0;}
+    </style>
+</head>
+    <!-- common wrapper-box -->
+    <body>
+        <div class="wrapper-box">
+            <!-- 마케팅 메인 페이지 -->
+            <div class="marketing-wrap">
+                <div class="marketing-contents">
+                    <div class="marketing-top">
+                        <h2>NHN고도 마케팅</h2>
+                        <div class="h2-sub">디지털 마케팅 파트너로써<br>고도 셀러의 매출 성장을 목표로 컨설팅 해드립니다.</div>
+
+                        <div class="recently-notice">
+                            <strong>공지사항</strong>
+                            <div class="recently-date">2020.06.01</div>
+                            <div class="recently-title">shop by 구글 스마트 쇼핑광고 런칭</div>
+                            <a href="https://marketing.godo.co.kr/board/list.gd" class="more-list">더보기</a>
+                        </div>
+                    </div>
+                    <div class="section-1">
+                        <div class="marketing-list-wrap">
+                            <div class="info-txt text-left">
+                                <div class="text-1">광고도<br>고도인 이유</div>
+                                <div class="text-2">광고 전략이 없어 어떤 광고부터 해야 할지 막막하신가요.<br>고도와 함께라면 간단한 광고부터 쉽게 시작할 수 있습니다.</div>
+                            </div>
+                            <ol class="marketing-list text-right">
+                                <li>
+                                    <strong>현황 분석<br>진단</strong>
+                                    <div>내 사이트는 어디쯤 있지?<br>시장분석부터 마케팅 설계까지<br>한번에 OK</div>
+                                </li>
+                                <li>
+                                    <strong>광고/사이트<br>최적화</strong>
+                                    <div>고객이 사이트에 들어오기 전부터<br>구매하는 그 순간까지<br>A to Z 컨설팅 </div>
+                                </li>
+                                <li>
+                                    <strong>경쟁사 분석<br>업계 동향 체크</strong>
+                                    <div>혼자하려니 막막한데,<br>주변 업체들은 어떻게 하고<br>있는지 궁금해요</div>
+                                </li>
+                                <li>
+                                    <strong>분석<br>보고서</strong>
+                                    <div>명확한 원인분석이 있어야<br>다음 전략 설계가<br>가능합니다</div>
+                                </li>
+                            </ol>
+                        </div>
+                    </div>
+
+                    <div class="section-2">
+                        <div class="h3-title-wrap">
+                            <div class="title-box">
+                                <div class="text-1 big">최적의 효율을 찾다.</div>
+                                <div class="text-2 big">고도의 전문 마케터가 비즈니스에 맞는 가장 적합한 광고를 찾아 제안해 드립니다.</div>
+                            </div>
+                        </div>
+                        <div class="info-box">
+                            <div class="info-img motion-01" aria-hidden="true">
+                                <div class="motion mot01-bg"><img src="img/img_info01_bg.png"></div>
+                                <div class="motion mot01-img01"><img src="img/img_info01_img01.png"></div>
+                                <div class="motion mot01-img02"><img src="img/img_info01_img02.png"></div>
+                                <div class="motion mot01-img03"><img src="img/img_info01_img03.png"></div>
+                                <div class="motion mot01-img04"><img src="img/img_info01_img04.png"></div>
+                            </div>
+                            <div class="info-txt">
+                                <span class="text-1">키워드 광고 </span><em>Search AD</em>
+                                <span class="text-2">기본적이지만 가장 중요한 검색광고<br>
+                                    NHN고도의 전문 검색광고 마케터가 합리적인 광고비로<br>
+                                    높은 클릭율을 유지할 수 있도록 도와 드립니다.</span>
+                                <div class="arw-btn">
+                                    <a href="https://marketing.godo.co.kr/search/keyword-ad.gd" class="btn-red">더 알아보기</a>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="info-logo">
+                            <ul>
+                                <li><img src="img/img_mkt_logo_naver.png" alt="네이버"></li>
+                                <li><img src="img/img_mkt_logo_daum.png" alt="다음"></li>
+                                <li><img src="img/img_mkt_logo_nate.png" alt="네이트"></li>
+                                <li><img src="img/img_mkt_logo_google.png" alt="구글"></li>
+                                <li><img src="img/img_mkt_logo_reoclick.png" alt="레오클릭"></li>
+                            </ul>
+                        </div>
+
+                        <div class="info-box reverse">
+                            <div class="info-img motion-02" aria-hidden="true">
+                                <div class="motion mot02-img01"><img src="img/img_info02_img01.png"></div>
+                                <div class="motion mot02-img02"><img src="img/img_info02_img02.png"></div>
+                                <div class="motion mot02-img03"><img src="img/img_info02_img03.png"></div>
+                                <div class="motion mot02-img04"><img src="img/img_info02_img04.png"></div>
+                                <div class="motion mot02-img05"><img src="img/img_info02_img05.png"></div>
+                                <div class="motion mot02-img06"><img src="img/img_info02_img06.png"></div>
+                            </div>
+                            <div class="info-txt">
+                                <span class="text-1">디스플레이 광고</span><em>Display AD</em>
+                                <span class="text-2">보다 많은 사람들에게 노출하되 타겟과 위치를 고려하여<br>
+                                    적은 비용으로 높은 효율을 자랑합니다.<br>                                
+                                    광고비 예산이 적으신가요.<br>                                
+                                    NHN고도가 주목도 높은 배너를 무료로 제작해 드립니다.</span>
+                                <div class="arw-btn">
+                                    <a href="https://marketing.godo.co.kr/banner/portal-banner.gd" class="btn-red">더 알아보기</a>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="info-logo">
+                            <ul>
+                                <li><img src="img/img_mkt_logo_naver.png" alt="네이버"></li>
+                                <li><img src="img/img_mkt_logo_kakao.png" alt="다음"></li>
+                                <li><img src="img/img_mkt_logo_google.png" alt="구글"></li>
+                                <li><img src="img/img_mkt_logo_nate.png" alt="네이트"></li>
+                                <li><img src="img/img_mkt_logo_zum.png" alt="줌"></li>
+                                <li><img src="img/img_mkt_logo_criteo.png" alt="criteo"></li>
+                                <li><img src="img/img_mkt_logo_TargetingGates.png" alt="TargetingGates"></li>
+                                <li><img src="img/img_mkt_logo_mobon.png" alt="MOBON"></li>
+                                <li><img src="img/img_mkt_logo_acrossadn.png" alt="ACROSS ADN"></li>
+                                <li><img src="img/img_mkt_logo_acetrader.png" alt="ACE Trader"></li>
+                            </ul>
+                        </div>
+                        <div class="info-box">
+                            <div class="info-img motion-03" aria-hidden="true">
+                                <div class="motion mot03-bg"><img src="img/img_info03_bg.png"></div>
+                                <div class="motion mot03-img01"><img src="img/img_info03_img01.png"></div>
+                                <div class="motion mot03-img02"><img src="img/img_info03_img02.png"></div>
+                                <div class="motion mot03-img03"><img src="img/img_info03_img03.png"></div>
+                                <div class="motion mot03-img04"><img src="img/img_info03_img04.png"></div>
+                                <div class="motion mot03-img05"><img src="img/img_info03_img05.png"></div>
+                                <div class="motion mot03-img06"><img src="img/img_info03_img06.png"></div>
+                            </div>
+                            <div class="info-txt">
+                                <span class="text-1">SNS/모바일 광고</span><em>SNS/Mobile AD</em>
+                                <span class="text-2">SNS를 활용한 광고로 빠른 시간 안에 많은 고객을 확보할 수 있습니다.<br>
+                                    NHN고도는 페이스북 인증을 받은 마케팅 파트너이며,<br>                                
+                                    구글과 세일즈 파트너쉽을 체결하여 이커머스 시장의<br>
+                                    고객 성장을 주도합니다.</span>
+                                <div class="arw-btn">
+                                    <a href="https://marketing.godo.co.kr/mobile/facebook.gd" class="btn-red">더 알아보기</a>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="info-logo">
+                            <ul>
+                                <li><img src="img/img_mkt_logo_google.png" alt="구글"></li>
+                                <li><img src="img/img_mkt_logo_facebook.png" alt="네이버"></li>
+                                <li><img src="img/img_mkt_logo_instagram.png" alt="인스타그램"></li>
+                                <li><img src="img/img_mkt_logo_nate.png" alt="네이트"></li>                                
+                                <li><img src="img/img_mkt_logo_kakaobusiness.png" alt="카카오 비즈니스"></li>
+                                <li><img src="img/img_mkt_logo_cashslide.png" alt="캐시 슬라이드"></li>
+                                <li><img src="img/img_mkt_logo_inmobi.png" alt="inmobi"></li>
+                                <li><img src="img/img_mkt_logo_honeyscreen.png" alt="Honey screen"></li>
+                                <li><img src="img/img_mkt_logo_nhnpayco.png" alt="NHN PAYCO"></li>
+                                <li><img src="img/img_mkt_logo_skplanet.png" alt="SK planet"></li>
+                            </ul>
+                        </div>
+
+                        <div class="info-box reverse">
+                            <div class="info-img motion-04" aria-hidden="true">
+                                <div class="motion mot04-img01"><img src="img/img_info04_img01.png"></div>
+                                <div class="motion mot04-img02"><img src="img/img_info04_img02.png"></div>
+                                <div class="motion mot04-img03"><img src="img/img_info04_img03.png"></div>
+                                <div class="motion mot04-img04"><img src="img/img_info04_img04.png"></div>
+                                <div class="motion mot04-img05"><img src="img/img_info04_img05.png"></div>
+                            </div>
+                            <div class="info-txt">
+                                <span class="text-1">인플루언서 마케팅</span><em>Influencer Marketing</em>
+                                <span class="text-2">시작 단계의 브랜드 / 상품을 인플루언서와 유기적으로 결합하여<br>
+                                    브랜드 인지도 상승은 물론 사이트 유입을 증가시킬 수 있습니다.<br>
+                                    셀링에 특화된 NHN고도의 전속 인플루언서가 나서서<br>
+                                    쉽고 간편하게 시작하실 수 있도록 도와드립니다. </span>
+                            </div>
+                            <div class="info-list">
+                                <ul>
+                                <li>
+                                    <img src="img/icon_info_list01.png" aria-hidden="true">
+                                    <span>공동구매</span>
+                                </li>
+                                <li>
+                                        <img src="img/icon_info_list02.png" aria-hidden="true">
+                                        <span>PPL</span>
+                                    </li>
+                                    <li>
+                                        <img src="img/icon_info_list03.png" aria-hidden="true">
+                                        <span>체험단</span>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+
+
+                    </div>
+
+                    <div class="section-3">
+                        <div class="text-1">NHN고도 마케팅 상품</div>
+                        <ul class="product-list">
+                            <li>
+                                <a href="https://marketing.godo.co.kr/mobile/facebook.gd">
+                                    <div class="icon"><img src="img/icon_mkt_product01.png" aria-hidden="true"></div>
+                                    <div class="exp">검색광고</div>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://marketing.godo.co.kr/opening/naver-shopping.gd">
+                                    <div class="icon"><img src="img/icon_mkt_product02.png" aria-hidden="true"></div>
+                                    <div class="exp">입점광고</div>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://marketing.godo.co.kr/opening/naver-shopping.gd">
+                                    <div class="icon"><img src="img/icon_mkt_product03.png" aria-hidden="true"></div>
+                                    <div class="exp">구글스마트<br>쇼핑 광고</div>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://marketing.godo.co.kr/insite/facebook.gd">
+                                    <div class="icon"><img src="img/icon_mkt_product04.png" aria-hidden="true"></div>
+                                    <div class="exp">페이스북</div>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://marketing.godo.co.kr/banner/portal-banner.gd">
+                                    <div class="icon"><img src="img/icon_mkt_product05.png" aria-hidden="true"></div>
+                                    <div class="exp">디스플레이<br>광고</div>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://marketing.godo.co.kr/banner/retargeting.gd">
+                                    <div class="icon"><img src="img/icon_mkt_product06.png" aria-hidden="true"></div>
+                                    <div class="exp">타게팅 광고</div>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://marketing.godo.co.kr/shopping/google_shopping_ads.gd">
+                                    <div class="icon"><img src="img/icon_mkt_product07.png" aria-hidden="true"></div>
+                                    <div class="exp">쇼핑광고</div>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://marketing.godo.co.kr/mobile/facebook.gd">
+                                    <div class="icon"><img src="img/icon_mkt_product08.png" aria-hidden="true"></div>
+                                    <div class="exp">SNS 광고</div>
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+
+                    <div class="section-4">
+                        <div class="banner-wrap">
+                            <div class="banner"><a href="#none"><img src="img/img_banner01.png" alt="구글 스마트 쇼핑광고 런칭 기념, 광고비 10만원 지원! 자세히보기"></a></div>
+                            <div class="banner"><a href="#none"><img src="img/img_banner01.png" alt="구글 스마트 쇼핑광고 런칭 기념, 광고비 10만원 지원! 자세히보기"></a></div>
+                        </div>
+                    </div>
+                    <div class="section-5">
+                        <div class="text-1">고객사 <span id="counter"></span><em class="cnt-unit">개</em></div><!-- 하단 스크립트 내 '고객사 숫자입력' 주석 확인-->
+                        <div class="text-1-sub">NHN고도 마케팅팀과 함께 성장하고 있습니다.</div>
+                        <div class="partners-wrap">
+                            <div class="partners-group">
+                                <div class="partners-logo"><img src="img/img_logo_dukomall.png" alt="두코몰"><span>두코몰</span></div>
+                                <div class="partners-logo"><img src="img/img_logo_hamsoa.png" alt="함소아몰"><span>함소아몰</span></div>
+                                <div class="partners-logo"><img src="img/img_logo_imdak.png" alt="아임닭"><span>아임닭</span></div>
+                                <div class="partners-logo"><img src="img/img_logo_yoon.png" alt="윤선생"><span>윤선생</span></div>
+                                <div class="partners-logo"><img src="img/img_logo_tirtir.png" alt="티르티르"><span>티르티르</span></div>
+                                <div class="partners-logo"><img src="img/img_logo_dukomall.png" alt="두코몰"><span>두코몰</span></div>
+                                <div class="partners-logo"><img src="img/img_logo_hamsoa.png" alt="함소아몰"><span>함소아몰</span></div>
+                                <div class="partners-logo"><img src="img/img_logo_imdak.png" alt="아임닭"><span>아임닭</span></div>
+                                <div class="partners-logo"><img src="img/img_logo_yoon.png" alt="윤선생"><span>윤선생</span></div>
+                                <div class="partners-logo"><img src="img/img_logo_tirtir.png" alt="티르티르"><span>티르티르</span></div>
+                            </div>
+                            <div class="partners-group">
+                                <div class="partners-logo"><img src="img/img_logo_dukomall.png" alt="두코몰"><span>두코몰</span></div>
+                                <div class="partners-logo"><img src="img/img_logo_hamsoa.png" alt="함소아몰"><span>함소아몰</span></div>
+                                <div class="partners-logo"><img src="img/img_logo_imdak.png" alt="아임닭"><span>아임닭</span></div>
+                                <div class="partners-logo"><img src="img/img_logo_yoon.png" alt="윤선생"><span>윤선생</span></div>
+                                <div class="partners-logo"><img src="img/img_logo_tirtir.png" alt="티르티르"><span>티르티르</span></div>
+                                <div class="partners-logo"><img src="img/img_logo_dukomall.png" alt="두코몰"><span>두코몰</span></div>
+                                <div class="partners-logo"><img src="img/img_logo_hamsoa.png" alt="함소아몰"><span>함소아몰</span></div>
+                                <div class="partners-logo"><img src="img/img_logo_imdak.png" alt="아임닭"><span>아임닭</span></div>
+                                <div class="partners-logo"><img src="img/img_logo_yoon.png" alt="윤선생"><span>윤선생</span></div>
+                                <div class="partners-logo"><img src="img/img_logo_tirtir.png" alt="티르티르"><span>티르티르</span></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="section-6">
+                        <div class="img-visual-wrap">
+                            <img src="img/img_visual_bottom.png" aria-hidden="true">
+                        </div>
+                        <div class="text-wrap">
+                            <div class="text-1">매출 성장의 기적,<br>이제는 당신 차례입니다.</div>
+                            <div class="text-tel">02-567-3719</div>
+                            <div class="text-email">mc@godo.co.kr</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- //마케팅 메인 페이지 -->
+
+        <!--상담신청 버튼-->
+        <a href="javascript:window.open('https://marketing.godo.co.kr/regist/counsel-apply.gd?_reg_goodsCode=marketing_counsel', '상담신', 'width=700, height=900');" class="btn-counsel"><span>상담신청</span></a>
+
+        <!-- TOP 버튼 -->
+        <a href="#none" class="btn-top"></a>
+
+    </div>
+    <!-- //common wrapper-box -->
+
+    <script type="text/javascript">
+        $(document).ready(function(){ 
+            //인터렉션            
+            $(window).on('load scroll', function(){ //20201222 수정
+                var wScroll = $(window).scrollTop() + $(window).outerHeight()-50;
+
+                // 20201224 추가
+                if($(window).height() < 808){
+                    if(wScroll > $('.marketing-list').offset().top){
+                        setTimeout(function(){
+                            $('.marketing-list li').each(function(i){
+                                setTimeout(function(){
+                                    $('.marketing-list li').eq(i).addClass('on')
+                                }, i*400);
+                            });
+                        },500);
+                    }
+                }else{
+                    $('.marketing-list li').each(function(i){
+                        setTimeout(function(){
+                            $('.marketing-list li').eq(i).addClass('on')
+                        }, i*400);
+                    });
+                }
+                // //20201224 추가
+
+                // 20201224 삭제
+                // if(wScroll > $('.marketing-list').offset().top){
+                //     setTimeout(function(){
+                //         $('.marketing-list li').each(function(i){
+                //             setTimeout(function(){
+                //                 $('.marketing-list li').eq(i).addClass('on')
+                //             }, i*400);
+                //         });
+                //     },500);
+                // }
+
+                if(wScroll > $('.section-3').offset().top-100){
+                    setTimeout(function(){
+                        $('.product-list li').each(function(i){
+                            setTimeout(function(){
+                                $('.product-list li').eq(i).addClass('on')
+                            }, i*300);
+                        });
+                    },300);
+                }  
+
+                if(wScroll > $('.motion-01').offset().top){
+                    setTimeout(function(){
+                        $('.motion-01 .motion').each(function(i){
+                            setTimeout(function(){
+                                $('.motion-01 .motion').eq(i).addClass('on')
+                            }, i*300);
+                        });
+                    },600);
+                }  
+
+                if(wScroll > $('.motion-02').offset().top){
+                    setTimeout(function(){
+                        $('.motion-02 .motion').each(function(i){
+                            setTimeout(function(){
+                                $('.motion-02 .motion').eq(i).addClass('on')
+                            }, i*500);
+                        });
+                    },600);
+                }  
+
+                if(wScroll > $('.motion-03').offset().top){
+                    setTimeout(function(){
+                        $('.motion-03 .motion').each(function(i){
+                            setTimeout(function(){
+                                $('.motion-03 .motion').eq(i).addClass('on')
+                            }, i*200);
+                        });
+                    },600);
+                }  
+
+                if(wScroll > $('.motion-04').offset().top){
+                    setTimeout(function(){
+                        $('.motion-04 .motion').each(function(i){
+                            setTimeout(function(){
+                                $('.motion-04 .motion').eq(i).addClass('on')
+                            }, i*200);
+                        });
+                    },600);
+                }  
+            });  
+
+            //고객사 숫자 카운트업 펑션
+            function numberCounter(target_frame, target_number) {
+                this.count = 0; this.diff = 0;
+                this.target_count = parseInt(target_number);
+                this.target_frame = document.getElementById(target_frame);
+                this.timer = null;
+                this.counter();
+                runCheck = false;
+            };
+            numberCounter.prototype.counter = function() {
+                var self = this;
+                this.diff = this.target_count - this.count;
+                
+                if(this.diff > 0) {
+                    self.count += Math.ceil(this.diff / 5);
+                }
+                
+                this.target_frame.innerHTML = this.count.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+                
+                if(this.count < this.target_count) {
+                    this.timer = setTimeout(function() { self.counter(); }, 80);
+                } else {
+                    clearTimeout(this.timer);
+                }
+            };
+
+            //카운트업 - 스크롤 이벤트 한번만 실행
+            function scrollEvent() {
+            var hT = $('#counter').offset().top;
+                hH = $('#counter').outerHeight();
+                wH = $(window).height();
+                wS = $(this).scrollTop();
+                if (wS > (hT+hH-wH+200)){
+                    new numberCounter("counter", 2324/*고객사 숫자 입력*/ );
+                    $('.cnt-unit').addClass('on');
+                    window.removeEventListener("scroll", scrollEvent);
+                }
+            }
+            window.addEventListener("scroll", scrollEvent);
+
+            //상담신청 버튼 스크롤이벤트
+            $(window).on('scroll',function(){
+                var wTop = $(window).scrollTop();
+                var wHeight = $(window).height();
+                var ftTop = $('.footer-wrap').offset().top                
+                if ($('.btn-counsel').length > 0){        
+                    if (wTop >= (wHeight)) {
+                        $('.btn-counsel').addClass('fixed')
+                    } else {
+                        $('.btn-counsel').removeClass('fixed')
+                    }
+
+                    if (wTop >= (ftTop - wHeight)) {
+                        $('.btn-counsel').addClass('bottom')
+                    } else {
+                        $('.btn-counsel').removeClass('bottom')
+                    }
+                }
+            });
+
+            //배너
+            $('.banner-wrap').slick({
+                autoplay:true,
+                fade:true,
+                infinite:true,
+                speed: 1000,
+                cssEase: 'ease',
+                pauseOnHover:false,
+                draggabl:false,
+                pauseOnFocus:false, 
+                swipe:false, 
+                arrows:false,
+                dots:true
+            });
+
+
+            //고객사
+            $('.partners-wrap').slick({
+                slidesToShow:1,
+                slidesToScroll: 1,
+                autoplay:true,
+                speed: 2500,
+                cssEase: 'ease',
+                variableWidth: true,
+                pauseOnHover:true, //20201222 수정2
+                draggabl:false,
+                pauseOnFocus:false, 
+                swipe:false, 
+            });
+
+        });
+    </script>
+</body>
+</html>

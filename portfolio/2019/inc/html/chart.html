@@ -1,0 +1,926 @@
+
+<!DOCTYPE html>
+<html>
+<head> 
+	<meta charset="UTF-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta http-equiv="content-language" content="kr">
+	<meta http-equiv="imagetoolbar" content="no">
+	<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+	<meta name="title" content="{{웹사이트이름}}">
+	<meta name="description" content="{{웹사이트설명}}">
+	<meta name="copyright" content="{{웹사이트저작권정보}}">
+	<title>아파트 관리비_명세서</title>
+	<link rel="stylesheet" href="../asset/css/style.css" />
+</head>
+<body>
+	<div id="ebppWrap">		
+		<!--contents-->
+		<div id="ebppContent">
+		
+			<!-- tab nav 1depth START --> 
+            <nav class="tab_main dep1_nav">
+                <strong class="screen_out">메뉴 네비게이션</strong>
+                <div class="box_tab">
+                    <div class="scroller">
+                        <ul class="list_nav">
+						   <li class="on"><a href="#none" class="link_menu" aria-selected="true" role="tab"><span class="inner_txt">My BILL&amp;PAY</span></a></li>
+						   <li><a href="#none" class="link_menu" aria-selected="false" role="tab"><span class="inner_txt">My</span></a></li>
+						   <li><a href="#none" class="link_menu" aria-selected="false" role="tab"><span class="inner_txt">고객센터</span></a></li>
+					   </ul>
+                    </div>
+                </div>
+            </nav>
+            <!-- //tab nav 1depth END -->
+		
+			<!---------------------------------------------------------
+			//////////////////////////////////////////////아파트 관리비 명세서_이번 달 관리비
+			--------------------------------------------------------->
+			
+			<div class="box_con tab_wrap1">
+				<!-- 탭 활성화 : li 엘리먼트 .on 클래스 추가 -->
+				<ul class="tab_type1" role="tablist">
+					<li role="presentation">
+						<a href="#tabCon1" role="tab" aria-selected="false"><span>이번달 관리비</span></a>
+					</li>
+					<li class="on" role="presentation">
+						<a href="#tabCon2" role="tab" aria-selected="true" onclick="tabCon02_charts()"><span>상세보기</span></a><!-- 그래프 영역 모션을 위한  onclick 이벤트 -->
+					</li>
+					<li role="presentation">
+						<a href="#tabCon3" role="tab" aria-selected="false" onclick="tabCon03_charts();tabCon04_charts();"><span>비교보기</span></a><!--20190621 function 추가 -->
+					</li>
+				</ul>
+				
+				
+				<!-- 이번달 관리비 탭 컨텐츠 시작 -->
+				<div id="tabCon1" role="tabpanel">
+					<strong class="screen_out">이번달 관리비</strong>	
+					<!--20190624 수정-->
+					<div class="mg_btm30">
+						<div class="date_cnt">
+							<p class="cnt_info"><strong class="fs14">D-10</strong><em class="fs12">납기 내</em></p>
+						</div>
+						<h3 class="tit_type1">이지스엔터프라이즈99998<br>204동 305호</h3>
+					</div>
+					<div class="box_total_wrap box_total_wrap2 mg_btm20">
+						<div class="box_total">
+							<dl>
+								<dt>5월분 납부 금액</dt>
+								<dd role="text"><span>343,000</span>원</dd>
+							</dl>
+						</div>
+					</div>
+					<!--//20190624 수정-->	
+					
+					<!--20190624 수정 -->
+					<table cellspacing="0" class="tbl_type1 tbl_border mg_btm25">
+						<caption>납부 마감일 안내 테이블 </caption>
+						<colgroup>
+							<col width="33%">
+							<col width="33%">
+						</colgroup>
+						<tbody>				
+							<tr>
+								<th>납부 마감일</th>
+								<td><strong>YY년 MM월 DD일</strong></td>
+							</tr>
+							<tr>
+								<th>신한카드 결제마감일</th><!--20190624 자동이체 중 고객의 경우 신한결제 마감일은 노출하지 않습니다.-->
+								<td><strong>YY년 MM월 DD일</strong></td>
+							</tr>
+						</tbody>	
+						<!--20190621 아파트 코드 노출 영역 삭제 -->
+					</table>		
+					<!--20190624 자동이체 중 고객의 경우 아래 문구 노출-->
+					<!--<p class="txt_gap txt_gap3 mg_btm20">※ 신한카드에서 자동이체 됩니다.</p>-->
+					<!--//20190624 수정 -->
+					
+					<h3 class="tit_type2">납기 내</h3>
+					<ul class="list_type1 list_type1_5 pd_top20 pd_bot5">
+						<li class="bd_btm_none pd_bot15 pd_top0 mg_btm0">
+							<div class="cell">
+								<span class="fs14">5월분 부과 금액<br><!--20190621 월분 앞에 숫자(월) 추가 -->
+								<span class="fs12">(납기 내 금액 합계)</span>
+							</span></div>
+							<div class="price" role="text"><strong>194,300</strong>원</div>
+						</li>
+						<li class="bd_btm_none pd_bot20 pd_top0 mg_btm0">
+							<div class="cell">
+								<span class="fs14">할인 총계<br>
+							</span></div>
+							<div class="price" role="text"><strong>20</strong>원</div>
+						</li>
+					</ul>
+					
+					<h3 class="tit_type2">납기 후</h3>
+					<ul class="list_type1 list_type1_5 pd_top20 pd_bot5">
+						<li class="bd_btm_none pd_bot15 pd_top0 mg_btm0">
+							<div class="cell">
+								<span class="fs14">5월분 부과 금액<br><!--20190621 월분 앞에 숫자(월) 추가 -->
+								<span class="fs12">(납기 내 금액 + 납기 후 연체료)</span>
+							</span></div>
+							<div class="price" role="text"><strong>193,190</strong>원</div>
+						</li>
+						<li class="bd_btm_none pd_bot20 pd_top0 mg_btm0">
+							<div class="cell">
+								<span class="fs14">납기 후 연체료<br>
+								<span class="fs12">(납기 후 연체료는 일할 계산, 매일 다름)</span>
+							</span></div>
+							<div class="price" role="text"><strong>3,890</strong>원</div>
+						</li>
+					</ul>
+					
+					<!-- 20190925 기존 버튼을 플로팅 버튼으로 수정-->
+					<div class="btn_wrap floating">
+						<a href="#none" class="btn_type1 btn_type1_2" role="button"><span>관리비 결제</span></a>
+						<a href="#alert01" class="btn_alert btn_type1" role="button"><span>자동이체 신청</span></a><!--이미 자동이체 중인 경우 alert01 이 노출됩니다. -->
+					</div>
+					<!-- //20190925 기존 버튼을 플로팅 버튼으로 수정-->
+					
+				</div>
+				<!-- //이번달 관리비 탭 컨텐츠 끝 -->
+
+				
+				<!-- 상세보기 탭 컨텐츠 시작 -->
+				<div id="tabCon2" role="tabpanel" class="hide">
+					<strong class="screen_out">상세보기</strong>
+					<div class="mg_btm30">
+						<div class="date_cnt">
+							<p class="cnt_info"><strong class="fs14">D-10</strong><em class="fs12">납기 내</em></p>
+						</div>
+						<h3 class="tit_type1">이지스엔터프라이즈99998<br>204동 305호</h3>
+					</div>
+					<div class="statement_list">
+						<div class="list_top_type box_tit2 mg_btm0">
+							<span class="left_con">
+								<strong>전기 에너지</strong>
+							</span>
+							<span class="right_con">92,360원</span>
+						</div>
+						<div id="Echart" class="chartBox" style="height:80px;margin:0 auto;"></div>
+						<ul class="list_type1 mg_btm0 bd_btm_none">
+							<li>
+								<span class="left_con"><em>TV 수신료</em></span>
+								<span class="right_con"><strong>1,550</strong>원</span>
+							</li>
+							<li>
+								<span class="left_con"><em>세대전기료</em></span>
+								<span class="right_con"><strong>35,900</strong>원</span>
+							</li>
+							<li>
+								<span class="left_con"><em>공동전기료</em></span>
+								<span class="right_con"><strong>12,050</strong>원</span>
+							</li>
+						</ul>
+					</div>
+					
+					<div class="statement_list">
+						<div class="list_top_type box_tit2 mg_btm0">
+							<span class="left_con">
+								<strong>열 에너지</strong>
+							</span>
+							<span class="right_con">54,300원</span>
+						</div>
+						<div id="Fchart" class="chartBox" style="height:80px;margin:0 auto;"></div>
+						<ul class="list_type1 mg_btm0 bd_btm_none">
+							<li>
+								<span class="left_con"><em>도시가스사용료</em></span>
+								<span class="right_con"><strong>41,500</strong>원</span>
+							</li>
+							<li>
+								<span class="left_con"><em>온수사용료</em></span>
+								<span class="right_con"><strong>12,800</strong>원</span>
+							</li>
+						</ul>
+					</div>
+					
+					<div class="statement_list">
+						<div class="list_top_type box_tit2 mg_btm0">
+							<span class="left_con">
+								<strong>세대감면내역</strong>
+							</span>
+							<span class="right_con">9,000원</span>
+						</div>
+						<ul class="list_type1 mg_btm0 bd_btm_none">
+							<li>
+								<span class="left_con"><em>전기보장공제</em></span>
+								<span class="right_con"><strong>4,000</strong>원</span>
+							</li>
+							<li>
+								<span class="left_con"><em>대가족 할인</em></span>
+								<span class="right_con"><strong>5,000</strong>원</span>
+							</li>
+						</ul>
+					</div>
+					<p class="txt_gap txt_gap3 mg_btm20">※ 에너지할인은 복지할인(대가족할인, 다자녀할인), 절약할인 등이 포함된 합계입니다.</p>
+					
+					<div class="statement_list">
+						<div class="list_top_type box_tit2 mg_btm0">
+							<span class="left_con">
+								<strong>관리비 세부</strong><br>
+								<em class="txt_type3 fw_n txt_al mg_top0">(기간 : 2019.05.01~05.30)</em>
+							</span>
+						</div>
+						<table cellspacing="0" class="tbl_type1 bd_btm_none mg_btm0">
+							<caption>관리비 세부 내역 표 입니다.</caption>
+							<colgroup><col width="50%"><col width="*"></colgroup>
+							<thead>
+								<tr>
+									<th scope="col">항목</th>
+									<th scope="col">당월</th>
+									<th scope="col">비중</th>
+								</tr>
+							</thead>
+							<tbody>
+								<tr>
+									<td>일반관리비</td>
+									<td>0</td>
+									<td>N%</td>
+								</tr>
+								<tr>
+									<td>청소비</td>
+									<td>0</td>
+									<td>N%</td>
+								</tr>
+								<tr>
+									<td>소독비</td>
+									<td>0</td>
+									<td>N%</td>
+								</tr>
+								<tr>
+									<td>승강기유지비</td>
+									<td>0</td>
+									<td>N%</td>
+								</tr>
+								<tr>
+									<td>수선유지비</td>
+									<td>0</td>
+									<td>N%</td>
+								</tr>
+								<tr>
+									<td>장기수선충당금</td>
+									<td>0</td>
+									<td>N%</td>
+								</tr>
+								<tr>
+									<td>공동기본전기료</td>
+									<td>0</td>
+									<td>N%</td>
+								</tr>
+								<tr>
+									<td>경비비</td>
+									<td>0</td>
+									<td>N%</td>
+								</tr>
+								<tr>
+									<td>화재보험료</td>
+									<td>0</td>
+									<td>N%</td>
+								</tr>
+								<tr>
+									<td>세대전기료</td>
+									<td>0</td>
+									<td>N%</td>
+								</tr>
+								<tr>
+									<td>공동전기료</td>
+									<td>0</td>
+									<td>N%</td>
+								</tr>
+								<tr>
+									<td>정화오물수거료</td>
+									<td>0</td>
+									<td>N%</td>
+								</tr>
+								<tr>
+									<td>TV수신료</td>
+									<td>0</td>
+									<td>N%</td>
+								</tr>
+								<tr>
+									<td>승강기전기료</td>
+									<td>0</td>
+									<td>N%</td>
+								</tr>
+								<tr>
+									<td>세대수도료</td>
+									<td>0</td>
+									<td>N%</td>
+								</tr>
+								<tr>
+									<td>공동수도료</td>
+									<td>0</td>
+									<td>N%</td>
+								</tr>								
+							</tbody>
+							<tfoot>
+								<tr>
+									<td>총계</td>
+									<td>0</td>
+									<td>N%</td>
+								</tr>
+							</tfoot>
+						</table>
+					</div>
+					
+					<!-- 20190925 기존 버튼을 플로팅 버튼으로 수정-->
+					<div class="btn_wrap floating">
+						<a href="#none" class="btn_type1" role="button"><span>자동이체 신청</span></a><!--이미 자동이체 중인 경우 alert01 이 노출됩니다. -->
+					</div>
+					<!-- //20190925 기존 버튼을 플로팅 버튼으로 수정-->
+					
+				</div>
+				<!-- //상세보기 탭 컨텐츠 끝 -->
+				
+				
+				
+				<!-- 비교보기 탭 컨텐츠 시작 -->
+				<div id="tabCon3" role="tabpanel" class="hide">
+					<strong class="screen_out">비교보기</strong>
+					<div class="mg_btm30">
+						<div class="date_cnt">
+							<p class="cnt_info"><strong class="fs14">D-10</strong><em class="fs12">납기 내</em></p>
+						</div>
+						<h3 class="tit_type1">이지스엔터프라이즈99998<br>204동 305호</h3>
+					</div>
+					
+					<div class="statement_list">
+						<div class="list_top_type box_tit2 mg_btm0">
+							<span class="left_con">
+								<strong>전년비교</strong>
+							</span>
+						</div>
+						<div id="agoCharts" class="chartBox" style="height:80px;margin:0 auto;"></div>
+					</div>
+					
+					<div class="statement_list">
+						<div class="list_top_type box_tit2 mg_btm0">
+							<span class="left_con">
+								<strong>우리아파트 동일면적 비교</strong>
+							</span>
+						</div>
+						<div id="sizeCompCharts" class="chartBox" style="height:80px;margin:0 auto;"></div>
+					</div>
+					
+					<!--20190621 추가 -->
+					<div class="no_data bd_top_none mg_btm20">
+						<p>우리아파트 전기 검침일은<br>매월 <strong>26일</strong>입니다.</p>
+					</div>
+					<!--//20190621 추가 -->
+					
+					<div class="statement_list">
+						<div class="list_top_type box_tit2 mg_btm0">
+							<span class="left_con">
+								<strong>우리집 에너지사용요금</strong>
+							</span>
+						</div>
+						<div id="EcompCharts" class="chartBox" style="height:200px;margin:0 auto;"></div>
+					</div>
+					
+					
+					<!-- 20190925 기존 버튼을 플로팅 버튼으로 수정-->
+					<div class="btn_wrap floating">
+						<a href="#alert01" class="btn_alert btn_type1" role="button"><span>자동이체 신청</span></a><!--이미 자동이체 중인 경우 alert01 이 노출됩니다. -->
+					</div>
+					<!-- //20190925 기존 버튼을 플로팅 버튼으로 수정-->
+					
+				</div>
+				<!-- //비교보기 탭 컨텐츠 끝 -->
+			</div>
+			<!--20190624 이지스 화면 인지 문구 추가-->
+			<div class="aboutView">
+				<p class="logo_noti"><img src="../asset/images/contents/apt_i_logo.png" alt="아파트아이 로고"></p>
+			</div>
+			<!--//20190624 이지스 화면 인지 문구 추가-->
+			
+		</div>			
+	</div>	
+	<!-- //contents -->
+	<style>
+		.chartBox + .list_type1{border-top:1px solid #e6e6e6;}</style>
+	<script type="text/javascript" src="../asset/js/jquery-2.1.3.min.js"/></script>
+	<script type="text/javascript" src="../asset/js/common.js"></script>
+	<script type="text/javascript" src="../asset/js/highcharts.js"></script>
+	
+	
+	<script>
+	//////////////가로바는 세로(왼쪽)가 x축 가로(하단)이 y축 입니다.
+	function tabCon02_charts(){
+			/////////////////////////////////////////////////////////Echart(에너지차트) 스크립트
+			Highcharts.setOptions({
+				lang:{
+					thousandsSep:',' //원단위 comma 표시
+				}
+			});
+			Highcharts.chart('Echart',{
+			chart: {
+					type: 'bar',
+					spacingBottom:10,
+					spacingTop:10,
+					spacingLeft:15,//20190718 추가
+					spacingRight:0,
+					plotBorderWidth:0
+			},
+			credits:{enabled:false},
+			title:{text:null},
+			subtitle:{text:null},
+			xAxis:{
+				startOnTicd:false,
+				endOnTick:false,
+				tickWidth:0,
+				lineWidth:0,
+				gridLineWidth:0,
+				offset:40,//20190718 추가
+				type:'category',
+				categories:['<font style="color:#553e96;">우리집</font>', '동일면적'], //x축 데이터별 카테고리
+				labels:{
+					align:'left',//20190718 추가
+					style:{
+						fontFamily:'ShinhanCard',
+						fontSize:'13px',
+						fontWeight:900,
+						color:['#191919']
+					}
+				}
+			},
+			yAxis:{
+				tickWidth:0,
+				lineWidth:0,
+				gridLineWidth:0,
+				min:0,
+				max:200000, //기준치가 됩니다.
+				title:{
+					text:''
+				},
+				labels:{enabled:false}
+			},
+			legend:{enabled:false},
+			plotOptions:{
+				series:{
+					states:{
+						hover:{
+							enabled:false
+						}
+					},
+					
+					borderWidth:0,
+					dataLabels:{
+						enabled:true,
+						format:'{point.y:,3f}원'
+					}
+				},
+				bar:{
+					dataLabels:{
+							style:{
+									fontFamily:'ShinhanCard',
+									fontSize:'13px'									
+						}
+					}
+				}
+			},
+			tooltip:{enabled:false},
+			series:[{name:" ",
+						colorByPoint:true,
+						data:[{
+									y:88000, //y축 중 우리집 데이터									
+									color:"#553e96" //y축 중 우리집 데이터 컬러			
+								},{
+									y:88000, //y축 중 동일면적 데이터	
+									color:"#e6e6e6" //y축 중 동일면적 데이터	
+								}]
+					 }]
+			});
+			
+			/////////////////////////////////////////////////////////Fchart(열에너지차트) 스크립트
+			Highcharts.chart('Fchart',{
+			chart: {
+					type: 'bar',
+					spacingBottom:10,
+					spacingTop:10,
+					spacingLeft:15,//20190718 추가
+					spacingRight:0,
+					plotBorderWidth:0
+			},
+			credits:{enabled:false},
+			title:{text:null},
+			subtitle:{text:null},
+			xAxis:{
+				startOnTicd:false,
+				endOnTick:false,
+				tickWidth:0,
+				lineWidth:0,
+				gridLineWidth:0,
+				offset:40,//20190718 추가
+				type:'category',
+				categories:['<font style="color:#553e96;">우리집</font>', '동일면적'], //x축 데이터별 카테고리
+				labels:{
+					align:'left',//20190718 추가
+					style:{
+						fontFamily:'ShinhanCard',
+						fontSize:'13px',
+						fontWeight:900,
+						color:['#191919']
+					}
+				}
+			},
+			yAxis:{
+				tickWidth:0,
+				lineWidth:0,
+				gridLineWidth:0,
+				min:0,
+				max:200000, //기준치가 됩니다.
+				title:{
+					text:''
+				},
+				labels:{enabled:false}
+			},
+			legend:{enabled:false},
+			plotOptions:{
+				series:{
+					states:{
+						hover:{
+							enabled:false
+						}
+					},
+					borderWidth:0,
+					dataLabels:{
+						enabled:true,
+						format:'{point.y:,3f}원'
+					}
+				},
+				bar:{
+					dataLabels:{
+							style:{
+									fontFamily:'ShinhanCard',
+									fontSize:'13px'									
+						}
+					}
+				}
+			},
+			tooltip:{enabled:false},
+			series:[{name:" ",
+						colorByPoint:true,
+						data:[{
+									y:80000, //y축 중 우리집 데이터									
+									color:"#553e96" //y축 중 우리집 데이터 컬러			
+								},{
+									y:60000, //y축 중 동일면적 데이터	
+									color:"#e6e6e6" //y축 중 동일면적 데이터	
+								}]
+					 }]
+			});
+		}
+		
+		
+
+		
+		function tabCon03_charts(){
+		
+			////////////////////////////////////////////////agoCharts(전년비교) 스크립트
+			Highcharts.chart('agoCharts',{
+			chart: {
+					type: 'bar',
+					spacingBottom:10,
+					spacingTop:10,
+					spacingLeft:15,//20190718 추가
+					spacingRight:0,
+					plotBorderWidth:0
+			},
+			title:{text:null},
+			subtitle:{text:null},
+			xAxis:{
+				startOnTicd:false,
+				endOnTick:false,
+				tickWidth:0,
+				lineWidth:0,
+				gridLineWidth:0,
+				offset:40,//20190718 추가
+				type:'category',
+				categories:['<font style="color:#553e96;">이번달</font>', '전년동월'], //x축 데이터별 카테고리
+				labels:{
+					align:'left',//20190718 추가
+					style:{
+						fontFamily:'ShinhanCard',
+						fontSize:'13px',
+						fontWeight:900,
+						color:['#191919']
+					}
+				}
+			},
+			yAxis:{
+				tickWidth:0,
+				lineWidth:0,
+				gridLineWidth:0,
+				min:0,
+				max:200000, //기준치가 됩니다.
+				title:{
+					text:''
+				},
+				labels:{enabled:false}
+			},
+			credits:{enabled:false},
+			legend:{enabled:false},
+			plotOptions:{
+				series:{
+					states:{
+						hover:{
+							enabled:false
+						}
+					},
+					
+					borderWidth:0,
+					dataLabels:{
+						enabled:true,
+						format:'{point.y:,3f}원'
+					}
+				},
+				bar:{
+					dataLabels:{
+							style:{
+									fontFamily:'ShinhanCard',
+									fontSize:'13px'									
+						}
+					}
+				}
+			},
+			tooltip:{enabled:false},
+			series:[{name:" ",
+						colorByPoint:true,
+						data:[{
+									y:80000, //y축 중 이번달 데이터									
+									color:"#553e96" //y축 중 이번달 데이터 컬러			
+								},{
+									y:60000, //y축 중 전년동월 데이터	
+									color:"#e6e6e6" //y축 중 전년동월 데이터	
+								}]
+					 }]
+			});
+			
+			
+			/////////////////////////////////////////////////////////////sizeCompCharts(전년비교) 스크립트
+			Highcharts.chart('sizeCompCharts',{
+			chart: {
+					type: 'bar',
+					spacingBottom:10,
+					spacingTop:10,
+					spacingLeft:15,//20190718 추가
+					spacingRight:0,
+					plotBorderWidth:0
+			},
+			title:{text:null},
+			subtitle:{text:null},
+			xAxis:{
+				startOnTicd:false,
+				endOnTick:false,
+				tickWidth:0,
+				lineWidth:0,
+				gridLineWidth:0,
+				offset:40,//20190718 추가
+				type:'category',
+				categories:['<font style="color:#553e96;">우리집</font>', '평균'], //x축 데이터별 카테고리
+				labels:{
+					align:'left',//20190718 추가
+					style:{
+						fontFamily:'ShinhanCard',
+						fontSize:'13px',
+						fontWeight:900,
+						color:['#191919']
+					}
+				}
+			},
+			yAxis:{
+				tickWidth:0,
+				lineWidth:0,
+				gridLineWidth:0,
+				min:0,
+				max:200000, //기준치가 됩니다.
+				title:{
+					text:''
+				},
+				labels:{enabled:false}
+			},
+			credits:{enabled:false},
+			legend:{enabled:false},
+			plotOptions:{
+				series:{
+					states:{
+						hover:{
+							enabled:false
+						}
+					},
+					borderWidth:0,
+					dataLabels:{
+						enabled:true,
+						format:'{point.y:,3f}원'
+					}
+				},
+				bar:{
+					dataLabels:{
+							style:{
+									fontFamily:'ShinhanCard',
+									fontSize:'13px'									
+						}
+					}
+				}
+			},
+			tooltip:{enabled:false},
+			series:[{name:" ",
+						colorByPoint:true,
+						data:[{
+									y:80000, //y축 중 우리집 데이터									
+									color:"#553e96" //y축 중 우리집 데이터 컬러			
+								},{
+									y:60000, //y축 중 평균 데이터	
+									color:"#e6e6e6" //y축 중 평균 데이터	
+								}]
+					 }]
+			});
+		}
+		
+		
+		///20190621 전체 height 변경으로 스크롤이벤트 추가 - 기존 tabCon03_charts 함수내에 포함에서 tabCon04_charts함수로 변경
+		function tabCon04_charts(){
+			///////////////////////////////////////////////EcompCharts(에너지 사용량 비교) 스크립트	
+			Highcharts.chart('EcompCharts',{
+				colors:[/*온수*/'#24b0c9',/*난방*/'#1995d3',/*수도*/'#3f6ee2',/*전기*/'#9280ec',/*가스*/'#6452c8'], //20190925수정
+				chart: {
+					type: 'bar',
+					spacingBottom:0,
+					spacingTop:0, //20190925수정
+					spacingLeft:15,
+					spacingRight:0,
+					marginBottom:10
+				},
+				title:{text:null},
+				xAxis:{
+					startOnTick:false,//20190925수정
+					endOnTick:false,
+					tickWidth:0,
+					lineWidth:0,
+					offset:60,//20190925수정
+					gridLineWidth:0,
+					type:'category',
+					categories:['당월<br>129,000원', '전월<br>129,000원', '전년<br>129,000원'], //금액 부분에는 해당 월의 금액, 각각의 레이블에 맞는 기간의 고객 요금이 표기 되어야 합니다.
+					labels:{
+						align:'left',
+						style:{
+							fontFamily:'ShinhanCard',
+							fontSize:'13px',
+							fontWeight:900,
+							color:'#191919',//20190925수정
+							lineHeight:'20px',//20190925수정
+							marginTop:'-50px',//20190925수정
+						}
+					}
+				},
+				yAxis:{
+					tickWidth:0,
+					lineWidth:0,
+					gridLineWidth:0,
+					min:0,
+					max:100,
+					title:{
+						text:''
+					},
+					labels:{enabled:false}
+				},
+				legend:{
+					enabled:false
+				},
+				credits:{
+					enabled:false
+				},
+				plotOptions:{
+					series:{
+						states:{
+							hover:{
+								enabled:false
+							}							
+						},
+						stacking:'normal',
+						pointPlacement:-0.17,
+						borderWidth:0,
+						pointWidth:20,						
+						dataLabels:{
+							enabled:true,
+							format:'{series.name}'+'<br/>'+'<span style="color:#fff;">{point.y}'+'%'+'</span>',
+							labels:{
+								align:'left',
+							},
+							style:{
+								textOutline:0,
+								color:'#ffffff',
+								lineHeight:'20px'
+							}
+						}
+					},
+					bar:{
+						dataLabels:{
+								style:{
+										fontFamily:'ShinhanCard',
+										fontSize:'13px'
+							}
+						},
+						grouping:true, //20190925 추가
+						groupPadding:20 //20190925 추가
+					}
+				},
+				tooltip:{
+					enabled:false
+				},
+				series:[{
+								name:"온수",
+								data:[20,20,8], //온수에 대한 y축 데이터 값
+								dataLabels:{
+										style:{
+												color:'#24b0c9'
+									},									
+									y:-11
+								}
+							},{
+								name:"난방",
+								data:[10,30,12], //난방에 대한 y축 데이터 값
+								dataLabels:{
+										style:{
+												color:'#1995d3'
+									},
+									y:-11
+								}
+							},{
+								name:"수도",
+								data:[20,5,30], //수도에 대한 y축 데이터 값
+								dataLabels:{
+										style:{
+												color:'#3f6ee2'
+									},
+									y:-11
+								}
+							},{
+								name:"전기",
+								data:[null,35,30], //전기에 대한 y축 데이터 값 20190726 0대신 null로 입력
+								dataLabels:{
+										style:{
+												color:'#9280ec'
+									},
+									y:-11
+								}
+							},{
+								name:"가스",
+								data:[50,10,20], //가스에 대한 y축 데이터 값
+								dataLabels:{
+										style:{
+												color:'#6452c8'
+									},
+									y:-11
+								}
+							}]
+				
+			});
+			
+		}
+		
+		
+		tabCon02_charts();
+		
+		$(function(){
+			// 20190925 플로팅 버튼으로 하단 영역 가려짐 방지 스크립트 추가
+			var floating = $('#ebppContent .floating').height();
+			$('#ebppContent').css('padding-bottom',floating);
+			
+			//window.height 변경으로 스크롤 이벤트 추가
+			$(window).scroll(function(){
+				scrollBottom=$(window).height()+$(window).scrollTop();
+				triggerBottom=$('#ebppContent').height() + floating; //20190925 추가
+				
+				scrollTop=$(window).scrollTop();
+				triggerTop=$('#ebppContent').offset().top
+				
+				if(scrollTop==triggerTop){
+					tabCon02_charts();
+					tabCon03_charts();
+				}else if(scrollBottom==triggerBottom)  {
+					tabCon04_charts();
+				}
+			});
+		});
+	
+		
+		
+	</script>
+		
+	
+	<div class="layer_dimmed"></div>
+	
+	<!-- 자동이체 신청중인경우 불가 알럿창 노출 -->
+	<div id="alert01" class="layer_alert" role="alert">
+		<p class="txt_cont">이미 자동이체 신청 중입니다.</p>
+		<div class="btn_wrap_layer">
+			<a href="#none" class="button btn_close" role="button"><span>확인</span></a>
+		</div>
+	</div>
+	<!-- 자동이체 신청중인경우 불가 알럿창 노출 -->
+	
+	
+		
+</body>
+</html>

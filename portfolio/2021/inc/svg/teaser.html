@@ -1,0 +1,717 @@
+
+
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="euc-kr">
+    <title>고도:쇼핑몰 주요기능</title>
+    <script type="text/javascript" src="https://code.jquery.com/jquery-1.11.1.min.js"></script>
+    <script type="text/javascript" src="http://static.godo.co.kr/extern/jquery-cookie/jquery.cookie-1.4.1.min.js"></script>
+
+    <style>
+        *{margin:0;padding:0;}
+        li{list-style: none;}
+        a{text-decoration:none;color:#000;}
+        em{font-style:normal;}
+        .comm-gnb-wrap h1{display:inline-block;float:left;padding:10px 0;}
+        .comm-gnb-wrap h1 a img{width:76px;vertical-align:middle;}
+        .comm-gnb-wrap h1 .txt-sub{display:inline-block;margin-left:10px;padding-bottom:4px;font-weight:500;font-size:16px;color:#f7444e;vertical-align:middle;}
+        .comm-header-wrap{position:absolute;top:0;left:0;right:0;width:100%;box-sizing:border-box;z-index:1000;}
+        .comm-header-wrap .header{position:relative;transition:all .3s;}
+        .comm-header-wrap .header.sub-header{border-bottom:1px solid #e6e6e6;background:#fff;}
+        .comm-header-wrap .header.type-shadow{box-shadow:0 4px 6px 0 rgba(0, 0, 0, 0.06);}
+        .comm-header-wrap.fixed{position:fixed;}
+        .comm-header-wrap.fixed .header{top:-36px;box-shadow:0 4px 6px 0 rgba(0, 0, 0, 0.06);background:#fff;}
+        .comm-header-wrap.fixed .header.sub-header{border-bottom:1px solid #fff;}
+        .comm-header-wrap.fixed.up .header{top:0;}
+        .comm-header-wrap.active{background:#fff;}
+
+        .comm-gnb-wrap{position:relative;padding:10px 0 0;transition:all .2s;;}
+        .comm-gnb-wrap.fixed{position:fixed;width:100%;top:0;left:0;right:0;background:#fff;}
+        .comm-gnb-wrap .comm-gnb-box{width:1200px;margin:0 auto;}
+        .comm-gnb-wrap .comm-gnb-box:after{display:block;content:'';clear:both;}
+        .comm-gnb-wrap .comm-gnb{float:left;box-sizing:border-box;margin-left:60px;}
+        .comm-gnb-wrap .comm-gnb > .depth-1:after{display:block;content:'';clear:both;}
+        .comm-gnb-wrap .comm-gnb > .depth-1 > li:nth-of-type(1){margin-left:0;}
+        .comm-gnb-wrap .comm-gnb > .depth-1 > li{float:left;margin-left:30px;}
+        .comm-gnb-wrap .comm-gnb > .depth-1 > li > a{position:relative;display:block;line-height:50px;box-sizing:border-box;padding-bottom:10px;font-weight:500;font-size:18px;color:#121212;font-family: 'Montserrat';}
+        .comm-gnb-wrap .comm-gnb > .depth-1 > li > a:hover:before{display:block;content:'';width:100%;height:6px;background:#f7444e;position:absolute;left:0;bottom:-1px;}
+
+
+        /*200928 Æ¼?¿½?¿½ - kbn*/
+
+        .teaser-header{transition:all ease .4s;position:fixed !important;}
+        .teaser-header.fixed{top:-74px;}
+        .teaser-header.fixed.up{top:0;}
+        .teaser-header.fixed .header{top:inherit;}
+        .teaser-header .header.sub-header{border:0;}
+        .teaser-header .comm-gnb-wrap {padding:14px 0 0 0 ;}
+        .teaser-header .comm-gnb-wrap .comm-gnb{margin:0 0 0 365px}
+        .teaser-header .comm-gnb-wrap .comm-gnb > .depth-1 > li{margin-left:45px;}
+        .teaser-header .comm-gnb-wrap .comm-gnb > .depth-1 > li > a.on{color:#111111;letter-spacing:4px;}
+        .teaser-header .comm-gnb-wrap .comm-gnb > .depth-1 > li > a.on:after{content:"";display:block;width:100%;height:6px;position:absolute;left:0;bottom:-8px;background:-webkit-linear-gradient(-45deg, #6d1bdf 0%, #f7444e 100%);-moz-background:linear-gradient(-45deg, #6d1bdf 0%, #f7444e 100%);-ms-background:linear-gradient(-45deg, #6d1bdf 0%, #f7444e 100%);background:linear-gradient(-45deg, #6d1bdf 0%, #f7444e 100%);}
+        .teaser-header .comm-gnb-wrap .comm-gnb > .depth-1 > li > a{color:#999999;font-size:20px;font-weight:bold;}
+        /* .teaser-header .comm-gnb-wrap .comm-gnb > .depth-1 > li > a:hover{color:#111111;border:0;} */
+        .teaser-header .comm-gnb-wrap .comm-gnb > .depth-1 > li > a:hover:before{display:none;}
+        .teaser-header .comm-gnb-wrap .comm-gnb > .depth-1 > li > a > span{text-align:center;line-height:1;margin:-4px 0 0 0;color:#adadad;display:block;font-family:'Montserrat';font-weight:bold;font-size:12px;}
+        /* .teaser-header .comm-gnb-wrap .comm-gnb > .depth-1 > li > a:hover > span{color:#111111;} */
+        .teaser-header .comm-gnb-wrap .count-down{color:#283440;font-size:25px;font-family:'Montserrat';font-weight:bold;float:right;margin:10px 0 0 0;}
+        .teaser-header .comm-gnb-wrap .count-down>*{display:inline-block;vertical-align:middle;}
+        .teaser-header .comm-gnb-wrap .count-down>div{font-family:'Montserrat';font-weight:600;font-size:22px;}
+        .teaser-header .comm-gnb-wrap .count-down .time{margin:-4px 0 0 6px}
+        .teaser-header .comm-gnb-wrap .count-down .time .colon{color:#283440;vertical-align:middle;width:4px;height:14px;display:inline-block;margin:0 5px;font-size:0;background:url('img/icon_countdown_colon.png') no-repeat 0 0;background-size:cover;}
+        .teaser-header .comm-gnb-wrap .count-down .time span > em{color:#f0f0f0;margin:0 4px 0 0;font-family:'Montserrat';font-weight:600;font-size:20px;line-height:34px;background:#28333f;width:28px;height:34px;display:inline-block;text-align:center;padding:0.5% 0 0 0;box-sizing:border-box;border-radius:3px;}
+        .teaser-header .comm-gnb-wrap .count-down .time span > em:last-child{margin:0;}
+        .teaser-wrap {padding:75px 0 0 0;margin-top:-158px;}
+        .teaser-wrap .teaser-content .btn-gradation{color:#ffffff;font-weight:bold;background:-webkit-linear-gradient(-45deg, #6d1bdf 0%, #ff2828 50%, #6d1bdf 100%);-moz-background:linear-gradient(-45deg, #6d1bdf 0%, #ff2828 50%, #6d1bdf 100%);-ms-background:linear-gradient(-45deg, #6d1bdf 0%, #ff2828 50%, #6d1bdf 100%);background:linear-gradient(-45deg, #6d1bdf 0%, #ff2828 50%, #6d1bdf 100%);}
+        .teaser-wrap .teaser-content .btn-gradation{background-size:500% auto;animation:preOrder 3s infinite alternate linear;}
+        @keyframes preOrder{
+            0%{background-position:100% 0%;}
+            50%{background-position:0% 50%;}
+            100%{background-position:100% 0%;}
+        }
+        @-moz-keyframes preOrder{
+            0%{background-position:100% 0%;}
+            50%{background-position:0% 50%;}
+            100%{background-position:100% 0%;}
+        }
+        @-ms-keyframes preOrder{
+            0%{background-position:100% 0%;}
+            50%{background-position:0% 50%;}
+            100%{background-position:100% 0%;}
+        }
+        @-webkit-keyframes preOrder{
+            0%{background-position:100% 0%;}
+            50%{background-position:0% 50%;}
+            100%{background-position:100% 0%;}
+        }
+
+        .teaser-wrap .teaser-content .section-1{background:#0e0d0e;position:relative;margin-top:160px;padding:160px 0 50px 0;height:calc(100vh - 75px);box-sizing: border-box;overflow:hidden;}
+        .teaser-wrap .teaser-content .section-1:before{opacity:0;content:"";display:block;width:100%;height:100%;background-size:cover;position:absolute;top:0;left:0;background:url('img/teaser_top_bg.png') no-repeat top right;animation:bgmove 0.5s ease-in forwards;animation-delay:2.8s;}
+        @keyframes bgmove{
+            0%{opacity:0;}
+            100%{opacity:1;}
+        }
+        @-moz-keyframes bgmove{
+            0%{opacity:0;}
+            100%{opacity:1;}
+        }
+        @-ms-keyframes bgmove{
+            0%{opacity:0;}
+            100%{opacity:1;}
+        }
+        @-webkit-keyframes bgmove{
+            0%{opacity:0;}
+            100%{opacity:1;}
+        }
+        .teaser-wrap .teaser-content .section-1 .teaser-title{margin:0 0 0 0;position:relative;z-index:2;top:30%;transform:translate(0,-50%)}
+        .teaser-wrap .teaser-content .section-1 .teaser-title em{font-size:28px;display:block;text-align:center;color:#fff;}
+        .teaser-wrap .teaser-content .section-1 .teaser-title strong{font-size:100px;display:block;text-align:center;color:#fff;margin:20px 0 30px 0;font-family: 'Montserrat';}
+        .teaser-wrap .teaser-content .section-1 .teaser-title span{font-size:20px;display:block;text-align:center;color:#9d9d9d;line-height:1.8;}
+        .teaser-wrap .teaser-content .section-1 .teaser-title .btn-wrap{text-align:center;margin:25px 0 0 0;}
+        .teaser-wrap .teaser-content .section-1 .teaser-title .pre-reserv-btn{border-radius:30px;margin:0 auto;display:inline-block;width:200px;padding:19px 0 21px 0;margin-left:5px;text-align:center;font-weight:700;font-size:16px;color:#fff;}
+        body.type-ie-9 .teaser-wrap .teaser-content .section-1 .teaser-title .pre-reserv-btn{background:#6d1bdf;}
+
+        .teaser-wrap .teaser-content .section-1 .teaser-trigger{position: Absolute;bottom: 50px;left: 50%;text-align: center;margin:0 0 0 -55px;}
+        .teaser-wrap .teaser-content .section-1 .teaser-trigger .open-date{font-family:'Montserrat';color:#ff0050;text-align:center;font-weight:bold;margin:180px 0 0 0;}
+        .teaser-wrap .teaser-content .section-1 .teaser-trigger .teaser-scroll{position:relative;top:15px;margin:0 0 0 5px !important;z-index:2;text-align:center;animation:scroll 0.7s infinite ease-in-out alternate;animation-delay:4s;}
+        .teaser-wrap .teaser-content .section-1 .teaser-trigger .teaser-scroll:after{content:"";display:block;width:1px;height:60px;background:#b0b0b0;position:absolute;top:73px;left:50%;margin:0 0 0 -1px;z-index:1;}
+        @-webkit-keyframes scroll{
+            0%{top:15px}
+            100%{top:25px;}
+        }
+        @-moz-keyframes scroll{
+            0%{top:15px}
+            100%{top:25px;}
+        }
+        @-ms-keyframes scroll{
+            0%{top:15px}
+            100%{top:25px;}
+        }
+        @keyframes scroll{
+            0%{top:15px}
+            100%{top:25px;}
+        }
+        .teaser-wrap .teaser-content .section-1 #svg-ani{position: absolute;bottom: 0;left: 50%;transform:translate(-50%, 0);max-width: 1600px;width: 100%;height: 100%;}
+        .teaser-wrap .teaser-content .section-1 #mask-p{position:Absolute;top:0;lefT:0;-webkit-filter:drop-shadow(14px 9px 40px rgba(0, 0, 0, .7));filter:drop-shadow(14px 9px 40px rgba(0, 0, 0, .7))}
+        .teaser-wrap .teaser-content .section-1 #mask-r{position:absolute;top:0;left:0;-webkit-filter:drop-shadow(14px 9px 40px rgba(0, 0, 0, .7));filter:drop-shadow(14px 9px 40px rgba(0, 0, 0, .7))}
+        .teaser-wrap .teaser-content .section-1 #mask-o{position:Absolute;top:0;lefT:0;-webkit-filter:drop-shadow(14px 9px 40px rgba(0, 0, 0, .7));filter:drop-shadow(14px 9px 40px rgba(0, 0, 0, .7))}
+        .teaser-wrap .teaser-content .section-1 #mask-p path, #mask-r path, #mask-o path{fill-opacity:0;}
+
+        .teaser-wrap .teaser-content .section-1 .mask-p{width:35%;height:694px;position:absolute;bottom:0;lefT:0;animation:maskPmv both linear infinite 15s 1.5s;; animation-delay:4s;}
+        @keyframes maskPmv{
+            0% {transform:translate(0%,0%);}
+            25%{transform:translate(-5%,-7%);}
+            50%{transform:translate(-2%,7%);}
+            75%{transform:translate(5%,10%);}
+            100% {transform:translate(0%,0%);}
+        }
+        .teaser-wrap .teaser-content .section-1 .mask-r{width:20%;height:533px;position:absolute;bottom:-200px;lefT:30%;animation:maskRmv both linear infinite 18s 1.5s;; animation-delay:4.4s;}
+        @keyframes maskRmv{
+            0% {transform:translate(0%,0%);}
+            20%{transform:translate(5%,-5%);}
+            50%{transform:translate(3%,5%);}
+            70%{transform:translate(-10%,4%);}
+            100% {transform:translate(0%,0%);}
+        }
+        .teaser-wrap .teaser-content .section-1 .mask-o{width:34%;height:528px;position:absolute;bottom:0;right:50px;animation:maskOmv both linear infinite 20s 1.5s; animation-delay:4.8s;}
+        @keyframes maskOmv{
+            0% {transform:translate(0%,0%);}
+            25%{transform:translate(-12%,-2%);}
+            50%{transform:translate(-2%,7%);}
+            75%{transform:translate(14%,13%);}
+            100% {transform:translate(0%,0%);}        
+        }
+
+        @media screen and (max-width:1280px){
+            .teaser-wrap .teaser-content .section-1 .mask-p{height:60%}
+            .teaser-wrap .teaser-content .section-1 .mask-o{height:50%;}
+        }
+
+        .ie-gradient{display:none;}
+        .ie-not{display:block;}
+
+        .section-2 {padding:140px 0;height:auto;background:#f2f2f2;position:relative;}
+        .section-2 .pre-reserv-apply{width:1200px;margin:0 auto;}
+        .section-2 .pre-reserv-apply:after{content:"";display:block;clear:both;}
+        .section-2 .pre-reserv-apply .apply-info{float:left;width:600px;}
+        .section-2 .pre-reserv-apply .apply-info .apply-title{font-size:48px;color:#111111;font-weight:bold;line-height:1.5;font-family: 'Montserrat';}
+        .section-2 .pre-reserv-apply .apply-info .apply-sub-title{font-size:18px;color:#111111;line-height:1.5;margin:20px 0 0 0;}
+        .section-2 .pre-reserv-apply .apply-info .apply-term{margin:20px 0 0 0;}
+        .section-2 .pre-reserv-apply .apply-info .apply-term em{font-size:14px;margin-right:10px;text-align:center;line-height:26px;color:#ffffff;display:inline-block;width:76px;height:26px;border-radius:13px;background:#3a29fc;}
+        .section-2 .pre-reserv-apply .apply-info .apply-term span{font-family:"Montserrat";font-size:16px;color:#111111;font-weight:bold;}
+        .section-2 .pre-reserv-apply .apply-info .apply-step{text-align:center;display:inline-block;margin:80px 0 0 0;}
+        .section-2 .pre-reserv-apply .apply-info .apply-step .step{display:inline-block;vertical-align:top;position:Relative;margin:0 60px 0 0;}
+        .section-2 .pre-reserv-apply .apply-info .apply-step .step:after{content:"";display:block;width:67px;height:1px;background:#3a29fc;position:absolute;top:60px;righT:-65px;}
+        .section-2 .pre-reserv-apply .apply-info .apply-step .step:last-child{margin:0 0 0 12px;}
+        .section-2 .pre-reserv-apply .apply-info .apply-step .step:last-child:after{display:none;}
+        .section-2 .pre-reserv-apply .apply-info .apply-step .step .step-date{color:#3a29fc;font-family:'Montserrat';font-weight:bold;}
+        .section-2 .pre-reserv-apply .apply-info .apply-step .step .step-circle{position:relative;top:20px;opacity:0;width:60px;height:60px;border-radius:30px;text-align:center;padding:18px 0;margin:11px auto 7px auto;background:none;border:2px solid #3a29fc;box-sizing:border-box;transition:all ease-in .5s;}
+
+        .section-2 .pre-reserv-apply .apply-info .apply-step .step .step-circle.on{top:0;opacity:1;}
+        .section-2 .pre-reserv-apply .apply-info .apply-step .step .step-check{display:block;margin:0 0 -6px 0;}
+        .section-2 .pre-reserv-apply .apply-info .apply-step .step .step-num{font-family:'Montserrat';font-weight:bold;color:#3a29fc;}
+        .section-2 .pre-reserv-apply .apply-info .apply-step .step .step-num.italic{font-style:italic;font-size:13px;font-weight:bold;}
+        .section-2 .pre-reserv-apply .apply-info .apply-step .step.on .step-circle{background:#3a29fc;padding:13px 0 0 0 ;}
+        .section-2 .pre-reserv-apply .apply-info .apply-step .step.on .step-check+.step-num{color:#ffffff;}
+        .section-2 .pre-reserv-apply .apply-info .apply-step .step-cont{color:#222222;}
+        .section-2 .pre-reserv-apply .apply-form{float:left;width:600px;height:450px;box-sizing:border-box;padding:65px 100px;backgrounD:#ffffff;box-shadow:5px 5px 10px rgba(0, 0, 0, 0.2);}
+        .section-2 .pre-reserv-apply .apply-form .form-submit{cursor:pointer;font-size:18px;width:400px;height:68px;line-height:68px;display:inline-block;border:0;border-radius:15px;margin:35px 0 0 0;}
+        .section-2 .pre-reserv-apply .apply-form .input-wrap + .input-wrap{margin:30px 0 0 0;}
+        .section-2 .pre-reserv-apply .apply-form .input-wrap label{font-size:16px;color:#111111;display:block;font-weight:bold;}
+        .section-2 .pre-reserv-apply .apply-form .input-wrap input[type="text"]{border:0;border-bottom:3px solid #111111;width:100%;font-size:16px;margin:23px 0 0 0;padding:0 0 5px 0;}
+        .section-2 .pre-reserv-apply .apply-form .input-wrap.checkbox{margin:25px 0 0 0;position:relative;}
+        .section-2 .pre-reserv-apply .apply-form .input-wrap.checkbox input[type="checkbox"]{display:inline-block;vertical-align:middle;width:18px;height:18px;border:1px solid rgba(0, 0, 0, 0.5) !important;border-radius:0 !important;box-shadow:0 !important}
+        .section-2 .pre-reserv-apply .apply-form .input-wrap.checkbox label{display:inline-block;vertical-align:middle;font-size:15px;font-weight:500;margin:0 0 0 7px;}
+        .section-2 .pre-reserv-apply .apply-form .input-wrap.checkbox .tooltip{position:absolute;top:0;right:0;}
+        .section-2 .pre-reserv-apply .apply-form .input-wrap.checkbox .tooltip-btn{position:Absolute;top:2px;right:0;font-weight:500;border-bottom:1px solid #111111;line-height:1;}
+        .section-2 .pre-reserv-apply .apply-form .input-wrap.checkbox .tooltip-close{position:absolute;top:15px;right:15px;}
+        .section-2 .pre-reserv-apply .apply-form .input-wrap.checkbox .tooltip-layer{opacity:0;visibility:hidden;transition:all ease .4s;position:absolute;top:-210px;right:-310px;padding:20px;box-sizing:border-box;width:380px;height:200px;background:#ffffff;border:1px solid #cccccc;box-shadow:3px 2px 5px rgba(0, 0, 0, 0.12);}
+        .section-2 .pre-reserv-apply .apply-form .input-wrap.checkbox .tooltip-layer.on {opacity:1;visibility:visible;}
+        .section-2 .pre-reserv-apply .apply-form .input-wrap.checkbox .tooltip-layer .personal-term-list dt{font-size:13px;color:#666666;margin:0 0 7px 0;}
+        .section-2 .pre-reserv-apply .apply-form .input-wrap.checkbox .tooltip-layer .personal-term-list dd{font-size:11px;text-indent:-7px;padding-left:7px;line-height:1.6}
+        .section-2 .pre-reserv-apply .apply-form .input-wrap.checkbox .tooltip-layer .personal-term-list dd ul{margin:0 0 0 2px;}
+
+        .section-3{background:#1a1b22;text-align:center;padding:120px 0 130px 0;}
+        .section-3 .pre-reserv-benefit{position:relative;}
+        .section-3 .pre-reserv-benefit .benefit-title{font-size:48px;color:#ffffff;}
+        .section-3 .pre-reserv-benefit .benefit-title em{font-size:18px;display:block;width:145px;margin:0 auto 40px auto;height:36px;line-height:36px;border:1px solid #ffffff;border-radius:18px;}
+        .section-3 .pre-reserv-benefit .benefit-sub-title{font-size:20px;font-weight:300;margin:20px 0 -80px 0;line-height:1.8;color:#fff;}
+
+
+        .benefit-icon-wrap{height:570px;position:Relative;color:#fff;}
+        .benefit-icon-wrap .benefit-center{position:Absolute;top:50%;left:50%;transform:translate(-50%, -50%);z-index:2;font-size:20px;margin:0 auto;color:#000000;width:188px;height:188px;border-radius:94px;background:#ffffff;font-weight:500;padding:60px 0 0 0;box-sizing:border-box;font-family: 'Montserrat';}
+        .benefit-icon-wrap .benefit-center strong{color:#e90149;font-weight:500;}
+        .benefit-icon{position:Absolute;top:50%;left:50%;transform:translate(-50%, -50%) scale(0);opacity:0;z-index:1;transition:all cubic-bezier(0.29, 0.48, 0.56, 0.99) .7s;}
+        .benefit-icon.on{opacity:1;transform:translate(-50%, -50%)  scale(1);animation-delay:1.5s;}
+        @keyframes float1{
+        to{transform:translate(-50%,-50%);}
+        from{transform:translate(-50%,-68%);}
+        }
+        @keyframes float2{
+        to{transform:translate(-50%,-65%);}
+        from{transform:translate(-50%,-50%);}
+        }
+        .benefit-icon img{vertical-align:middle;}
+        .benefit-icon.icon-1{animation:float1 ease-in-out 1s alternate infinite ;width:108px;height:108px;line-height:108px;border-radius:55px;background:#2417c1;}
+        .benefit-icon.icon-2{animation:float1 ease-in-out 0.8s alternate infinite ;width:66px;height:66px;line-height:66px;border-radius:33px;background:#2417c1;}
+        .benefit-icon.icon-3{animation:float2 ease-in-out 1.2s alternate infinite ;width:108px;height:108px;line-height:108px;border-radius:54px;background:#2716e9;}
+        .benefit-icon.icon-4{animation:float2 ease-in-out 1.2s alternate infinite ;width:102px;height:102px;line-height:102px;border-radius:51px;background:#2716e9;}
+        .benefit-icon.icon-5{animation:float1 ease-in-out 0.8s alternate infinite ;width:88px;height:88px;line-height:87px;border-radius:44px;background:#2417c1;}
+        .benefit-icon.icon-6{animation:float2 ease-in-out 1s alternate infinite ;width:116px;height:116px;line-height:116px;border-radius:58px;background:#2417c1;}
+
+        .benefit-icon.icon-1.on{margin:-25px 0 0 -115px;}
+        .benefit-icon.icon-2.on{margin:162px 0 0 100px;}
+        .benefit-icon.icon-3.on{margin:165px 0 0 -240px ;}
+        .benefit-icon.icon-4.on{margin:-40px 0 0 200px;}
+        .benefit-icon.icon-5.on{margin:-90px 0 0 -355px;}
+        .benefit-icon.icon-6.on{margin:215px 0 0 295px;}
+
+        .benefit-icon.dot-1{animation:float1 ease-in-out 0.8s alternate infinite ;margin:266px 0 0 -365px;width:33px;height:33px;background:#211886;border-radius:17px;z-index:0;}
+        .benefit-icon.dot-2{animation:float1 ease-in-out 0.8s alternate infinite ;margin:-75px 0 0 390px;width:33px;height:33px;background:#2417c1;border-radius:17px;z-index:0;}
+        .benefit-icon.dot-3{animation:float1 ease-in-out 0.8s alternate infinite ;margin:150px 0 0 455px;width:33px;height:33px;background:#211886;border-radius:17px;z-index:0;}
+        .benefit-icon.dot-4{animation:float2 ease-in-out 1s alternate infinite ;margin:-140px 0 0 95px;width:33px;height:33px;background:#1e195e;border-radius:17px;z-index:0;}
+
+        .benefit-noti{margin:45px 0 0 0}
+        .benefit-noti dt{font-size:16px;display:inline-block;vertical-align:top;margin:0 20px 0 0;color:#fff;}
+        .benefit-noti dd{display:inline-block;vertical-align:top;}
+        .benefit-noti dd>ul>li{font-size:14px;text-align:left;margin:0 0 10px 0;color:#fff;}
+
+
+        .section-4{padding:85px 0 125px 0;background:linear-gradient(155deg,#e82645, #b72183, #8f1eb6,#e82645, #b72183, #8f1eb6);background-size:400% auto;animation:shareBg 8s infinite linear;}
+        @-webkit-keyframes shareBg{
+            0%{background-position:100% 0%;}
+            50%{background-position:0% 50%;}
+            100%{background-position:100% 0%;}
+        }
+        @-moz-keyframes shareBg{
+            0%{background-position:100% 0%;}
+            50%{background-position:0% 50%;}
+            100%{background-position:100% 0%;}
+        }
+        @-ms-keyframes shareBg{
+            0%{background-position:100% 0%;}
+            50%{background-position:0% 50%;}
+            100%{background-position:100% 0%;}
+        }
+        @keyframes shareBg{
+            0%{background-position:100% 0%;}
+            50%{background-position:0% 50%;}
+            100%{background-position:100% 0%;}
+        }
+        .section-4 .pre-reserv-share .share-title{text-align:center;}
+        .section-4 .pre-reserv-share .share-title .share-title-1{font-size:20px;font-weight:400;color:#ffffff;}
+        .section-4 .pre-reserv-share .share-title .share-title-2{font-size:40px;font-weight:600;color:#ffffff;margin:20px 0 0 0}
+        .section-4 .pre-reserv-share .share-sns-list{text-align:center;margin:40px 0 0 0;}
+        .section-4 .pre-reserv-share .share-sns-list li{display:inline-block;margin:0 20px 0 0;transform:scale(0.5);opacity:0;transition:all linear .3s;}
+        .section-4 .pre-reserv-share .share-sns-list li.on{transform:scale(1);opacity:1;}
+        .section-4 .pre-reserv-share .share-sns-list li a{display:block;width:70px;height:70px;border-radius:35px;line-height:70px;text-align:Center;background:#ffffff;box-shadow:5px 5px 10px rgba(0, 0, 0, 0.2)}
+        .section-4 .pre-reserv-share .share-sns-list li a img{vertical-align:middle;}
+
+        /*?¿½?¿½?¿½?¾?¿½?¿½?¾?¿½ ?¿½?¿½?¿½?¿½*/
+        .dimmed{position:fixed;width:100%;height:100%;top:0;left:0;background:#000000;opacity:0.6;z-index:9998;}
+        .layer{position:fixed;top:0;left:0;z-index:9999;width:100%;height:100%;transition:all ease-in-out .2s;opacity:0;visibility:hidden;overflow-y:hidden;}
+        .layer.on{opacity:1;visibility:visible;}
+        .layer-btn{padding:0 0 10px 0;position:absolute;bottom:0;right:0;}
+        .layer-pop{width:760px;margin:0 auto;position:relative;top:50%;transform:translate(0, -50%);left:0;z-index:9999;background:#ffffff;padding:23px 40px 40px;box-sizing:border-box;border:1px solid #e0e0e0;border-radius:10px;}
+        .layer-pop .layer-cont{width:100%;height:570px;}
+        .layer-pop .layer-cont::-webkit-scrollbar {width:10px;max-height:106px;}
+        .layer-pop .layer-cont::-webkit-scrollbar-thumb {background-color:#b3b3b3;border-radius:10px;}
+        .layer-pop .layer-cont::-webkit-scrollbar-track {border-radius:10px;box-shadow:none}
+        .layer-pop .layer-title{font-size:24px;font-weight:500;color:#111111;padding:0 0 23px 0;margin:0 0 30px 0;text-align:Center;}
+        .layer-pop .layer-close{position:absolute;width:20px;height:20px;top:25px;right:25px;}
+        .layer-pop .layer-close img{max-width:100%;}
+
+        /*?¿½?¿½?¿½?¾?¿½?¿½?¾?¿½ - Æ¼?¿½?¿½*/
+        /* #pre-reserv-layer{display:none;} */
+        #pre-reserv-layer .layer-pop{padding:40px 0;border:0;border-radius:0;width:580px;margin:0 auto;}
+        #pre-reserv-layer .layer-title .benefit-code-tit1{font-size:24px;line-height:1.8;}
+        #pre-reserv-layer .layer-title .benefit-code-tit2{font-size:16px;}
+        #pre-reserv-layer .layer-cont {height:Auto;}
+        #pre-reserv-layer .layer-cont .benefit-code {background:linear-gradient(90deg, #e82645 0%, #bb227e 50%, #6d1bdf 130%);text-align:center;padding:0 0 50px 0;}
+        #pre-reserv-layer .layer-cont .benefit-code .benefit-code-img1{position:Relative;top:-30px;}
+        #pre-reserv-layer .layer-cont .benefit-code .benefit-code-txt1{font-size:40px;color:#fff;margin:-10px 0 0 0;}
+        #pre-reserv-layer .layer-cont .benefit-code .benefit-code-txt2{font-size:22px;font-weight:200;color:#fff;margin:18px 0 0 0;font-family:'Noto Sans KR';}
+        #pre-reserv-layer .layer-cont .benefit-code .benefit-code-num{font-family:'Montserrat';font-size:42px;color:#fff;width:400px;padding:24px 0;box-sizing:border-box;height:100px;background:#000000;border-radius:10px;margin:28px auto 0 auto;}
+        #pre-reserv-layer .layer-cont .btn-wrap .code-save-btn{font-size:18px;text-align:center;background:linear-gradient(90deg, #e82645 0%, #bb227e 50%, #6d1bdf 130%);padding:0 0 50px 0;width:240px;display:block;margin:30px auto 0 auto;padding:23px 0;border-radius:40px;color:#fff;}
+    </style>
+</head>
+<body>
+    <!-- common wrapper-box -->
+    <div class="wrapper-box">
+        <!-- sub header -->
+        <div class="comm-header-wrap teaser-header">
+            <div class="header sub-header">
+                <div class="comm-gnb-wrap">
+                    <div class="comm-gnb-box">
+                        <h1><a href="http://www.godo.co.kr"><img src="img/img_logo_h1.png" alt="godo"></a></h1>
+                        <div class="comm-gnb">
+                            <ul class="depth-1">
+                                <li><a href="#none" class="on">사전예약</a></li>
+                                <li><a href="#none">shop by pro OPEN<span>2021.06.01</span></a></li>
+                            </ul>
+                        </div>
+                        <div class="count-down">
+                            <div>D-<span class="day"></span></div>
+                            <div class="time"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- //sub header -->
+        <div class="teaser-wrap">
+            <div class="teaser-content">
+                <div class="section-1" style="position:relative;">
+                    <div class="teaser-title">
+                        <em>이 시대를 주도할 쇼핑 플랫폼</em>
+                        <strong>shop by pro</strong>
+                        <span>찬란한 비즈니스 성장을 위해.<br>믿을 수 있는 쇼핑 플랫폼에 혁신이 더해집니다.<br>shop by pro로 세상을 경험하세요.</span>
+                        <div class="btn-wrap">
+                            <a href="#none" class="pre-reserv-btn btn-gradation">사전예약하기</a>
+                        </div>
+                    </div>
+                    <div class="teaser-trigger">
+                        <div class="open-date">Coming soon<br>2021.06.01</div>
+                        <div class="teaser-scroll"><img src="img/teaser_scroll.png" alt="scroll"></div>
+                    </div>
+                    <div id="svg-ani">                        
+                        <div class="mask-p">
+                            <svg id="mask-p" data-name="mask-p" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 42">
+                                <defs>
+                                    <linearGradient id="bg-gradient1" x1="0%" y1="100%" x2="100%" y2="0%"> 
+                                        <stop offset="0%" stop-color="#960b8a" stop-opacity="1">
+                                            <animate attributeName="stop-color" values="#960b8a; #2010ca; #960b8a;" begin="4s" dur="7s" repeatCount="indefinite"></animate>
+                                            <animate attributeName="stop-opacity" from="0" to="0.3" begin="3s" dur="0.2s" fill="freeze"></animate>
+                                        </stop>                            
+                                        <stop offset="100%" stop-color="#2010ca" stop-opacity="1">
+                                            <animate attributeName="stop-color" values="#2010ca; #960b8a; #2010ca;" begin="4s" dur="7s" repeatCount="indefinite"></animate>
+                                            <animate attributeName="stop-opacity" from="0" to="0.2" begin="3s" dur="0.2s" fill="freeze"></animate>
+                                        </stop> 
+                                    </linearGradient>
+                                    <!--그래픽 배경-->
+                                    <pattern id="img1" height="100%" width="100%" patternContentUnits="objectBoundingBox" viewBox="0 0 1 1" preserveAspectRatio="xMidYMid slice">
+                                        <image href="img/mask-p-grap.png" height="1" width="1"  style="x:0;y:0;"></image>
+                                    </pattern> 
+                                </defs>
+                                <path transform="translate(-282 -400)" class="ie-not" fill="url(#img1)" stroke-width="0.07" style="stroke:rgba(255, 255, 255, 0.3); stroke-miterlimit:10; stroke-dasharray:193.831, 193.831; stroke-dashoffset:0px;" d="M313.11,416.26c0,9-6.21,14.8-14.63,14.8a11.83,11.83,0,0,1-9.23-3.89v14H282.5V401.85h6.42v3.78a11.89,11.89,0,0,1,9.56-4.11C306.9,401.52,313.11,407.36,313.11,416.26Zm-6.85,0c0-5.5-3.68-9-8.54-9s-8.58,3.51-8.58,9,3.72,9,8.58,9S306.26,421.77,306.26,416.26Z"></path>   
+                                <path transform="translate(-282 -400)" class="ie-gradient" fill="url(#bg-gradient1)" stroke-width="0.07" style="stroke:rgba(255, 255, 255, 0.3); stroke-miterlimit:10; stroke-dasharray:193.831, 193.831; stroke-dashoffset:0px;" d="M313.11,416.26c0,9-6.21,14.8-14.63,14.8a11.83,11.83,0,0,1-9.23-3.89v14H282.5V401.85h6.42v3.78a11.89,11.89,0,0,1,9.56-4.11C306.9,401.52,313.11,407.36,313.11,416.26Zm-6.85,0c0-5.5-3.68-9-8.54-9s-8.58,3.51-8.58,9,3.72,9,8.58,9S306.26,421.77,306.26,416.26Z"></path>
+                            </svg>
+                        </div>
+                        <div class="mask-r">
+                            <svg id="mask-r" data-name="mask-r" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 17 30">
+                                <defs>
+                                    <linearGradient id="bg-gradient2" x1="0%" y1="0%" x2="0%" y2="100%"> 
+                                        <stop offset="0%" stop-color="#2010ca" stop-opacity="1">
+                                            <animate attributeName="stop-color" values="#2010ca; #960b8a; #2010ca;" begin="4s" dur="7s" repeatCount="indefinite"></animate>
+                                            <animate attributeName="stop-opacity" from="0" to="0.3" begin="3s" dur="0.2s" fill="freeze"></animate>
+                                        </stop>                            
+                                        <stop offset="100%" stop-color="#960b8a" stop-opacity="1">
+                                            <animate attributeName="stop-color" values="#960b8a; #2010ca; #960b8a;" begin="4s" dur="7s" repeatCount="indefinite"></animate>
+                                            <animate attributeName="stop-opacity" from="0" to="0.2" begin="3s" dur="0.2s" fill="freeze"></animate>
+                                        </stop> 
+                                    </linearGradient>
+                                    <!--그래픽 배경-->
+                                    <pattern id="img2" height="100%" width="100%" patternContentUnits="objectBoundingBox" viewBox="0 0 1 1" preserveAspectRatio="xMidYMid slice">
+                                        <image href="img/mask-r-grap.png" height="1" width="1" style="x:0;y:0;"></image>
+                                    </pattern>
+                                </defs>
+                                <path transform="translate(-289.46 -406.76)" class="ie-not" fill="url(#img2)" stroke-width="0.07" style="stroke:rgba(255, 255, 255, 0.3);stroke-miterlimit:10;" d="M306.15,406.76v6.43a8.44,8.44,0,0,0-1.57-.16c-5.13,0-8.37,3-8.37,8.91v14h-6.75V407.09h6.43v4.21C297.83,408.27,301.34,406.76,306.15,406.76Z" />
+                                <path transform="translate(-289.46 -406.76)" class="ie-gradient" fill="url(#bg-gradient2)" stroke-width="0.07" style="stroke:rgba(255, 255, 255, 0.3);stroke-miterlimit:10;" d="M306.15,406.76v6.43a8.44,8.44,0,0,0-1.57-.16c-5.13,0-8.37,3-8.37,8.91v14h-6.75V407.09h6.43v4.21C297.83,408.27,301.34,406.76,306.15,406.76Z" />
+                            </svg>
+                        </div>
+                        <div class="mask-o">
+                            <svg id="mask-o" data-name="mask-o" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 31 30">
+                                <defs>
+                                    <linearGradient id="bg-gradient3" x1="50%" y1="100%" x2="100%" y2="0%"> 
+                                        <stop offset="0%" stop-color="#960b8a" stop-opacity="1">
+                                            <animate attributeName="stop-color" values="#960b8a; #2010ca; #960b8a;" begin="4s" dur="7s" repeatCount="indefinite"></animate>
+                                            <animate attributeName="stop-opacity" from="0" to="0.3" begin="3s" dur="0.2s" fill="freeze"></animate>
+                                        </stop>                            
+                                        <stop offset="100%" stop-color="#2010ca" stop-opacity="1">
+                                            <animate attributeName="stop-color" values="#2010ca; #960b8a; #2010ca;" begin="4s" dur="7s" repeatCount="indefinite"></animate>
+                                            <animate attributeName="stop-opacity" from="0" to="0.2" begin="3s" dur="0.2s" fill="freeze"></animate>
+                                        </stop> 
+                                    </linearGradient>
+                                    <!--그래픽 배경-->
+                                    <pattern id="img3" height="100%" width="100%" patternContentUnits="objectBoundingBox" viewBox="0 0 1 1" preserveAspectRatio="xMidYMid slice">
+                                        <image href="img/mask-o-grap.png" height="1" width="1" style="x:0;y:0;"></image>
+                                    </pattern>
+                                </defs>
+                                <path transform="translate(-299.86 -407.98)" class="ie-not" fill="url(#img3)" stroke-width="0.07" style="stroke:rgba(255, 255, 255, 0.3);stroke-miterlimit:10;" d="M299.86,422.72c0-8.64,6.48-14.74,15.33-14.74s15.39,6.1,15.39,14.74-6.42,14.79-15.39,14.79S299.86,431.36,299.86,422.72Zm23.92,0c0-5.51-3.67-9-8.59-9s-8.53,3.51-8.53,9,3.67,9,8.53,9S323.78,428.23,323.78,422.72Z"/>
+                                <path transform="translate(-299.86 -407.98)" class="ie-gradient" fill="url(#bg-gradient3)" stroke-width="0.07" style="stroke:rgba(255, 255, 255, 0.3);stroke-miterlimit:10;" d="M299.86,422.72c0-8.64,6.48-14.74,15.33-14.74s15.39,6.1,15.39,14.74-6.42,14.79-15.39,14.79S299.86,431.36,299.86,422.72Zm23.92,0c0-5.51-3.67-9-8.59-9s-8.53,3.51-8.53,9,3.67,9,8.53,9S323.78,428.23,323.78,422.72Z"/>
+                            </svg>
+                        </div>
+                    </div>                    
+                </div>
+                <div class="section-2">
+                    
+                    <div class="pre-reserv-apply">
+                        <div class="apply-info">
+                            <div class="apply-title">shop by pro<br>사전예약</div>
+                            <div class="apply-sub-title">사전예약 참여 후 shop by pro 신청 시<br>추가 혜택을 드립니다.</div>
+                            <div class="apply-term"><em>신청기간</em><span>2021.05.17 - 2021.05.31</span></div> 
+
+                            <div class="apply-step">
+                                <div class="step on">
+                                    <em class="step-date">2021.05.17</em>
+                                    <div class="step-circle">
+                                        <span class="step-check"><img src="img/icon_step_check.png" alt="현재 스텝"></span>
+                                        <span class="step-num">01</span>
+                                    </div>
+                                    <span class="step-cont">사전예약 하기</span>
+                                </div>
+                                <div class="step">
+                                    <em class="step-date">2021.06.01</em>
+                                    <div class="step-circle">
+                                        <span class="step-num">02</span>
+                                    </div>
+                                    <span class="step-cont">신청 시 문자로<br>발송된 코드 입력</span>
+                                </div>
+                                <div class="step">
+                                    <em class="step-date">2021.07</em>
+                                    <div class="step-circle">
+                                        <span class="step-num italic">FINAL</span>
+                                    </div>
+                                    <span class="step-cont">혜택 받기</span>
+                                </div>
+                            </div>
+                        </div>
+    
+                        <div class="apply-form">
+                            <form action="#">
+                                <div class="input-wrap">
+                                    <label for="name">이름</label>
+                                    <input type="text" id="name" name="name">
+                                </div>
+                                
+                                <div class="input-wrap">
+                                    <label for="phone">휴대폰번호</label>
+                                    <input type="text" id="phone" name="phone">
+                                </div>
+                                
+                                <div class="input-wrap checkbox">
+                                    <input type="checkbox" name="agree" id="agree">
+                                    <label for="agree">개인정보 수집 및 이용동의</label>
+                                    
+                                    <div class="tooltip-wrap">
+                                        <a href="#personal-term" title="개인정보 수집 및 이용동의 내용" class="tooltip-btn">자세히보기</a>
+                                        <div id="personal-term" class="tooltip-layer">
+                                            <a href="#none" class="tooltip-close"><img src="img/icon_tooltip_close.png" alt="레이어닫기"></a>
+                                            <dl class="personal-term-list">
+                                                <dt>개인정보 수집 및 이용 동의</dt>
+                                                <dd>- 혜택 안내를 위한 최소한의 개인 정보 수집· 이용에 동의해 주셔야 합니다.
+                                                    개인 정보 수집 및 이용에 대하여 동의를 거부할 수 있으나  미동의 시
+                                                    본 이벤트 참여가 불가함을 알려드립니다.</dd>
+                                                <dd>- shop by pro 신청 프로모션 혜택 소식은 오픈 시점에 SMS 재 발송해드립니다.  
+                                                    <ul>
+                                                        <li>· 수집 목적 :사전 예약 본인 확인, 이벤트 안내를 위한 SMS 발송</li>
+                                                        <li>· 수집 항목 :이름, 휴대폰 번호</li>
+                                                        <li>· 보유 기간 :이벤트 안내 종료 후 즉시 파기</li>
+                                                    </ul>
+                                                </dd>
+                                            </dl>
+                                        </div>
+                                    </div>
+                                </div>
+                                <input type="button" value="사전예약하기" class="btn-gradation form-submit">
+                            </form>                          
+                        </div>
+                    </div>
+                </div>
+                <div class="section-3">
+                    <div class="pre-reserv-benefit">
+                        <div class="benefit-title">
+                            <em>선착순 3,000명</em>
+                            사전예약 후 특별한 추가혜택이!
+                        </div>
+                        <div class="benefit-sub-title">
+                            shop by pro 신청자 선착순 3,000명에게<br>특별한 추가혜택을 드립니다.
+                        </div>
+                        <div class="benefit-icon-wrap">
+                            <div class="benefit-center"><strong>5만원</strong> 상당의<br>SMS 포인트<br>무료 제공</div>
+                            <div class="benefit-icon icon-1" aria-hidden="true"><img src="img/icon_cogwheel.png"></div>
+                            <div class="benefit-icon icon-2" aria-hidden="true"><img src="img/icon_link.png"></div>
+                            <div class="benefit-icon icon-3" aria-hidden="true"><img src="img/icon_cloud.png"></div>
+                            <div class="benefit-icon icon-4" aria-hidden="true"><img src="img/icon_chart.png"></div>
+                            <div class="benefit-icon icon-5" aria-hidden="true"><img src="img/icon_cube.png"></div>
+                            <div class="benefit-icon icon-6" aria-hidden="true"><img src="img/icon_letter.png"></div>
+                            <div class="benefit-icon dot-1" aria-hidden="true"></div>
+                            <div class="benefit-icon dot-2" aria-hidden="true"></div>
+                            <div class="benefit-icon dot-3" aria-hidden="true"></div>
+                            <div class="benefit-icon dot-4" aria-hidden="true"></div>
+                        </div>
+                    </div>
+                    
+                    <dl class="benefit-noti">
+                        <dt>유의사항</dt>
+                        <dd>
+                            <ul>
+                                <li>※ 사전예약 시, 동일 번호 중복신청은 제외됩니다.</li>
+                                <li>※ 본 혜택은 프로모션 기간 동안 신청한 shop by pro 솔루션에 한해서만 유효합니다.</li>
+                                <li>※ 경품 제공은 프로모션 종료 후 일괄 제공되며 별도 공지로 진행됩니다.</li>
+                            </ul>
+                        </dd>
+                    </dl>
+                </div>
+                <!--[if lte IE 9]>
+                    <style type="text/css">
+                        .section-4 {background:url('img/img_section4_ie_bg.png') no-repeat 0 0;background-size:cover}          
+                    </style>
+                <![endif]-->
+                <div class="section-4">
+                    <div class="pre-reserv-share">
+                        <div class="share-title">
+                            <div class="share-title-1">shop by pro 사전예약 혜택</div>
+                            <div class="share-title-2">지금 SNS로 알려주세요!</div>
+                        </div>
+                        <ul class="share-sns-list">
+                            <li><a href="#none"><img src="img/icon_share_kakao.png" alt="카카오톡"></a></li>
+                            <li><a href="#none"><img src="img/icon_share_facebook.png" alt="페이스북"></a></li>
+                            <li><a href="#none"><img src="img/icon_share_naverblog.png" alt="네이버블로그"></a></li>
+                            <li><a href="#none"><img src="img/icon_share_twitter.png" alt="트위터"></a></li>
+                            <li><a href="#none"><img src="img/icon_share_url.png" alt="URL"></a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    
+        <!-- TOP 버튼 -->
+        <a href="#none" class="btn-top"></a>
+
+        <!--레이어팝업-->
+        <div id="pre-reserv-layer" class="layer">
+            <div class="layer-pop">
+                <a href="#none" class="layer-close"><img src="img/icon_layer_close.png" alt="레이어닫기"></a>
+                <div class="layer-title">
+                    <div class="benefit-code-tit1"><img src="img/icon_smile.png" aria-hidden="true"><br>사전예약 완료</div>
+                    <div class="benefit-code-tit2">shop by pro 신청 시, 아래 코드를 입력하여 추가 혜택 받아가세요!</div>
+                </div>
+                <div class="layer-cont">
+                    <div class="benefit-code">
+                        <div class="benefit-code-img1"><img src="img/teaser_layer_subtxt.png" alt="free code free"></div>
+                        <div class="benefit-code-txt1"><strong>shop by pro</strong><br>사전예약 혜택코드</div>
+                        <div class="benefit-code-txt2">입력만해도 무료체험 기본제공 + 특별한 혜택</div>
+                        <div class="benefit-code-num"><span>SHOPBYPRO2161</span></div>
+                    </div>
+                    <div class="btn-wrap">
+                        <a href="#none" class="code-save-btn">이미지 저장</a>
+                    </div>
+                </div>
+            </div>
+        <div class="dimmed"></div>
+        </div>
+    </div>
+    <!-- // wrapper-box -->
+
+    
+    <script type="text/javascript" src="https://code.jquery.com/jquery.easing.1.3.js"></script>
+    <script>
+        $(document).ready(function(){            
+            //카운트다운
+            var countDownDate = new Date("Jun 1, 2021 00:00:00").getTime(); //d- day설정
+            var x = setInterval(function() {
+                var now = new Date().getTime();
+                var distance = countDownDate - now;
+            
+                var days = Math.floor(distance / (1000 * 60 * 60 * 24));
+                var hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+                var minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+                var seconds = Math.floor((distance % (1000 * 60)) / 1000);
+                
+                 //배경대비 가운데 정렬 위해 자릿수 분리
+                 var hours10 = (hours / 10^(0))%10;
+                 var hours1  = (hours / 1^(0))%10;
+                 var minutes10 = (minutes / 10^(0))%10;
+                 var minutes1  = (minutes / 1^(0))%10;
+                 var seconds10 = (seconds / 10^(0))%10;
+                 var seconds1  = (seconds / 1^(0))%10;
+
+                $('.count-down .day').text((days < 10 ? '0' :'') + days);
+                $('.count-down .time').html("<span class='hours'><em>" + hours10 +"</em><em>"+ hours1 + "</em></span>" + "<span class='colon'>:</span>" +
+                                            "<span class='hours'><em>" + minutes10 +"</em><em>"+ minutes1 + "</em></span>" + "<span class='colon'>:</span>" +
+                                            "<span class='seconds'><em>" + seconds10 +"</em><em>"+ seconds1 + "</em></span>"); 
+                    
+                // 카운트다운이 끝나면 노출될 텍스트 주석 해제 후 입력 ex)샵바이프로오픈
+                // if (distance < 0) {
+                //     clearInterval(x);
+                //     $('.count-down').text('샵바이 프로 오픈');
+                //}
+            }, 100);
+
+            //사전예약 이동
+            $('.pre-reserv-btn').click(function(){
+                $('body, html').stop().animate({ 'scrollTop': $('.section-2').offset().top }, 500)
+            });
+
+            //svg 드로잉
+            var pathes = $('#svg-ani').find('path');
+            pathes.each(function( i, path ) {
+                var total_length = path.getTotalLength();                            
+                path.style.strokeDasharray = total_length + " " + total_length; 
+                path.style.strokeDashoffset = total_length;
+                $(path).animate({
+                    "strokeDashoffset" :0
+                }, 2800);
+                setTimeout(function(){
+                    $(path).animate({
+                        "strokeWidth":"0.01",
+                        "fill-opacity":"1"
+                    }, 500);
+                }, 2800);
+            });
+
+            //비주얼 인터렉션 크로스 브라우징
+            if (navigator.userAgent.indexOf('MSIE') > 0 || navigator.userAgent.indexOf('Trident') > 0){
+                $('.ie-gradient').css('display', 'block')
+                $('.ie-not').css('display', 'none')
+            }
+
+            //툴팁 레이어 토글
+            $('.tooltip-btn').click(function(e){
+                e.preventDefault();
+                var tooltipID = $(this).attr('href');
+                $(tooltipID).addClass('on');
+            });
+            $('.tooltip-close').click(function(e){
+                e.preventDefault();
+                $(this).parents('.tooltip-layer').removeClass('on');
+            });
+            
+            //티저 레이어팝업
+            $('.form-submit').click(function(e){
+                $('#pre-reserv-layer').addClass('on');
+                $('.layer').append('<div class="dimmed"></div>');
+                $('body, html').css('overflow','hidden');
+            });
+            $('.layer-close').click(function(){
+                $(this).parents('.layer').removeClass('on');
+                $('.dimmed').remove();
+                $('body, html').css('overflow','visible');
+            });
+
+            //툴팁 클릭시 이동 방지
+            $('.tooltip-btn').click(function(e){
+                e.preventDefault();
+            });
+
+            //인터렉션
+            $(window).on('scroll', function(){
+                var wsTop = $(this).scrollTop();
+                var spList1 = $('.pre-reserv-apply').offset().top - 500;
+                var spList2 = $('.pre-reserv-benefit').offset().top - 500;
+                var spList3 = $('.pre-reserv-share').offset().top - 700;
+                
+                if(wsTop > spList1){
+                    $('.step .step-circle').each(function(i){
+                        setTimeout(function(){
+                            $('.step .step-circle').eq(i).addClass('on')
+                        }, i*300)
+                    });
+                }
+
+                if(wsTop > spList2){
+                    $('.benefit-icon-wrap>.benefit-icon').each(function(i){
+                        setTimeout(function(){
+                            $('.benefit-icon-wrap>.benefit-icon').eq(i).addClass('on')
+                        }, i*150)
+                    });
+                }
+
+                if(wsTop > spList3){
+                    $('.share-sns-list li').each(function(i){
+                        setTimeout(function(){
+                            $('.share-sns-list li').eq(i).addClass('on')
+                        }, i*400)
+                    });
+                }
+            });
+        });
+
+    </script>
+    
+
+    
+</body>
+</html>

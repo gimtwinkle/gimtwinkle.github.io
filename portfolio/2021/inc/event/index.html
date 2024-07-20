@@ -1,0 +1,1073 @@
+
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+	<title></title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <meta name="viewport" content="initial-scale=1.0, user-scalable=no, maximum-scale=1, width=device-width, viewport-fit=cover>
+	<meta name="author" content="">
+	<meta name="robots" content="">
+	<meta name="keywords" content="">
+	<meta name="description" content="">
+	<!-- START OPEN GRAPH -->
+	<meta property="og:locale" content=""/>
+	<meta property="og:image" content=""/>
+	<meta property="og:image:width" content=""/>
+	<meta property="og:image:height" content=""/>
+	<meta property="og:type" content="website"/>
+	<meta property="og:url" content=""/>
+	<meta property="og:title" content=""/>
+	<meta property="og:description" content="" />
+	<!-- END OPEN GRAPH -->
+    <!-- <link type="text/css" rel="stylesheet" href="css/intro.css"> -->
+    <script type="text/javascript" src="https://code.jquery.com/jquery-3.6.0.js"></script>
+    <style>
+        *{margin:0;padding:0;}
+        li{list-style: none;}
+        a{text-decoration: none;}
+        .pop_wrap{display:none;}
+    
+        input[type="number"]::-webkit-outer-spin-button, input[type="number"]::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
+    
+        .pointColor1{color:#ff525b;}
+        .notScroll{position: fixed;overflow: hidden;width: 100%;height: 100%}
+        .dimmed {width:100%;height:100%;position:fixed;top:0;left:0;overflow:hidden;background:#000000;filter:alpha(opacity=50);opacity:0.5;z-index:100;}
+        .evtEnterPop{width:618px;position:Absolute;z-index:999;}
+        .evtEnterPop .popHead{position:relative;z-index:1;}
+        .evtEnterPop .popHead>h2{line-height:0;}
+        .evtEnterPop .popHead>h2>img{width:100%;}
+        .evtEnterPop .popHead>.popClose{position:Absolute;top:-18px;right:0px;z-index:999;}
+        .evtEnterPop .popHead>.popClose:before{content:"";display:block;background:url(img/2003/evtEnterpop_close.png) no-repeat 0 0;width:151px;height:112px;position: Absolute;top: -1px;right: 0px;z-index: 999;font-size:0;}
+        .evtEnterPop .popHead>.popClose a{position: absolute;top: 50px;right: 44px;width: 40px;height: 40px;z-index: 9999;font-size: 0;}
+        .evtEnterPop .popCont{background-color:#ffffff;padding:35px 37px 0 37px;margin-top:-20px;position:relative;z-index:-1;max-height:500px;overflow:auto;scrollbar-arrow-color:#f5b1b5;scrollbar-3dlight-color:#ffffff;scrollbar-darkshadow-color:#ffffff;scrollbar-face-color:#ebebeb;scrollbar-hightlight-color:#ebebeb;scrollbar-shadow-color:#ebebeb;scrollbar-track-color:#ffffff;}
+        .evtEnterPop .popCont:after{content:"";display:block;height:55px;}
+        .evtEnterPop .popCont::-webkit-scrollbar {width:8px; height:8px; border:3px solid #fff; }
+        .evtEnterPop .popCont::-webkit-scrollbar-button:start:decrement, 
+        .evtEnterPop .popCont::-webkit-scrollbar-button:end:increment{display:block; height:10px; background:#ffffff}
+        .evtEnterPop .popCont::-webkit-scrollbar-track {background:#ffffff; -webkit-border-radius:10px; border-radius:10px; -webkit-box-shadow:inset 0 0 0 rgba(0,0,0,0)}
+        .evtEnterPop .popCont::-webkit-scrollbar-thumb {height:50px; width:50px; background:#ebebeb; -webkit-border-radius:8px; border-radius:8px; -webkit-box-shadow:inset 0 0 0 rgba(0,0,0,0)}
+        .evtEnterPop .popFooter>button{width:100%;cursor:pointer;background:url(img/2003/evtEnterpop_btn_bg.png) no-repeat 0 0;background-size:100% 100%;color:#ffffff;font-size:24px;padding:30px 0;font-weight:600;letter-spacing:-2.5px;}
+    
+        .evtEnterTbl tr th{font-weight:normal;font-size:14px;letter-spacing:-1px;padding:19px 0;vertical-align:top;text-align:left;}
+        .evtEnterTbl tr th label{vertical-align: middle;}
+        .evtEnterTbl tr th:after{content:"";display:inline-block;width:4px;height:4px;background:#ff4343;border-radius:2px;vertical-align:middle;margin-left:3px;}
+        .evtEnterTbl tr td{padding:5px;}
+        .evtEnterTbl tr td input,   
+        .evtEnterTbl tr td select{width:100%;color:#050c15;letter-spacing:-1px;height:48px}
+        .evtEnterTbl tr td .popNotiList li{font-size:12px;color:#979799;margin-top:4px;}
+        .evtEnterTbl tr td .popNotiList li:first-child{margin-top:1px;}
+        .evtEnterTbl tr td .popNotiList li:before{content:"";display:inline-block;vertical-align:middle;width:3px;height:1px;margin-right:5px;background:#393a3d;}
+        .evtEnterTbl tr td .popNotiList li>span{color:#ea534c}
+    
+        .shopby1st{font-family:'Noto Sans KR', sans-serif;}
+        .shopby1st.ie, .shopby1st.ie a{letter-spacing:-1px !important;}
+        .shopby1st.ie a.freeApplyBtn{letter-spacing:-3px !important;font-weight:bold;font-size:24px;}
+        .shopby1st.ie .applyWrap .evtApplyBtn span{letter-spacing:-2px !important;font-weight:bold;font-size:24px;box-sizing: border-box;}
+        .shopby1st.ie .applyWrap .applyStep li > p{letter-spacing:-2px !important;}
+        .shopby1st.ie .agreeBox .agreeComm{letter-spacing:-1.2px !important;}
+        .shopby1st input{border:1px solid #dbdbdb;padding:13px 15px;border-radius:5px;font-size:15px;outline:0;box-sizing:border-box;}
+        .shopby1st select{border:1px solid #dbdbdb;padding:13px 0 13px 15px;border-radius:5px;font-size:15px;outline:0;box-sizing:border-box;-webkit-appearance:none;-moz-appearance:none;appearance:none;background:url(img2003/select_arw.png) no-repeat 59px center;}
+        .shopby1st select::-ms-expand {display:none}
+    
+        .shopby1st .iptCol2>*{width:50%;float:left;}
+        .shopby1st .iptCol2:after{content:"";clear:Both;display:block;}
+    
+        .shopby1st .iptCol3>*{width:73.5px !important;float:left;}
+        .shopby1st .iptCol3>span{width:23px !important;height:45px;line-height:45px;display:block;text-align:Center;}
+        .shopby1st .iptCol3>span:before{content:"";display:inline-block;width:7px;height:2px;background:#d4d4d4;vertical-align:middle;margin-top:23px;}
+        .shopby1st .iptCol3:after{content:"";clear:Both;display:block;}
+        
+        .shopby1st .beforeZipCode{border:1px solid #dbdbdb;border-radius:5px;width:115px;margin-left:10px;}
+        .shopby1st .beforeZipCode>*{border:0;width:52px !important;float:left;padding-right:0;height:46px}
+        .shopby1st .beforeZipCode>span{width:10px !important;line-height:43px;height:43px;text-align:center;}
+        .shopby1st .beforeZipCode>span:before{content:"";display:inline-block;width:7px;height:2px;background:#d4d4d4;vertical-align:middle;margin-top:22px;}
+        .shopby1st .beforeZipCode:after{content:"";display:block;clear:both;}
+        
+        .btn_zipCode{color:#393a3d;font-size:13px;letter-spacing:-0.5px;text-align:center;font-weight:500;background:#eeeeee;height:42px;width:103px;display:inline-block;line-height:42px;border-radius:30px;}
+        
+        .iptChkBox .chkBox{display:none;}
+        .iptChkBox .chkBox + label{background:url('img/2003/check_box.png') no-repeat 0 0;width:26px;height:26px;display:inline-block;vertical-align:middle;margin:0 8px 0 0;}
+        .iptChkBox .chkBox.checked + label{background:url('img/2003/check_box.png') no-repeat 0 -26px;}
+    
+        .agreeSubj dl:after{content:"";display:block;clear:Both;}
+        .agreeSubj dl dt{float:left;width:20%;color:#707070;font-size:12px;padding-top:5px;}
+        .agreeSubj dl dd{float:left;width:80%;color:#b6b6b8;font-size:12px;letter-spacing:-0.7px;padding-top:5px;}
+        .agreeSubj dl dd>em{color:#8d8d8f;}
+    
+        .iptChkBoxWrap{position:relative;}
+        .iptChkBoxWrap strong{color:#393a3d;font-size:16px;font-weight:500;letter-spacing:-0.5px;}
+        .iptChkBoxWrap strong>span{color:#8d8d8f;font-weight:300;}
+        .agreeChkBox{border:1px solid #dbdbdb;padding:12px 20px 15px 20px;border-radius:10px;margin-top:10px;}
+        .agreeChkBox .iptChkBoxWrap strong{font-size:13px;display:inline-block;vertical-align:sub;}
+        .agreeChkBox .iptChkBoxWrap:after{content:"";display:block;background:url('img/2003/accordian_arw.png') no-repeat 0 0;position:Absolute;top:50%;right:0;width:10px;height:6px;margin-top:-3px;}
+        .agreeChkBox .iptChkBoxWrap.on:after{background-position:0 -6px;}
+        .agreeChkBox .iptChkBoxWrap + .agreeSubj{display:none;}
+        .agreeChkBox .iptChkBoxWrap.on + .agreeSubj{display:block;font-size:12px;margin-top:11px}
+        .agreeChkBox .iptChkBoxWrap .iptChkBox .chkBox + label{width:20px;height:20px;background-size:cover;}
+        .agreeChkBox .iptChkBoxWrap .iptChkBox .chkBox.checked + label{background-position:0 -20px;}
+        
+        .agreeBox{margin-top:24px;}
+        .agreeBox .agreeComm{font-size:12px;color:#b6b6b8;letter-spacing:-0.5px;margin:9px 0 10px 0;}
+        .agreeBox .agreeComm>em{color:#8d8d8f;}
+    
+        .alertPop{border:1px solid #171819;position:absolute;top:50%;left:50%;text-align:center;width:312px;border-radius:8px;overflow:hidden;box-shadow:2px 5px 15px rgba(0, 0, 0, 0.3);z-index:9999;}
+        .alertPop .alertCont{background:#ffffff;padding:45px 0;font-weight:500;color:#171819;font-size:16px;letter-spacing:-0.5px;}
+        .alertPop .alertCont>strong{color:#ff4343;font-weight:500;}
+        .alertPop .alertFooter{background:#171819;}
+        .alertPop .alertFooter>a.alertBtn{color:#ffffff;display:block;width:100%;position:relative;padding:17px 0;font-weight:bold;font-size:18px;}
+        .alertPop .alertFooter>a.alertBtn:before{contenT:"";display:block;width:12px;height:8px;background:url(img/2003/alert_btn_bg.png) no-repeat 0 0;position:absolute;bottom:50%;left:50%;margin:0 0 -6px -36px;}
+    
+        .alertPop.redVer{width:372px;border:0;box-shadow:none;text-align:center;}
+        .alertPop.redVer:before{content:"";display:block;background:url(img/2003/alertPop_redver_tit_bg.png)no-repeat 0 0;height:130px;}
+        .alertPop.redVer .alertCont{padding:35px 0;font-size:22px;}
+        .alertPop.redVer .alertCont > p{}
+        .alertPop.redVer .alertCont > p+span{font-size:15px;color:#c2c2c3;font-weight:300;display:block;margin:10px 0 12px 0;}
+        .alertPop.redVer .alertCont > em{display:block;font-size:15px;font-weight:400;margin:10px 0 14px 0;}
+        .alertPop.redVer .alertFooter{background:url(img/2003/alertPop_redver_btn_bg.png) no-repeat 0 0;background-size:100% 100%;}
+    
+        .hashtagWrap{position:Relative;}
+        .hashtagWrap:after{content:"";display:block;width:100%;background:#fef4f4 url(img/2003/hashtag_wave_bg.png) no-repeat 50% 0;height: 117px;}
+        .hashtagWrap .hashtagTit{text-align:center;padding:66px 0 50px 0;}
+        .hashtagWrap .hashtagTit:before{content:"";display:block;background:url(img/2003/syrup_bg01_new.png) no-repeat 50% 100%;width:100%;height:196px;position:absolute;top:-52px;z-index:2;left:50%;margin:0 0 0 -50%;}
+        .hashtagWrap > ul{width:730px;margin:0 auto;text-align:center;}
+        .hashtagWrap > ul > li{display:inline-block;margin:0 0 -15px -4px;opacity:0;transition:all ease .6s;position:relative;top:20px;}
+        .hashtagWrap > ul > li.on{opacity:1;top:0;}
+        .hashtagWrap > ul > li > img{transition:all ease .6s;}
+    
+        .calendarWrap{background:#fef4f4;position:Relative;z-index:2;}
+        .calendarWrap:after{content:"";display:block;background:url(img/2003/wave_bg.png) repeat-x left center;width:100%;height:16px;position:absolute;bottom:-16px;left:0;z-index:5;}
+        .calendarWrap .calendarTit{text-align:center;padding:66px 0 0 0;}
+        
+        .visualWrap{position:relative;background:#f9eae9;height:650px;overflow:hidden;z-index:-1;}
+        .visualWrap:before{content:"";display:block;background:url(img/2003/cloud_02.png) no-repeat 50% 100%;width:100%;height:700px;position:absolute;bottom:-108px;z-index:1;transition:all cubic-bezier(0.46, 0.03, 0.52, 0.96) 1s;}
+        .visualWrap.on:before{bottom:-128px;}
+        .visualWrap:after{content:"";display:block;background:url(img/2003/cloud_01.png) no-repeat 50% 100%;width:100%;height:650px;position:absolute;bottom:-134px;z-index:2;transition:all cubic-bezier(0.46, 0.03, 0.52, 0.96) 1s;}
+        .visualWrap.on:after{bottom:-114px}
+        
+        .visualWrap .hbdWrap{position:relative;}
+        .visualWrap .hbdWrap>.hbd{position:absolute;top:205px;width:100%;text-align:center;left:-79px;z-index:4;opacity:0;animation:hbd .5s;animation-fill-mode:forwards;animation-delay:1.4s;transition:all ease-in .5s;}
+        .visualWrap .hbdWrap.on>.hbd{top:181px;opacity:1;}
+        .visualWrap .hbdWrap>.balloon{position:absolute;right:-187px;top:206px;opacity:0;z-index:4;transition:all ease .8s;}
+        .visualWrap .hbdWrap>.balloon.on{top:186px;opacity:1;}
+        
+        .visualWrap .cakeWrap{width:743px;margin:0 auto;position:relative;}        
+        .visualWrap .cakeWrap>.top{width:100%;margin:0 auto;position:absolute;bottom:95px;left:0;text-align:Center;z-index:3;animation:cake 1s;animation-fill-mode:forwards;transition:all ease-in-out .8s;}
+        .visualWrap .cakeWrap>.top img{position:relative;bottom:-415px;transition:all ease-in-out .8s;}
+        .visualWrap .cakeWrap>.top.on img{bottom:0px;}
+        .visualWrap .cakeWrap>.top:before{background:url(img/2003/cake_gift.png) no-repeat top center;content:"";display:block;height:112px;width:135px;position:Absolute;bottom:161px;left:83px;z-index:-1;}
+        .visualWrap .cakeWrap>.st{position:absolute;bottom:390px;right:245px;opacity:0;animation:st .4s;animation-fill-mode:forwards;animation-delay:1s;transition:all ease-in .8s;}
+        .visualWrap .cakeWrap>.st.on{opacity:1;}
+        .visualWrap .cakeWrap>.bottom{width:100%;max-width:1480px;margin:0 auto;padding-top:408px;text-align:center;position:Relative;z-index:4;}
+        .visualWrap .cakeWrap>.commLeft{position:absolute;bottom:584px;right:400px;width:0;opacity:0;animation:commL .5s;animation-fill-mode:forwards;animation-delay:1.9s;transition:all cubic-bezier(0.42, 0, 0.23, 1.32) .8s}
+        .visualWrap .cakeWrap>.commLeft.on{bottom:584px;opacity:1;width:221px;}
+        .visualWrap .cakeWrap>.commLeft>img{width:100%}
+        .visualWrap .cakeWrap>.commRight{position:absolute;bottom:618px;left:469px;opacity:0;width:0;animation:commR .5s;animation-fill-mode:forwards;animation-delay:2s;animation-delay:1.9s;transition:all cubic-bezier(0.42, 0, 0.23, 1.32) .8s}
+        .visualWrap .cakeWrap>.commRight.on{bottom:618px;opacity:1;width:243px;}
+        .visualWrap .cakeWrap>.commRight>img{width:100%}
+    
+        .visualWrap .mobil{width:1463px;margin:0 auto;position:absolute;top:0;left:50%;margin:0 0 0 -731.5px;z-index:5;}
+        .visualWrap .mobil:before{content:"";display:block;width:40px;height:60px;background:url(img/2003/bling_left.png) no-repeat 0 0;position:absolute;left:45px;top:393px}
+        .visualWrap .mobil:after{content:"";display:block;width:146px;height:157px;background:url(img/2003/bling_right.png) no-repeat 0 0;position:absolute;right:-31px;top:332px}
+        .visualWrap .mobil .mobilL01{position:Absolute;left:-11px;top:-60px;}
+        .visualWrap .mobil .mobilL02{position:absolute;left:70px;top:-60px;}
+        .visualWrap .mobil .mobilR01{position:absolute;right:0;top:-58px;}
+        
+        .benefitWrap:after{content:"";display:block;background:url(img/2003/wave_bg_wh.png) repeat-x left center;width:100%;height:16px;position:absolute;bottom:-16px;left:0;z-index:5;}
+        .benefitWrap{background:#ffffff;padding-bottom:100px;position:Relative;}
+        .benefitWrap .benefitTit{padding:95px 0 45px 0;text-align:center;}
+        .benefitWrap .benefitInfo li{text-align:Center;margin-top:10px;}
+        .benefitWrap .benefitInfo li:first-child{margin-top:0;}
+        .benefitWrap .benefitInfo li>strong{vertical-align:middle;display:inline-block;margin-right:16px;}
+        .benefitWrap .benefitInfo li>span{vertical-align:middle;display:inline-block;width:400px;text-align:left;color:#393a3d;font-size:20px;letter-spacing:-1px;}
+        .benefitWrap .benefitInfo li>span>em{color:#ff6262;font-weight:bold;}
+        
+        .benefitWrap .benefitStep.stick01:after{content:"";display:block;background:url(img/2003/benefit_sticker01.png) no-repeat 0 0;width:88px;height:88px;position:absolute;top:-69px;left:-24px;}
+        .benefitWrap .benefitStep.stick02:after{content:"";display:block;background:url(img/2003/benefit_sticker02.png) no-repeat 0 0;width:104px;height:88px;position:absolute;bottom:-18px;right:-32px;}
+    
+        .benefitWrap .benefitStep {border:1px solid #ecd3d4;width:765px;height:248px;margin:80px auto 0 auto;padding:50px 0 0 105px;position:relative;}
+        .benefitWrap .benefitStep.on{border:1px solid #ff6262;transition:all ease .3s;box-shadow:3px 5px 15px rgba(0, 0, 0, 0.1)}
+        .benefitWrap .benefitStep + .benefitStep{margin-top:40px;}
+        .benefitWrap .benefitStep .stepImg{display:table-cell;vertical-align:top;padding-right:73px;}
+        .benefitWrap .benefitStep .stepTxt{display:table-cell;vertical-align:top;width:100%;}
+        .benefitWrap .benefitStep .stepTxt>.freeApplyBtn{font-size:20px;font-weight:500;color:#ffffff;border:1px solid #ffffff;width:151px;height:56px;border-radius:30px;line-height:56px;display:inline-block;padding:0 0 0 25px;position:relative;letter-spacing:-1px;margin-top:24px;transition:all ease .1s;background:#17d0bc;box-shadow:8px 10px 13px rgba(23, 208, 188, 0.12);letter-spacing:-2px;}
+        .benefitWrap .benefitStep .stepTxt>.freeApplyBtn:after{content:"";display:block;position:absolute;top:23px;right:25px;background:url(img/2003/benefit_step01_btnBg_arw.png) no-repeat 0 0;width:10px;height:15px;transition:all ease .1s;}
+        .benefitWrap .benefitStep .stepTxt>.freeApplyBtn:hover{background:#ffffff;color:#050c15;border:1px solid #17d0bc;height:56px;line-height:56px;width:149px;}
+        .benefitWrap .benefitStep .stepTxt>.freeApplyBtn:hover:after{background:url(img/2003/benefit_step01_btnBg_arw_on.png) no-repeat 0 0;right:23px}
+        
+    
+        .benefitWrap .benefitStep .stepTxt>.gotoBtn{color:#ff6262;font-size:14px;font-weight:600;position:absolute;margin:7px 0 0 11px;}
+        .benefitWrap .benefitStep .stepTxt>.gotoBtn:hover:after{margin-left:10px;}
+        .benefitWrap .benefitStep .stepTxt>.gotoBtn:before{content:"";display:block;width:50px;height:1px;background:#ff6262;position:absolute;bottom:0;left:0;}
+        .benefitWrap .benefitStep .stepTxt>.gotoBtn:after{transition:all ease .4s;content:"";background:url(img/2003/benefit_step_btnArw.png) no-repeat 0 0;width:132px;height:10px;display:block;margin-top:-5px;}
+        .benefitWrap .benefitStep .stepTxt>.gotoBtn.Lver:before{width:110px;}
+        .benefitWrap .benefitStep .stepTxt>.gotoBtn.Lver:after{margin-left:100px;}
+        .benefitWrap .benefitStep .stepTxt>.gotoBtn.Lver:hover:after{margin-left:110px;}
+        .benefitWrap .benefitStep .stepTxt>span{text-align:right;font-size:15px;position:absolute;right:30px;bottom:30px;color:#c2c2c3}
+        .benefitWrap .benefitStep .stepTxt>span.stepFlag{top:11px;right:-20px;}
+        .benefitWrap .benefitStep .stepTxt>span>em{color:#ff6262;}
+        .benefitWrap .benefitStep .stepTxt>ul>li{font-size:16px;margin-top:3px;letter-spacing:-1px;color:#393a3d;}
+        .benefitWrap .benefitStep .stepTxt>ul>li>em{font-weight:normal;display:inline-block;padding-right:13px;}
+        .benefitWrap .benefitStep .stepTxt>ul>li:before{content:"";display:inline-block;width:4px;height:4px;background:#393a3d;border-radius:3px;vertical-align:middle;margin-right:6px;}
+        .benefitWrap .benefitStep .stepTxt>ul>li:first-child{margin-top:15px;}
+        .benefitWrap .benefitStep .stepTxt>ul>li>span>strong{font-weight:900;}
+    
+        .benefitWrap .mobil{width:1200px;margin:0 auto;position:absolute;top:0;left:50%;margin:0 0 0 -600px;z-index:1;}
+        .benefitWrap .mobil .mobilL01{position:Absolute;left:78px;top:-89px;}
+        .benefitWrap .mobil .mobilL02{position:absolute;right:19px;top:31px;}
+        .benefitWrap .mobil .mobilL02:before{content:'';display:block;width:2px;height:40px;background:#ead4d5;position:absolute;top:-30px;left:50%;margin-left:-1px;}
+        .benefitWrap .mobil .mobilR01{position:absolute;right:82px;top:-93px;}
+    
+        .applyWrap{background:#fef4f4;text-align:center;padding:0 0 80px 0;}
+        .applyWrap .applyTit{text-align:center;padding:115px 0 55px 0;position:relative;}
+        .applyWrap .applyTit:before{content:"";display:block;background:url(img/2003/syrup_bg02.png) no-repeat 50% 100%;position:Absolute;top:-23px;left:50%;width:259px;height:168px;z-index:5;margin-left:-780px;}
+        .applyWrap .applyStep li{display:inline-block;vertical-align:top;text-align:center;width:192px;margin-left:70px;}
+        .applyWrap .applyStep li>p{letter-spacing:-1.5px;color:#ac7d7d;font-size:20px;margin-top:3px;letter-spacing:-2.5px;}
+        .applyWrap .applyStep li:first-child{margin-left:0;}
+        .applyWrap .evtApplyBtn{background:#ff525b;border:1px solid #ff525b;width:320px;height:82px;line-height:79px;border-radius:40px;box-shadow:8px 10px 13px rgba(255, 98, 98, 0.2);display:inline-block;color:#fff;font-size:26px;font-weight:bold;letter-spacing:-1px;text-align:left;margin-top:55px;position:Relative;}
+        .applyWrap .evtApplyBtn:after{content:"";display:block;position:absolute;right:65px;top:50%;margin:-9px 0 0 0;width:10px;height:18px;background:url(img/2003/apply_btnBg_Arw.png) no-repeat 0 0;}
+        .applyWrap .evtApplyBtn:hover{background:#ffffff;border:1px solid #ff6262;color:#ff6262;}
+        .applyWrap .evtApplyBtn:hover:after{background:url(img/2003/apply_btnBg_Arw_on.png) no-repeat 0 0;}
+        .applyWrap .evtApplyBtn span{width:100%;text-align:left;display:inline-block;padding:0 0 0 67px;box-sizing:border-box;letter-spacing:-2px;}
+    
+        .slideOpenBnr{text-align:Center;background:url(img/2003/slideOpen_bnr_bg.png) repeat-x 50% 100%;height:0;position:relative;height:0;z-index:-1;}
+        .slideOpenBnr>a{height:100%;top:0%;display:inline-block;width:100%;position:absolute;text-align:center;left:50%;margin:0 0 0 -50%;}
+        .slideOpenBnr>a>img{position:absolute;left:50%;top:50%;margin:-30.5px 0 0 -369px;} 
+    
+        .noticeWrap{background:#fff7e9 url(img/2003/notice_bg.png) no-repeat 50% 100%;padding:0 0 100px 0}
+        .noticeWrap .noticeTit{text-align:center;padding:100px 0 0 0;position:relative;}
+        .noticeWrap .noticeTit:after{content:"";display:block;opacity:0;background-size:contain;background:url(img/2003/notice_comment.png) no-repeat 0 0;height:0;width:0;bottom:0;position:absolute;left:50%;margin-left:178px;transition: all cubic-bezier(0.42, 0, 0.4, 1.38) 1s;}
+        .noticeWrap .noticeTit.on:after{opacity:1;width:286px;height:63px;}
+        .noticeWrap .noticeList{width:100%;max-width:960px;margin:0 auto;}
+        .noticeWrap .noticeList>li{font-size:15px;color:#171819;letter-spacing:-1.2px;margin-top:22px;text-indent:-12px;padding-left:12px;word-break:keep-all;}
+        .noticeWrap .noticeList>li:first-child{margin-top:45px;}
+        .noticeWrap .noticeList>li:before{content:"";display:inline-block;vertical-align:middle;width:4px;height:4px;background:#ea534c;border-radius:4px;margin-right:8px;}
+        .noticeWrap .noticeList>li>strong{font-size:16px;color:#ea534c;font-weight:600;padding-right:12px;}
+        .noticeWrap .noticeList>li>strong+span{font-size:16px;font-weight:600;}
+        .noticeWrap .noticeList>li>strong+span+em{font-size:15px;color:#898170;}
+        .noticeWrap .noticeList>li>ul>li{color:#898170;margin:8px 0 0 12px;font-weight:100;}
+    
+        .floatMark{position:fixed;top:160px;right:0;text-align:right;z-index:99;transition:all ease-in .4s;}
+        .floatMark.on{top:50%;}
+        .floatMark>*{display:block;}
+        .floatMark>ul{margin-bottom:28px;margin-right:54px;}
+        .floatMark>ul>li{margin:0;}
+        .floatMark>ul>li>a{padding:12.5px 0;display:inline-block;}
+        .floatMark>ul>li>a span{height:16px;font-size:0;line-height:0;text-indent:-9999px;display:inline-block;width:78px;}
+        .floatMark>ul>li.on a{padding:0;margin:0px 0px -12px 0;position:relative;right:-29px;}
+        .floatMark>ul>li.on a span{height:81px;width:100%;margin-right:5px;}        
+        .floatMark>ul>li.Mark01 a span{background:url(img/2003/float_list01_off.png) no-repeat right center;}
+        .floatMark>ul>li.Mark01.on a span{background:url(img/2003/float_list01_on.png) no-repeat right center;width:248px;}
+        .floatMark>ul>li.Mark01_1 a span{background:url(img/2003/float_list01_1_off.png) no-repeat right center;}
+        .floatMark>ul>li.Mark01_1.on a span{background:url(img/2003/float_list01_1_on.png) no-repeat right center;width:272px;}
+        .floatMark>ul>li.Mark02 a span{background:url(img/2003/float_list02_off.png) no-repeat right center;}
+        .floatMark>ul>li.Mark02.on a span{background:url(img/2003/float_list02_on.png) no-repeat right center;width:204px;}
+        .floatMark>ul>li.Mark03 a span{background:url(img/2003/float_list03_off.png) no-repeat right center;}
+        .floatMark>ul>li.Mark03.on a span{background:url(img/2003/float_list03_on.png) no-repeat right center;width:254px;}
+        .floatMark>ul>li.Mark04 a span{background:url(img/2003/float_list04_off.png) no-repeat right center;}
+        .floatMark>ul>li.Mark04.on a span{background:url(img/2003/float_list04_on.png) no-repeat right center;width:287px;}
+        .floatMark>ul>li.Mark05 a span{background:url(img/2003/float_list05_off.png) no-repeat right center;}
+        .floatMark>ul>li.Mark05.on a span{background:url(img/2003/float_list05_on.png) no-repeat right center;width:277px;}
+    
+        .floatTopBtn{margin-right:54px;}
+        #layerOpenBtn{position:fixed;right:55px;bottom:30px;z-index:99;border-radius: 38px;box-shadow: 8px 10px 13px rgba(23, 208, 188, 0.12);}
+        .freeApplyBtn02{position:fixed;right:55px;bottom:130px;z-index:99;border-radius: 38px;box-shadow: 8px 10px 13px rgba(77, 128, 122, 0.12);}
+    </style>
+</head>
+<body>
+	
+    <!--[if lte IE 9]>
+        <style>
+            .visualWrap.on:before{bottom:-108px;}
+             .visualWrap.on:after{bottom:-134px}
+             .calendarScroll{overflow:auto !important}
+        </style>
+    <![endif]-->
+    
+
+    <!--20200305 샵바이 1주년-->
+    <div class="shopby1st">
+        <div class="visualWrap" id="fMatch01">
+            <div class="cakeWrap">
+                <div class="top"><img src="img/2003/cake_top.png" alt=""></div>                
+                <div class="st"><img src="img/2003/st.png" alt="1st"></div>
+                <div class="hbdWrap">
+                    <div class="hbd"><img src="img/2003/happy_birthday.png" alt="happy birthday"></div>
+                    <div class="balloon"><img src="img/2003/balloon.png" alt=""></div>
+                </div>
+                <div class="commLeft"><img src="img/2003/comment01_new.png" alt="상품 1개로 시작하는 shop by 첫 번째 생일 기념"></div>
+                <div class="commRight"><img src="img/2003/comment02.png" alt="영혼까지 끌어모은 혜택이 팡팡!"></div>
+                <div class="bottom"><img src="img/2003/cake_bottom_new.png" alt=""></div>
+            </div>
+            <div class="mobil">
+                <div class="mobilL01"><img src="img/2003/mobile_left01.png" alt=""></div>
+                <div class="mobilL02"><img src="img/2003/mobile_left02.png" alt=""></div>
+                <div class="mobilR01"><img src="img/2003/mobile_right.png" alt=""></div>
+            </div>
+            <div class="cloud">
+                <div class="cloud01"><img src="img/2003/cloud_01.png"></div>
+                <div class="cloud02"><img src="img/2003/cloud_02.png"></div>
+            </div>
+    
+        </div>
+        <div class="hashtagWrap" id="fMatch01_1">
+            <div class="hashtagTit"><img src="img/2003/hashtag_tit.png" alt="초보자도 혼자서 뚝딱 만들 수 있죠 누구에게나 쉽고 빠른 쇼핑몰 shop by"></div>
+            <ul>
+                <li><img src="img/2003/hashtag01.png" alt="월이용료_0원"></li>
+                <li><img src="img/2003/hashtag02.png" alt="마우스_하나로_디자인편집"></li>
+                <li><img src="img/2003/hashtag03.png" alt="모바일_쇼핑몰_자동완성"></li>
+                <li><img src="img/2003/hashtag04.png" alt="고퀄리티_디자인스킨_무료제공"></li>
+            </ul>
+        </div>
+        <style>
+            .calendarAreaWrap{margin-top:-20px;}
+    
+            .calendar{text-align:center;}
+            .calendar .calendarYear2019 + ul{width:2px;margin:0 auto;height:486px;}
+            .calendar .calendarYear2019 + ul:before{display:block;content:"";width:2px;top:229px;height:486px;background-color:#f2cecf;position:absolute;left:50%;margin-left:-1px;}
+            .calendar ul li{position:relative;right:9px;opacity:0;transition:all ease 1s;}
+            .calendar ul li.on{opacity:1;}
+            .calendar ul li.tl01{top:0;}
+            .calendar ul li.tl02{top:-46px;right:461px}
+            .calendar ul li.tl03{top:-82px;}
+            .calendar ul li.tl04{top:-123px;right:554px}
+            .calendar ul li.tl05{top:-166px;}
+            .calendar ul li.tl06{top:-202px;right:479px}
+            .calendar ul li.tl07{top:-248px;}
+            
+    
+            .calendar .calendarYear2020 {margin:40px 0 0 0;}
+            .calendar .calendarYear2020 + ul{width:2px;margin:0 auto;height:186px;padding-bottom:387px;}
+            .calendar .calendarYear2020 + ul:before{display:block;content:"";width:2px;height:186px;background-color:#f2cecf;position:absolute;left:50%;margin-left:-1px;top:795px;}
+            .calendar ul li.tl08{right:471px;}
+            .calendar ul li.tl09{top:-36px}
+            .calendar ul li.tlNaver{right:339px;top:-34px;}
+            .calendar ul li.tobe{right:141px;}
+    
+            .sticker01{position: absolute;top: 259px;left: 50%;margin-left: 492px;}
+            .sticker02{position: absolute;top: 640px;right: 50%;margin-right: 480px;}
+            .sticker03{position: absolute;top: 807px;left: 50%;margin-left: 440px;}
+    
+        </style>
+        <div class="calendarWrap" id="fMatch02">
+            <div class="calendarTit"><img src="img/2003/calendar_title_new.png" alt="shop by의 지난 1년"></div>
+            <div class="calendarAreaWrap">
+                <div class="calendar">
+                    <div class="calendarYear2019"><img src="img/2003/calendar_2019.png" alt="2019"></div>
+                    <ul>
+                        <li class="tl01"><img src="img/2003/calendar_201903.png" alt="상품 1개로 시작하는 shop by 오픈/세상 힙했던 shop by 런칭 파티!"></li>
+                        <li class="tl02"><img src="img/2003/calendar_201906.png" alt="shop by 상점 1만개 돌파/실시간 검색어 “샵바이” 1위 등극"></li>
+                        <li class="tl03"><img src="img/2003/calendar_201907.png" alt="언제 어디서나 간편하게! 모바일 관리자 출시"></li>
+                        <li class="tl04"><img src="img/2003/calendar_201908.png" alt="2019 독일 레드닷 디자인 어워드 온라인 서비스 브랜드 부문 수상"></li>
+                        <li class="tl05"><img src="img/2003/calendar_201909.png" alt="센세이셔널 했던 디자인 템플릿 업데이트"></li>
+                        <li class="tl06"><img src="img/2003/calendar_201910.png" alt="의류/패션 성장 지원 프로젝트 진행, 신규 전자결제 서비스 추가"></li>
+                        <li class="tl07"><img src="img/2003/calendar_201911.png" alt="쇼핑몰 통합 관리 서비스 연동/사업자등록 없이 시작하는 개인 판매 서비스 출시"></li>
+                    </ul>
+    
+                    <div class="calendarYear2020"><img src="img/2003/calendar_2020.png" alt="2020"></div>
+                    <ul>
+                        <li class="tl08"><img src="img/2003/calendar_202001.png" alt="인플루언서 공동구매 이벤트 진행/신규 스킨 10종 오픈"></li>
+                        <li class="tl09"><img src="img/2003/calendar_202002.png" alt="인스타그램 기능 업데이트"></li>
+                        <li class="tlNaver"><a href="https://www.nhn-commerce.com/shopby/customer/board-detail.gd?boardId=shopby_upgrade&page=2&idx=24"><img src="img/2003/calendar_202002_naver.png" alt="2,200만 포털 회원을 잡을 기회! 네이버페이 OPEN!"></a></li>
+                        <li class="tobe"><img src="img/2003/to_be.png" alt="To be continued..."></li>
+                    </ul>
+                </div>
+                <span class="sticker01"><img src="img/2003/calendar_sticker01.png" alt=""></span>
+                <span class="sticker02"><img src="img/2003/calendar_sticker02.png" alt=""></span>
+                <span class="sticker03"><img src="img/2003/calendar_sticker03.png" alt=""></span>
+            </div>
+            
+        </div>
+        <div class="benefitWrap">
+            <div class="benefitTit"><img src="img/2003/benefit_tit.png" alt="shop by 1주년 생일턱을 쏜다"></div>
+            <ul class="benefitInfo">
+                <li>
+                    <strong><img src="img/2003/benefit_list01.png" alt="이벤트대상"></strong>
+                    <span>기간 내 <em>shop by 사업자 유형</em> 신규 신청한 회원</span>
+                </li>
+                <li>
+                    <strong><img src="img/2003/benefit_list02.png" alt="응모기간"></strong>
+                    <span><img src="img/2003/benefit_term.png" alt="2020.03.25 ~ 2020.04.30"></span>
+                </li>
+            </ul>
+    
+            <div class="benefitStep stick01">
+                <div class="stepImg"><img src="img/2003/benefit_step01_img.png" alt=""></div>
+                <div class="stepTxt">
+                    <p style="padding-top:25px;"><img src="img/2003/benefit_step01_tit.png" alt="생일턱 받을 준비! 먼저, shop by 신청해주세요!"></p>
+                    <a href="https://{:$godoDomain.godo}/echost/solution/godo-solution-regist.gd?smode=rfree" class="freeApplyBtn">무료 신청하기</a>
+                    <span><em>※ 로그인을 해주셔야 해요</em></span>
+                </div>
+            </div>
+    
+            <div class="benefitStep stick02" id="fMatch03">
+                <div class="stepImg"><img src="img/2003/benefit_step02_img.png" alt=""></div>
+                <div class="stepTxt">
+                    <span class="stepFlag"><img src="img/2003/benefit_step02_tit_v3_flag.png" alt="선착순 증정"></span>
+                    <p><img src="img/2003/benefit_step02_tit_v3.png" alt="핫한 아이템 받기!이벤트 응모만 해도 선물이 와르르~"></p>
+                    <ul>
+                        <li><em>참여방법</em><span>shop by로 <strong>상품 1개 등록</strong> 하기</span></li>
+                        <li><em>당첨인원</em><span>선착순 <strong>1,000명</strong> 제공</span></li>
+                        <li><em>증정상품</em><span>무드등 미니 가습기, 핸디형 무선 청소기</span></li>
+                    </ul>
+                    <a href="https://lifesum.shopby.co.kr/index" target="_blank" class="gotoBtn Lver">샵바이로 제작된 라이프썸 구경하기</a>
+                </div>
+            </div>
+    
+            <div class="benefitStep" id="fMatch04">
+                <div class="stepImg"><img src="img/2003/benefit_step03_img.png" alt=""></div>
+                <div class="stepTxt">
+                    <p><img src="img/2003/benefit_step03_tit.png" alt="1주년 기념 떡 케이크 받기"></p>
+                    <ul>
+                        <li><em>참여방법</em><span>상품 등록 후 <strong>PG 신청</strong> 하기</span></li>
+                        <li><em>당첨인원</em><span>추첨을 통해 <strong>100명</strong> 선정</span></li>
+                    </ul>
+                    <a href="//{:$godoDomain.godo}/echost/power/add/payment/pg-intro.gd" target="_blank" class="gotoBtn">PG 신청 상세보기</a>
+                    <span>※ 예시 이미지와 다를 수 있어요</span>
+                </div>
+            </div>
+            <div class="benefitStep" id="fMatch05">
+                <div class="stepImg"><img src="img/2003/benefit_step04_img.png" alt=""></div>
+                <div class="stepTxt">
+                    <p style="padding-top:35px;"><img src="img/2003/benefit_step04_tit.png" alt="shop by 는 프로니까 ~! 거하게 쏜다! iPad Pro 증정"></p>
+                    <ul>
+                        <li><em>참여방법</em><span>신청 후 한 달 이내 거래액 <strong>천만 원</strong> 달성</span></li>
+                        <li><em>당첨인원</em><span>거래액 달성 인원 중 <strong class="pointColor1">상위 3명</strong>에게 증정</span></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="mobil">
+                <div class="mobilL01"><img src="img/2003/mobile_left01.png" alt=""></div>
+                <div class="mobilL02"><img src="img/2003/mobile_left02.png" alt=""></div>
+                <div class="mobilR01"><img src="img/2003/mobile_right.png" alt=""></div>
+            </div>
+        </div>
+        <div class="applyWrap">
+            <div class="applyTit"><img src="img/2003/applyStep_tit.png" alt="한눈에 보는 참여방법"></div>
+            <ul class="applyStep">
+                <li>
+                    <img src="img/2003/applyStep01_img.png" alt="shop by 무료신청">
+                    <p>이벤트 참여를 위해 필수</p>
+                </li>
+                <li>
+                    <img src="img/2003/applyStep02_img.png" alt="상품 1개 등록하기">
+                    <p>라이프썸 이벤트 참여</p>
+                </li>
+                <li>
+                    <img src="img/2003/applyStep03_img.png" alt="PG 신청하기">
+                    <p>떡케이크 이벤트 참여</p>
+                </li>
+                <li>
+                    <img src="img/2003/applyStep04_img.png" alt="이벤트 응모하기">
+                    <p>거래액 상위 3명<br /><strong>iPad 증정</strong></p>
+                </li>
+            </ul>
+            <a href="#none" class="evtApplyBtn"  id="layerOpenBtn2"><span>이벤트 응모하기</span></a>
+        </div>
+        <div class="slideOpenBnr">
+            <a href="https://{:$godoDomain.godo}/echost/solution/godo-solution-regist.gd?smode=rfree"><img src="img/2003/slideOpen_bnr_txt.png" alt=""></a>
+        </div>
+        <div class="noticeWrap">
+            <div class="noticeTit"><img src="img/2003/notice_tit.png" alt="이벤트 유의사항"></div>
+            <ul class="noticeList">
+                <li><strong>응모 참여 기간</strong><span>2020년 3월 25일 ~ 2020년 4월 30일</span></li>
+                <li><strong>이벤트 대상</strong><span>이벤트 기간 내 shop by 사업자 유형 쇼핑몰을 신청한 고도 회원</span> <em>(기존 shop by 이용 회원은 신규 신청 후 이벤트 참여할 경우 응모 가능합니다.)</em></li>
+                <li>응모는 회원 당 1회로 제한되며, 한 번에 모든 이벤트에 자동 응모됩니다.</li>
+                <li>1주년 떡 케이크는 응모 종료일까지 PG 신청을 완료한 회원에 한해 추첨됩니다.</li>
+                <li>라이프썸, 떡 케이크 경품 당첨자는 5월 중 개별 SMS 및 공지사항을 통해 안내될 예정이며 경품은 이후 일괄 지급됩니다.</li>
+                <li>아이패드 경품은 shop by 신청일 기준으로 한 달 내 해당 거래액 이상을 달성한 인원 중 상위 3명에게 개별적으로 당첨 안내할 예정입니다.
+                    <ul>
+                        <li>- 예시) 4월 30일에 shop by를 신청했다면 5월 30일까지 거래액을 기준으로 합니다. (응모는 4월 30일까지 必)</li>
+                        <li>- 거래액은 무통장 입금을 제외한 신용카드, 계좌이체, 가상 계좌 건 기준이며 취소 건은 제외됩니다.</li>
+                    </ul>
+                </li>
+                <li>경품 응모 시 정확한 배송 정보를 입력 바랍니다. 정보 오기입으로 인한 피해는 당사에서 책임지지 않으며, 상품 배송이 불가할 경우 당첨이 취소될 수 있으니 유의 바랍니다.</li>
+                <li>이벤트 내용 및 경품은 당사 사정에 의해 변경되거나 조기 종료될 수 있습니다.</li>
+            </ul>
+        </div>
+        <div class="floatMark">
+            <ul>
+                <li class="Mark01 on"><a href="#fMatch01"><span>첫생일</span></a></li>
+                <li class="Mark01_1"><a href="#fMatch01_1"><span>shop by</span></a></li>
+                <li class="Mark02"><a href="#fMatch02"><span>성장기</span></a></li>
+                <li class="Mark03"><a href="#fMatch03"><span>핫아이템</span></a></li>
+                <li class="Mark04"><a href="#fMatch04"><span>기념 케이크</span></a></li>
+                <li class="Mark05"><a href="#fMatch05"><span>BIG 선물</span></a></li>
+            </ul>
+            <a href="javascript:;" class="floatTopBtn" onclick="$('html, body').animate({scrollTop:0},400);"><img src="img/2003/float_top.png" alt="맨위로 가기"></a>
+        </div>
+        <a href="https://{:$godoDomain.godo}/echost/solution/godo-solution-regist.gd?smode=rfree" class="freeApplyBtn02"><img src="img/2003/free_apply.png" alt="무료 신청하기"></a>
+        <a href="#none" id="layerOpenBtn"><img src="img/2003/float_apply.png" alt="이벤트 응모하기"></a>
+        
+        
+        <div class="dimmed" style="display:none;"></div>
+    
+        <!-- 20200305 응모하기 팝업-->
+        <!-- 응모 레이어팝업 내 기본 전송값 -->
+        <form id="registForm" method="post" action="https://{:$godoDomain.godo}/shopby/promotion/event-process.gd" target="ifrmHidden">
+            <input type="hidden" name="pageToken" id="pageToken" value="{:$pageToken}"/>
+            <input type="hidden" name="inflow" id="inflow" value="{:$inflow}"/>
+            <div class="evtEnterPop" style="display:none;">
+                <div class="popHead">
+                    <h2><img src="img/2003/evtEnterpop_tit.png" alt=""></h2>
+                    <div class="popClose">
+                        <a href="javascript:;"><span>팝업창 닫기</span></a>
+                    </div>
+    
+                </div>
+                <div class="popCont">
+                    <table class="evtEnterTbl" cellpadding="0" cellspacing="0" summary="이벤트 응모 팝업입니다.">
+                        <colgroup>
+                            <col style="width:95px">
+                            <col style="width:278px">
+                            <col style="width:auto">
+                        </colgroup>
+                        <tbody>
+                            <tr>
+                                <th><label for="applyName">이름</label></th>
+                                <td><input type="text" name="applyName" id="applyName" maxlength="30" value="{:$memberInfo['name']}"></td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <th>연락처</th>
+                                <td>
+                                    <div class="iptCol3">
+                                        <select name="phonePrefix" id="phonePrefix" title="핸드폰 번호 앞자리 선택">
+                                        {:foreach $phonePrefix as $idx => $prefix}
+                                        <option value="{:$prefix}" {:if $memberInfo['hp'][0] === $prefix}selected{:/if}>{:$prefix}</option>
+                                        {:/foreach}
+                                        </select><span></span>
+                                        <script>
+                                            //maxlength 체크
+                                            function maxLengthCheck(object){
+                                                if (object.value.length > object.maxLength){
+                                                    object.value = object.value.slice(0, object.maxLength);
+                                                }   
+                                            }
+                                        </script>
+                                        <input type="number" name="phoneMiddle" maxlength="4" value="{:$memberInfo['hp'][1]}" oninput="maxLengthCheck(this)" onKeyup="this.value=this.value.replace(/[^0-9]/g,'');" title="핸드폰 번호 가운데자리 입력"><span></span>
+                                        <input type="number" name="phoneEnd" maxlength="4" value="{:$memberInfo['hp'][2]}" oninput="maxLengthCheck(this)" onKeyup="this.value=this.value.replace(/[^0-9]/g,'');" title="핸드폰 번호 끝자리 입력">
+                                    </div>
+                                </td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <th rowspan="4">수령 주소지</th>
+                                <td>
+                                    <div class="iptCol2">
+                                        <input type="text" id="zonecode" name="zonecode" style="width:140px;" maxlength="5" title="현 우편번호 5자리">
+                                        <div class="beforeZipCode">
+                                            <input type="text" id="zipcode1" name="zipcode1" maxlength="3" title="구 우편번호 앞 3자리"><span></span>
+                                            <input type="text" id="zipcode2" name="zipcode2" maxlength="3" title="구 우편번호 뒤 3자리">
+                                        </div>
+                                    </div>
+                                </td>
+                                <td>
+                                    <a href="javascript:;" id="btnZipcode" class="btn_zipCode">우편번호 찾기</a>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td><input type="text" id="address_road" name="address_road" title="도로명주소"></td>
+                                <td><input type="text" id="address" name="address" title="지번주소"></td>
+                            </tr>
+                            <tr>
+                                <td colspan="2"><input type="text" id="address_ext" name="address_ext" title="상세주소"></td>
+                            </tr>
+                            <tr>
+                                <td colspan="2">
+                                    <ul class="popNotiList">
+                                        <li><span>응모후에는 주소지 변경이 불가능</span>하오니 유의 바랍니다.</li>
+                                        <li>응모는 <span>회원당 1회</span>이며, 자동으로 모든 이벤트에 응모됩니다.</li>
+                                        <li>자세한 사항은 유의사항을 통해 확인 바랍니다.</li>
+                                    </ul>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <div class="agreeBox">
+                        <div class="iptChkBoxWrap">
+                            <span class="iptChkBox">
+                                <input type="checkbox" name="agree" id="agree" class="chkBox allChk">
+                                <label for="agree"></label>
+                            </span>
+                            <strong>개인정보 수집 및 이용에 동의합니다. <span>(필수)</span></strong>
+                        </div>
+                        <div class="agreeComm">본 이벤트 당첨 안내 및 확인을 위한 최소한의 개인 정보 수집&middot;이용 및 처리 위탁에 동의해 주셔야 응모 가능합니다.<br/><em>개인 정보 활용에 대하여 동의를 거부할 수 있으나 미동의 시 이벤트 참여가 불가함</em>을 알려드립니다.</div>
+    
+                        <div class="agreeChkBox">
+                            <div class="iptChkBoxWrap">
+                                <span class="iptChkBox">
+                                    <input type="checkbox" name="agreeUse" id="agreeUse" class="chkBox reqChk" value="y">
+                                    <label for="agreeUse"></label>
+                                </span>
+                                <strong>개인 정보 수집&middot;이용</strong>
+                            </div>
+                            <div class="agreeSubj">
+                                <dl>
+                                    <dt>수집 목적</dt>
+                                    <dd><em>이벤트 당첨자 선정 및 본인확인, 당첨 시 개별 연락 및 경품 발송을 위한 개인 정보 수집</em></dd>
+                                    <dt>수집 항목</dt>
+                                    <dd>이름, 연락처, 경품 배송 주소</dd>
+                                    <dt>보유 기간</dt>
+                                    <dd>당첨 경품 발송 완료 시 즉시 파기</dd>
+                                </dl>
+                            </div>
+                        </div>
+    
+                        <div class="agreeChkBox">
+                            <div class="iptChkBoxWrap">
+                                <span class="iptChkBox">
+                                    <input type="checkbox" name="agreeOffer" id="agreeOffer" class="chkBox reqChk" value="y">
+                                    <label for="agreeOffer"></label>
+                                </span>
+                                <strong>개인 정보 처리 위탁</strong>
+                            </div>
+                            <div class="agreeSubj">
+                                <dl>
+                                    <dt>수탁 업체</dt>
+                                    <dd><em>㈜ 엔에이치엔위투, ㈜ 백년화편</em></dd>
+                                    <dt>위탁 업무</dt>
+                                    <dd>이벤트 당첨 경품 발송</dd>
+                                </dl>
+                            </div>
+                        </div>
+                    </div>            
+                </div>
+                <div class="popFooter">
+                    <button type="submit" class="evtEnterBtn">응모하기</button>
+                </div>            
+            </form>
+        </div>
+        <!-- //20200305 응모하기 팝업-->
+    
+        <!--20200305 알럿 레이어-->
+        <div class="alertPop" style="display:none;">
+            <div class="alertCont change">
+                <strong>이벤트 응모</strong>가 완료 되었습니다.
+            </div>
+            <div class="alertFooter">
+                <a href="javascript:;" class="alertBtn">확인</a>
+            </div>
+        </div>
+        <!--20200305 알럿 레이어-->
+    </div>
+    <!--//20200305 샵바이 1주년-->
+</body>
+
+<!-- ▼ 메인에서만 실행되어야하는 script-->
+<script>
+    $(document).ready(function(){
+        if ($(".teaser").length > 0) 
+            function teaserheader(){
+                if($(window).outerWidth()<1024){
+                    $(".teaserTxt>div").each(function(i){
+                        setTimeout(function(){
+                            $(".teaserTxt>div").eq(i).addClass("on");
+                        },(i+1)*220);
+                    });
+    
+                    setTimeout(function(){
+                        $(".snsList>li").each(function(i){
+                            setTimeout(function(){
+                                $(".snsList>li").eq(i).addClass("on");
+                            },(i+1)*220);
+                        });
+                    }, 880);
+                }else{
+                    
+                    $(".chatWrap>div").each(function(i){
+                        setTimeout(function(){
+                            $(".chatWrap>div").eq(i).addClass("on");
+                        },(i+1)*220);
+                    });
+                    setTimeout(function(){
+                        $(".teaserTxt>div").each(function(i){
+                            setTimeout(function(){
+                                $(".teaserTxt>div").eq(i).addClass("on");
+                            },(i+1)*220);
+                        });
+                    },1500);   
+                }
+            }
+
+            teaserheader();
+            $(window).resize(function(){
+                teaserheader();
+            });
+    });
+
+    
+    var isDuplicated = false;
+    $(document).ready(function(){
+
+        var agent = navigator.userAgent.toLowerCase();
+        if ( (navigator.appName == 'Netscape' && navigator.userAgent.search('Trident') != -1) || (agent.indexOf("msie") != -1) ) {
+            $('.shopby1st').addClass('ie');
+        }
+
+
+        $(".cakeWrap > div").each(function(i){
+            setTimeout(function(){
+                $(".cakeWrap > div").eq(i).addClass("on");
+            },(i+1)*300);
+        });
+        
+        setTimeout(function(){
+            $('.balloon').addClass('on');
+        },1500);
+
+        setInterval(function(){
+            $('.visualWrap').toggleClass('on');
+        },1000);
+
+        var i = 0;
+        bgMover();
+        function bgMover(){
+            $('.visualWrap .mobilL01').animate({'top':'-70px'},700).animate({'top':'-80px'},700);
+            $('.visualWrap .mobilL02').animate({'top':'-50px'},700).animate({'top':'-40px'},700);
+            $('.visualWrap .mobilR01').animate({'top':'-48px'},700).animate({'top':'-58px'},700);
+            i++;
+            window.setTimeout(function() { bgMover() }, 500)
+        }
+
+
+        $('.floatMark').css('top',($(window).outerHeight()-$('.floatMark').outerHeight())/2);
+        $('.floatTopBtn').hide();
+        $('.calendarScroll').addClass('off');
+
+        $(".hashtagWrap ul li img").mouseover(function() {
+            $(this).attr("src", $(this).attr("src").replace(".png","_hover.png"));
+        }).mouseout(function() {
+            $(this).attr("src", $(this).attr("src").replace("_hover.png",".png"));
+        });
+
+        $(window).on('scroll',function() {
+            if($(window).scrollTop()>=$('.hashtagWrap').offset().top-850){
+                $(".hashtagWrap > ul > li").each(function(i){
+                    setTimeout(function(){
+                        $(".hashtagWrap > ul > li").eq(i).addClass("on");
+                    },(i+1)*200);
+                });
+            }
+
+            if($(window).scrollTop()>=$('.calendarWrap').offset().top-600){               
+                $(".calendar ul li").each(function(i){
+                    setTimeout(function(){
+                        $(".calendar ul li").eq(i).addClass("on");
+                    },(i+1)*300);
+                });
+            }
+
+            if($(window).scrollTop()>=$('.slideOpenBnr').offset().top-600){
+                $(".slideOpenBnr").animate({'height':'200px', 'zIndex':'1'});
+            }
+
+            if($(window).scrollTop()+$(window).outerHeight()>=$('.noticeWrap').offset().top+100){
+                $(".noticeTit").addClass("on");
+            }
+
+
+            if($(window).scrollTop()>=$('.benefitWrap').offset().top-300){
+                    var i = 0;
+                    bgMover02();
+                    function bgMover02(){
+                        $('.benefitWrap .mobilL01').animate({'top':'-89px'},800).animate({'top':'-99px'},800);
+                        $('.benefitWrap .mobilL02').animate({'top':'31px'},800).animate({'top':'21px'},800);
+                        $('.benefitWrap .mobilR01').animate({'top':'-83px'},800).animate({'top':'-73px'},800);
+                        i++;
+                        window.setTimeout(function() { bgMover02() }, 500)
+                    }                    
+                }
+
+            if($(window).scrollTop()==0){
+                $('.floatMark').removeClass('on');
+                $('.floatTopBtn').fadeOut();
+                $('.floatMark>ul>li').removeClass('on');
+                $('.Mark01').addClass('on');
+            }else{
+                $('.floatMark').addClass('on');
+                $('.floatTopBtn').fadeIn();       
+            }
+
+            if($(window).scrollTop()+650>=$('#fMatch01').offset().top+$('#fMatch01').outerHeight()){
+                $('.floatMark>ul>li').removeClass('on');
+                $('.Mark01').addClass('on');
+            }
+
+            if($(window).scrollTop()+750>=$('#fMatch01_1').offset().top+$('#fMatch01_1').outerHeight()){
+                $('.floatMark>ul>li').removeClass('on');
+                $('.Mark01_1').addClass('on');
+            }
+
+            if($(window).scrollTop()+50>=$('#fMatch02').offset().top-350){
+                $('.floatMark>ul>li, .benefitWrap .benefitStep').removeClass('on');
+                $('.Mark02').addClass('on');
+            }
+            if($(window).scrollTop()+350>=$('#fMatch02').offset().top+$('#fMatch02').outerHeight()){
+                $('.floatMark>ul>li').removeClass('on');
+            }
+
+            if($(window).scrollTop()>=$('#fMatch03').offset().top-450){
+                $('.floatMark>ul>li, .benefitWrap .benefitStep').removeClass('on');
+                $('#fMatch03').addClass('on');
+                $('.Mark03').addClass('on');
+            }
+            if($(window).scrollTop()>=$('#fMatch04').offset().top-450){
+                $('.floatMark>ul>li, .benefitWrap .benefitStep').removeClass('on');
+                $('#fMatch04').addClass('on');
+                $('.Mark04').addClass('on');
+            }
+            if($(window).scrollTop()>=$('#fMatch05').offset().top-450){
+                $('.floatMark>ul>li, .benefitWrap .benefitStep').removeClass('on');
+                $('#fMatch05').addClass('on');
+                $('.Mark05').addClass('on');
+            }
+
+            if($(window).scrollTop()+550>=$('#fMatch05').offset().top+$('#fMatch05').outerHeight()){
+                $('.floatMark>ul>li, .benefitWrap .benefitStep').removeClass('on');
+            }
+        });
+        
+
+
+        //ie8 체크박스 커스텀위한 addClass
+        $('.agreeChkBox .iptChkBoxWrap').click(function(){
+            $(this).toggleClass('on');
+        });
+
+
+        //체크박스 prop
+        $('.chkBox').click(function(){
+            if($(this).is(':checked')){
+                $(this).prop('checked',true).addClass('checked');
+            }else{
+                $(this).prop('checked',false).removeClass('checked');
+            }
+        });
+
+
+        //전체선택 체크박스 prop 및 prop 해제
+        $('.chkBox.allChk').click(function(){
+            if($(this).is(':checked')){
+                $('.chkBox').prop('checked',true).addClass('checked');
+            }else{
+                $('.chkBox') .prop('checked',false).removeClass('checked');
+            }
+        });
+
+
+        //필수선택 체크박스 전체 prop시 전체선택 체크박스 prop
+        $('.chkBox.reqChk').click(function(){
+            if($('.reqChk').length==$('.reqChk:checked').length){
+                $('.chkBox.allChk').prop('checked',true).addClass('checked');
+            }else{
+                $('.chkBox.allChk') .prop('checked',false).removeClass('checked');
+            }
+        });
+
+
+        //체크박스 prop에 따른 알럿 멘트 switch
+        $('.alertPop').hide();
+        $('.evtEnterBtn').click(function(){
+            if(!($('.reqChk').length==$('.reqChk:checked').length)){
+                requireAgree();
+            }
+        });
+
+        $('#registForm').submit(function (e) {
+            var specialChars = /[<>|.,&!#$%^*()?+=\/]/gi;
+            if($.trim($("input[name='applyName']").val()) == '') {
+                // alert('이름을 입력해주세요.');
+                requireText('입력되지 않은 항목이 있습니다.');
+                $("input[name='applyName']").focus();
+                return false;
+            }
+            if(specialChars.test($("input[name='applyName']").val()) == true) {
+                alert('이름은 특수문자를 입력할 수 없습니다.');
+                $("input[name='applyName']").focus();
+                return false;
+            }
+            if($("input[name='applyName']").val().length > 30) {
+                alert('담당자명은 30글자 이내로 입력해주세요.');
+                $("input[name='applyName']").focus();
+                return false;
+            }
+            if ($.trim($("input[name='address']").val()) == '' || $.trim($("input[name='address_ext']").val()) == '') {
+                // alert('수령지 주소를 입력해주세요.');
+                requireText('입력되지 않은 항목이 있습니다.');
+                $("#btnZipcode").focus();
+                return false;
+            }
+            if ($.trim($("input[name='zonecode']").val()) == '' && $.trim($("input[name='zipcode1']").val()) == '' && $.trim($("input[name='zipcode2']").val()) == '') {
+                // alert('우편번호를 입력해주세요.');
+                requireText('입력되지 않은 항목이 있습니다.');
+                $("#btnZipcode").focus();
+                return false;
+            }
+            if($.trim($("input[name='phoneMiddle']").val()) == '') {
+                // alert('연락처 중간자리를 입력해주세요.');
+                requireText('입력되지 않은 항목이 있습니다.');
+                $("input[name='phoneMiddle']").focus();
+                return false;
+            }
+            if(/^[0-9]{3,4}$/.test($("input[name='phoneMiddle']").val()) == false) {
+                alert('숫자만 3~4자 이내로 입력해주세요.');
+                $("input[name='phoneMiddle']").focus();
+                return false;
+            }
+            if($.trim($("input[name='phoneEnd']").val()) == '') {
+                // alert('연락처 끝자리를 입력해주세요.');
+                requireText('입력되지 않은 항목이 있습니다.');
+                $("input[name='phoneEnd']").focus();
+                return false;
+            }
+            if(/^[0-9]{3,4}$/.test($("input[name='phoneEnd']").val()) == false) {
+                alert('숫자만 4자를 입력해주세요.');
+                $("input[name='phoneEnd']").focus();
+                return false;
+            }
+            if($("input:checkbox[name='agreeUse']").is(":checked") === true) {
+                $("input:checkbox[name='agreeUse']").val('y');
+            } else {
+                $("input:checkbox[name='agreeUse']").val('n');
+                $('.dimmed').show();
+                requireAgree();
+                return false; 
+            }
+            if($("input:checkbox[name='agreeOffer']").is(":checked") == true) {
+                $("input:checkbox[name='agreeOffer']").val('y');
+            } else {
+                $("input:checkbox[name='agreeOffer']").val('n');
+                $('.dimmed').show();
+                requireAgree();
+                return false;
+            }
+        });
+
+        
+        // 우편번호 찾기
+        $("#btnZipcode,#zipcode1,#zipcode2,#address,#address_road,#address_ext,#zonecode").click(function(){
+            var parameter_arr = new Array('zipcode1','zipcode2','address','address_road','address_ext','zonecode');
+            window.open("https://www.godo.co.kr/layer_pop_v2.php?parr="+parameter_arr+"&requestMode=api","roadPop","width=495,height=450,scrollbars=yes");
+        });
+
+        $('.popClose>a').click(function(){
+            $('body').css('overflow','auto');
+            $('.evtEnterPop, .dimmed').hide();
+        });
+
+        $('.alertBtn').click(function(){
+            if($(this).parents('div.alertPop').hasClass('require')){
+                $('.alertPop').hide();
+                $('body').css('overflow','auto');
+            }else{
+                $('.alertPop').hide();
+                $('.dimmed').hide();
+                $('body').css('overflow','auto');
+            }
+        });
+
+        $(".layer-login .btn-submit").on('click', function (e) {
+            $("body").css("overflow", "auto");
+            $(".layer-login").hide();
+        });
+        
+        $(".layer-login .close").click(function () {
+            $("body").css("overflow", "auto");
+            $(".layer-login").hide();
+        });
+        
+
+        //플로팅 마크
+        $('.floatMark ul li a').click(function(){
+            var areaID=$(this).attr('href');
+            //console.log();
+            if($(this).parents().hasClass('Mark01_1')){
+                $('html, body').animate({scrollTop:$(areaID).offset().top});    
+            }else{
+                $('html, body').animate({scrollTop:$(areaID).offset().top-300});
+            }
+            
+        });
+    });
+    //팝업창 가운데 정렬 함수
+        function layerCenter(){
+            wscrollT=$(window).scrollTop();
+            wscrollL=$(window).scrollLeft();
+
+            var evtPopH=$(".evtEnterPop").outerHeight();
+            var evtPopW=$(".evtEnterPop").outerWidth();
+            $('.evtEnterPop').css({
+                'top':(($(window).height()-evtPopH)/2 + wscrollT)+'px',
+                'left':(($(window).width()-evtPopW)/2 + wscrollL)+'px'
+            });
+
+            var alPopH=$(".alertPop").outerHeight();
+            var alPopW=$(".alertPop").outerWidth();
+            $('.alertPop').css({
+                'top':(($(window).height()-alPopH)/2 + wscrollT)+'px',
+                'left':(($(window).width()-alPopW)/2 + wscrollL)+'px'
+            });
+        }
+        function alignFunc(){
+            layerCenter();
+            $(window).scroll(function(){
+                layerCenter();
+            }).resize(function(){
+                layerCenter();
+            });
+        }
+        // 미입력 항목 레이어팝업
+        function requireText($str)
+        {
+            $('.alertCont.change').html($str)
+            $('.alertPop').removeClass('redVer').addClass('require').show();
+            $('body').css('overflow','hidden');//바디 스크롤 락
+            $('.dimmed').show();
+            alignFunc();
+        }
+
+        // 비동의 응모시 레이어팝업
+        function requireAgree()
+        {
+            $('.alertCont.change').html('개인 정보 수집 이용 및 처리 위탁을<br /><strong>동의하셔야 응모 가능</strong>합니다 ')
+            $('.alertPop').removeClass('redVer').show();
+            $('body').css('overflow','hidden');//바디 스크롤 락
+            $('.dimmed').show();
+            alignFunc();
+        }
+
+        // 응모 정상 완료 레이어팝업
+        function registerDone()
+        {
+            isDuplicated = true;
+            $('.alertCont.change').html('<strong>이벤트 응모</strong>가 완료 되었습니다.')
+            $('.alertPop').removeClass('redVer').addClass('complete').show();
+            $('body').css('overflow','hidden');//바디 스크롤 락
+            $('.dimmed').show();
+            alignFunc();
+            $('.evtEnterPop').hide();
+        }
+
+        // 재응모 시도 시 레이어 팝업
+        function duplicatedRegister()
+        {
+            isDuplicated = true;
+            $('.alertCont.change').html('<p><span class="pointColor1">이미 이벤트에 응모</span>하셨습니다.</p><span>※ 회원당 1회만 응모 가능합니다.</span>');
+            $('.alertPop').addClass('redVer').show();
+            $('body').css('overflow','hidden');//바디 스크롤 락
+            $('.dimmed').show();
+            alignFunc();
+        }
+
+        // 응모대상자 아닐 경우 레이어팝업
+        function unableToRegister()
+        {
+            $('.alertCont.change').html('<p><span class="pointColor1">이벤트 응모대상</span>이 아닙니다.</p><em>※ 대상 <span class="pointColor1">기간 내 shop by 사업자 유형 신청한 회원</span></em>');
+            $('.alertPop').addClass('redVer').show();
+            $('body').css('overflow','hidden');//바디 스크롤 락
+            $('.dimmed').show();
+            alignFunc();
+        }       
+    
+</script>
+</html>
