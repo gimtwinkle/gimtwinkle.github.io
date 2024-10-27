@@ -1,0 +1,21 @@
+.profile {
+  background: #fff;
+  border-radius: 20px;
+  box-shadow: 5px 5px 5px rgba(0, 0, 0, 0.2);
+  text-align: center;
+  padding: 20px 0;
+  width: 200px;
+  position: relative;
+}
+
+.new {
+  background: teal;
+  color: #fff;
+  font-weight: bold;
+  text-align: center;
+  padding: 5px 10px;
+  border-radius: 10px;
+  position: Absolute;
+  top: 20px;
+  right: 20px;
+}
