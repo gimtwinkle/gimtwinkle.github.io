@@ -36,3 +36,21 @@
     transform: rotate(360deg);
   }
 }
+
+/*counter*/
+.countContainer {
+  background: #fff;
+  border-radius: 20px;
+  box-shadow: 5px 5px 5px rgba(0, 0, 0, 0.1);
+  text-align: center;
+  padding: 20px 0;
+  width: 200px;
+  margin: 20px auto;
+  position: relative;
+  border: 1px solid #000;
+}
+.countTotalBox {
+  background: mediumpurple;
+  font-size: 25px;
+  color: #fff;
+}
