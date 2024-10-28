@@ -1,6 +1,6 @@
 import React from "react";
 import Avatar from "./Avatar";
-import "./Profile.css";
+import "../Profile.css";
 
 export default function Profile({ img, name, position, isNew }) {
   return (

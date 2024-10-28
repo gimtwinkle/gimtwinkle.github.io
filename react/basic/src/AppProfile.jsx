@@ -1,7 +1,10 @@
 import "./App.css";
-import Profile from "./Profile";
+import Profile from "./components/Profile";
 
-function App() {
+export default function AppProfile() {
+  const handleClick = (event) => {
+    console.log(event);
+  };
   const profileData = [
     {
       img: "https://randomuser.me/api/portraits/men/75.jpg",
@@ -24,7 +27,8 @@ function App() {
   ];
 
   return (
-    <div className="App">
+    <div className="AppProfile">
+      <button onClick={handleClick}>버튼</button>
       {profileData.map((item) => (
         <Profile
           img={item.img}
@@ -36,5 +40,3 @@ function App() {
     </div>
   );
 }
-
-export default App;
