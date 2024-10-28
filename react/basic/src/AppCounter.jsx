@@ -17,6 +17,7 @@ export default function AppCounter() {
         {count < 10 ? "❄️" : "🔥"}
       </div>
       <Counter totalCount={count} getCountData={getCountData} />
+      <Counter totalCount={count} getCountData={getCountData} />
     </div>
   );
 }
