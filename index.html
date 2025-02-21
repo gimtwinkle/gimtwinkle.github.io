@@ -4,48 +4,65 @@
     <meta charset="UTF-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <script src="https://kit.fontawesome.com/d83848f4f6.js" crossorigin="anonymous"></script>
     <title>Document</title>
   </head>
   <body>
     <style>
-      h1 {
-        font-size: 20px;
-        padding-left: 40px;
-        margin-top: 40px;
-      }
-      ul li {
-        list-style: none;
-        margin-bottom: 20px;
-      }
-      ul li a {
-        color: #000;
-        text-decoration: none;
-        display: block;
-        width: 200px;
-        font-size: 14px;
-        text-align: center;
-        line-height: 1;
-        font-weight: 500;
-        padding: 18px 0 16px;
-        border: 1px solid #000;
-      }
+      *{margin:0;padding:0;}
+      body,html{background:#000;color:#fff;}
+      a{color:#fff;text-decoration: none;}
+      h1 {font-size: 20px;color:#fff;margin-bottom:20px;padding-top:40px;}
+      ul li {list-style: none;margin-bottom: 20px;}
+      #wrap{display:flex;}
+      #sidebar{font-size:15px;padding:0 40px;border-right:1px solid #777;height:100dvh;}
+      #sidebar > ul > li > dl> dt{padding:5px 20px;}
+      #sidebar > ul > li > dl> dd{padding:5px 15px;margin-left:27px;border-left: 1px solid #777777;position:relative;}
+      #sidebar > ul > li > dl> dd:before{content: "";display: block;width: 10px;height: 1px;background: #777;position: Absolute;left: 0;top: 14px;}
+
     </style>
-    <div>
-      <h1>작업 리스트</h1>
-      <ul>
-        <li>
-          <a href="react/basic/index.html">개인프로젝트 - 리액트 (진행중)</a>
-        </li>
-        <li>
-          <a href="vanilajs/vanilaJS.html">개인프로젝트 - 바닐라 javascript</a>
-        </li>
-        <li>
-          <a href="portfolio2019/List2019.html">2019 - 2020 포트폴리오</a>
-        </li>
-        <li>
-          <a href="portfolio2021/List2021.html">2021 - 2023 포트폴리오</a>
-        </li>
-      </ul>
+    <div id="wrap">
+      <div id="sidebar">
+        <h1>
+          <i class="fa-solid fa-plug-circle-plus" style="color:#4bad55;"></i> gimtwinkle.github.io
+        </h1>
+        <ul>
+          <li class="">
+            <dl>
+              <dt><i class="fa-solid fa-folder" style="color: #42a5f5;"></i> WorkHistory</dt>
+              <dd>
+                <a href="portfolio2019/List2019.html">
+                  <i class="fa-brands fa-html5" style="color:#dc4a25;"></i> portfolio_2019-2020.html
+                </a>
+              </dd>
+              <dd><a href="portfolio2021/List2021.html">
+                <i class="fa-brands fa-html5" style="color:#dc4a25;"></i> portfolio_2021-2023.html</a>
+              </dd>
+            </dl>
+          </li>
+          <li>
+            <dl>
+              <dt>
+                <i class="fa-solid fa-folder" style="color: #42a5f5;"></i> PersonalProject
+              </dt>
+              <dd>
+                <a href="vanilajs/vanilaJS.html">
+                  <i class="fa-brands fa-js" style="color:#fed15b"></i> ChromeApp.js
+                </a>
+              </dd>
+              <dd>
+                <a href="https://react-newwons.vercel.app/">
+                  <i class="fa-brands fa-react" style="color:#5ed3f3;"></i>
+                  Blog.tsx
+                </a>
+              </dd>
+            </dl>
+          </li>
+        </ul>
+      </div>
+      <div id="contents">
+        <iframe src="https://react-newwons.vercel.app/" frameborder="0"></iframe>
+      </div>
     </div>
   </body>
 </html>
