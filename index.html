@@ -8,132 +8,96 @@
       src="https://kit.fontawesome.com/d83848f4f6.js"
       crossorigin="anonymous"
     ></script>
+    <link href="asset/index.css" rel="stylesheet" />
+
     <title>Document</title>
   </head>
   <body>
-    <style>
-      * {
-        margin: 0;
-        padding: 0;
-      }
-      body,
-      html {
-        background: #000;
-        color: #fff;
-      }
-      a {
-        color: #fff;
-        text-decoration: none;
-      }
-      h1 {
-        font-size: 20px;
-        color: #fff;
-        margin-bottom: 20px;
-        padding-top: 40px;
-      }
-      ul li {
-        list-style: none;
-        margin-bottom: 20px;
-      }
-      #wrap {
-        display: flex;
-      }
-      #sidebar {
-        font-size: 15px;
-        padding: 0 30px;
-        border-right: 1px solid #777;
-        height: 100dvh;
-      }
-      #sidebar > ul > li > dl > dt {
-        padding: 5px 20px;
-      }
-      #sidebar > ul > li > dl > dd {
-        padding: 5px 15px;
-        margin-left: 27px;
-        border-left: 1px solid #777777;
-        position: relative;
-      }
-      #sidebar > ul > li > dl > dd:before {
-        content: "";
-        display: block;
-        width: 10px;
-        height: 1px;
-        background: #777;
-        position: Absolute;
-        left: 0;
-        top: 14px;
-      }
-      #contents {
-        width: 100%;
-        padding: 0 20px;
-      }
-      #contents h3 {
-        padding: 40px 20px;
-      }
-    </style>
     <div id="wrap">
       <div id="sidebar">
         <h1>
           <i class="fa-solid fa-plug-circle-plus" style="color: #4bad55"></i>
           gimtwinkle.github.io
         </h1>
-        <ul>
-          <li class="">
-            <dl>
-              <dt>
-                <i class="fa-solid fa-folder" style="color: #42a5f5"></i>
-                WorkHistory
-              </dt>
-              <dd>
-                <a href="portfolio2019/List2019.html">
-                  <i class="fa-brands fa-html5" style="color: #dc4a25"></i>
-                  portfolio_2019-2020.html
-                </a>
-              </dd>
-              <dd>
-                <a href="portfolio2021/List2021.html">
-                  <i class="fa-brands fa-html5" style="color: #dc4a25"></i>
-                  portfolio_2021-2023.html</a
-                >
-              </dd>
-            </dl>
+        <ul class="oneDepth">
+          <li>
+            <div class="listTitle">
+              <i class="fa-solid fa-folder" style="color: #42a5f5"></i>
+              WorkHistory
+            </div>
+            <ul id="workHistoryList"></ul>
           </li>
           <li>
-            <dl>
-              <dt>
-                <i class="fa-solid fa-folder" style="color: #42a5f5"></i>
-                PersonalProject
-              </dt>
-              <dd>
-                <a href="vanilajs/vanilaJS.html">
+            <div class="listTitle">
+              <i class="fa-solid fa-folder" style="color: #42a5f5"></i>
+              PersonalProject
+            </div>
+            <ul id="PersonalProject">
+              <li>
+                <a href="vanilajs/vanilaJS.html" on>
                   <i class="fa-brands fa-js" style="color: #fed15b"></i>
                   Javascript_ChromeApp.js
                 </a>
-              </dd>
-              <dd>
+              </li>
+              <li>
                 <a href="https://react-newwons.vercel.app/">
                   <i class="fa-brands fa-react" style="color: #5ed3f3"></i>
                   React-Blog.tsx
                 </a>
-              </dd>
-              <dd>
+              </li>
+              <li>
                 <a href="https://twinkle-three-js.vercel.app/">
                   <i class="fa-solid fa-shapes"></i>
                   ThreeJS-3D.js
                 </a>
-              </dd>
-            </dl>
+              </li>
+            </ul>
           </li>
         </ul>
       </div>
       <div id="contents">
-        <!-- <h3>react, firbase로 만든 blog(crud), caleander는 FullCalendar 사용</h3>
-        <iframe
-          src="https://react-newwons.vercel.app/"
-          frameborder="0"
-          style="width: 100%; height: 80%"
-        ></iframe> -->
+        <iframe src="" frameborder="0" id="iframeView"></iframe>
       </div>
     </div>
   </body>
+  <script>
+    const workHistoryList = [
+      {
+        fileType: "html5",
+        iconColor: "#dc4a25",
+        link: "portfolio_2019/portfolio_2019-2020.html",
+        workName: "portfolio_2019-2020.html",
+      },
+      {
+        fileType: "html5",
+        iconColor: "#dc4a25",
+        link: "portfolio2021/portfolio_2021.html",
+        workName: "portfolio_2021-2023.html",
+      },
+    ];
+
+    const listWrapInner = workHistoryList
+      .map(
+        (item) =>
+          `<li><a href="${item.link}"><i class="fa-brands fa-${item.fileType}" style="margin-right:5px;color:${item.iconColor}"></i>${item.workName}</a></li>`
+      )
+      .join("");
+    document.getElementById("workHistoryList").innerHTML = listWrapInner;
+
+    let clickElementSrc;
+    document
+      .getElementById("workHistoryList")
+      .addEventListener("click", function (event) {
+        if (event.target.tagName.toLowerCase() === "a") {
+          event.preventDefault();
+
+          clickElementSrc = event.target.attributes.href.value;
+          useSrcOutSide(clickElementSrc);
+        }
+      });
+
+    const useSrcOutSide = (src) => {
+      document.getElementById("iframeView").setAttribute("src", src);
+    };
+  </script>
 </html>
