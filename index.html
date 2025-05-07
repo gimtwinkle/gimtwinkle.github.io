@@ -32,31 +32,19 @@
               <i class="fa-solid fa-folder" style="color: #42a5f5"></i>
               PersonalProject
             </div>
-            <ul id="PersonalProject">
-              <li>
-                <a href="vanilajs/vanilaJS.html" on>
-                  <i class="fa-brands fa-js" style="color: #fed15b"></i>
-                  Javascript_ChromeApp.js
-                </a>
-              </li>
-              <li>
-                <a href="https://react-newwons.vercel.app/">
-                  <i class="fa-brands fa-react" style="color: #5ed3f3"></i>
-                  React-Blog.tsx
-                </a>
-              </li>
-              <li>
-                <a href="https://twinkle-three-js.vercel.app/">
-                  <i class="fa-solid fa-shapes"></i>
-                  ThreeJS-3D.js
-                </a>
-              </li>
-            </ul>
+            <ul id="PersonalProject"></ul>
           </li>
         </ul>
       </div>
       <div id="contents">
         <iframe src="" frameborder="0" id="iframeView"></iframe>
+      </div>
+    </div>
+    <div id="myModal" class="modal">
+      <div id="modalHeader" class="modal-header">드래그해서 이동 가능</div>
+      <div class="modal-content">
+        <p id="description">여기에 원하는 내용을 넣으세요</p>
+        <button onclick="closeModal()">닫기</button>
       </div>
     </div>
   </body>
@@ -65,39 +53,123 @@
       {
         fileType: "html5",
         iconColor: "#dc4a25",
-        link: "portfolio_2019/portfolio_2019-2020.html",
+        link: "portfolio2019/List2019.html",
         workName: "portfolio_2019-2020.html",
       },
       {
         fileType: "html5",
         iconColor: "#dc4a25",
-        link: "portfolio2021/portfolio_2021.html",
+        link: "portfolio2021/List2021.html",
         workName: "portfolio_2021-2023.html",
       },
     ];
 
-    const listWrapInner = workHistoryList
-      .map(
-        (item) =>
-          `<li><a href="${item.link}"><i class="fa-brands fa-${item.fileType}" style="margin-right:5px;color:${item.iconColor}"></i>${item.workName}</a></li>`
-      )
-      .join("");
-    document.getElementById("workHistoryList").innerHTML = listWrapInner;
+    const PersonalProject = [
+      {
+        fileType: "js",
+        iconColor: "#fed15b",
+        link: "vanilajs/vanilaJS.html",
+        workName: "Javascript_ChromeApp.js",
+        desc: "🔧 기술 스택 요약 (Tech Stack)\n배포 (Deployment):\n→ Vercel을 사용하여 GitHub 연동 기반 자동 배포 구현\n→ 커밋 시 자동으로 빌드 및 실시간 반영\n\n프론트엔드 (Frontend):\n→ React.js와 Next.js 기반의 SPA(싱글 페이지 애플리케이션)\n→ CSR 및 SSR 혼합 구조로 빠른 로딩 성능 제공\n→ Tailwind CSS 또는 Emotion 등 스타일링 사용 (필요 시 추가 가능)\n\n백엔드 / DB (Backend / DB):\n→ Firebase (NoSQL) 기반 실시간 데이터베이스 활용\n→ Firebase Hosting, Authentication, Firestore 등 통합 사용 가능",
+      },
+      {
+        fileType: "react",
+        iconColor: "#5ed3f3",
+        link: "https://react-newwons.vercel.app/",
+        workName: "React_Blog.tsx",
+        desc: "javascript",
+      },
+      {
+        fileType: "shape",
+        iconColor: "#fff",
+        link: "https://twinkle-three-js.vercel.app/",
+        workName: " ThreeJS_3D.js",
+        desc: "javascript",
+      },
+    ];
+
+    const setSideList = (arry, area) => {
+      const listWrapInner = arry
+        .map(
+          (item) =>
+            `<li><a href="${item.link}"><i class="fa-brands fa-${item.fileType}" style="margin-right:5px;color:${item.iconColor}"></i>${item.workName}</a><a href="${item.link}" target="_blank">새창</a></li>`
+        )
+        .join("");
+
+      document.getElementById(area).innerHTML = listWrapInner;
+    };
+
+    setSideList(workHistoryList, "workHistoryList");
+    setSideList(PersonalProject, "PersonalProject");
+
+    const ids = ["#workHistoryList", "#PersonalProject"];
 
     let clickElementSrc;
-    document
-      .getElementById("workHistoryList")
-      .addEventListener("click", function (event) {
+
+    const showDescription = (text) => {
+      const descriptionBox = document.getElementById("description");
+      descriptionBox.innerHTML = text
+        ? `<p>${text.replace(/\n/g, "<br>")}</p>`
+        : "";
+    };
+
+    ids.forEach((selector) => {
+      const el = document.querySelector(selector);
+      el.addEventListener("click", function (event) {
         if (event.target.tagName.toLowerCase() === "a") {
           event.preventDefault();
 
-          clickElementSrc = event.target.attributes.href.value;
-          useSrcOutSide(clickElementSrc);
+          const href = event.target.getAttribute("href");
+          const clickedText = event.target.textContent.trim();
+          useSrcOutSide(href);
+
+          if (selector === "#PersonalProject") {
+            openModal();
+            const matched = PersonalProject.find((item) =>
+              clickedText.includes(item.workName.trim())
+            );
+            showDescription(matched?.desc || "");
+          } else {
+            showDescription("");
+          }
         }
       });
+    });
 
     const useSrcOutSide = (src) => {
       document.getElementById("iframeView").setAttribute("src", src);
     };
+
+    function openModal() {
+      document.getElementById("myModal").style.display = "block";
+    }
+
+    function closeModal() {
+      document.getElementById("myModal").style.display = "none";
+    }
+
+    const modal = document.getElementById("myModal");
+    const header = document.getElementById("modalHeader");
+
+    let offsetX = 0,
+      offsetY = 0,
+      isDragging = false;
+
+    header.addEventListener("mousedown", (e) => {
+      isDragging = true;
+      offsetX = e.clientX - modal.offsetLeft;
+      offsetY = e.clientY - modal.offsetTop;
+    });
+
+    document.addEventListener("mousemove", (e) => {
+      if (isDragging) {
+        modal.style.left = `${e.clientX - offsetX}px`;
+        modal.style.top = `${e.clientY - offsetY}px`;
+      }
+    });
+
+    document.addEventListener("mouseup", () => {
+      isDragging = false;
+    });
   </script>
 </html>
