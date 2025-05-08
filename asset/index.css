@@ -62,6 +62,7 @@ li {
 #contents {
   width: 100%;
   background: #fff;
+  color: #000;
 }
 #contents iframe {
   width: 100%;
@@ -71,6 +72,9 @@ li {
   padding: 40px 20px;
 }
 
+.mainList > li > a {
+  color: #000;
+}
 #description {
   color: #000;
   font-size: 13px;
@@ -79,7 +83,7 @@ li {
 .modal {
   position: absolute;
   top: inherit;
-  top: 50%;
+  top: 40%;
   left: 50px;
   width: 500px;
   border: 1px solid #aaa;
@@ -96,8 +100,4 @@ li {
   cursor: move;
   font-weight: bold;
   font-size: 12px;
-}
-
-.modal-content {
-  padding: 15px;
 }
