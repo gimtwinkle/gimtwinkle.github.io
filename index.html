@@ -37,19 +37,38 @@
         </ul>
       </div>
       <div id="contents">
-        의미있는 메인 화면이 되고자 유용한 사이트 리스트업
-        <ul class="mainList">
-          <li>
-            <a href="https://nerdcave.com/tailwind-cheat-sheet"
-              >Tailwind CHEAT SHEET</a
-            >
-          </li>
-          <li>
-            <a href="https://codesandbox.io/templates"
-              >CodeSandbox templates
-            </a>
-          </li>
-        </ul>
+        <div class="defaultContent">
+          <h2>의미있는 메인 화면이 되고자 유용한 사이트 리스트업</h2>
+          <p>🔎계속 수집중...</p>
+          <ul class="mainList">
+            <li>
+              <a href="https://nerdcave.com/tailwind-cheat-sheet"
+                >Tailwind CHEAT SHEET</a
+              >
+            </li>
+            <li>
+              <a href="https://codesandbox.io/templates"
+                >CodeSandbox templates
+              </a>
+            </li>
+            <li>
+              <a href="https://fontawesome.com/">FONT AWESOME</a>
+            </li>
+            <li>
+              <a
+                href="https://animated-gradient-background-generator.netlify.app/"
+                >Animated Gradient Background Generator</a
+              >
+            </li>
+            <li>
+              <a href="https://ko.javascript.info/">
+                모던 JavaScript 튜토리얼</a
+              >
+            </li>
+            <li><a href="https://animate.style/">Animate.css</a></li>
+          </ul>
+        </div>
+
         <iframe src="" frameborder="0" id="iframeView"></iframe>
       </div>
     </div>
@@ -105,7 +124,7 @@
       const listWrapInner = arry
         .map(
           (item) =>
-            `<li><a href="${item.link}"><i class="fa-brands fa-${item.fileType}" style="margin-right:5px;color:${item.iconColor}"></i>${item.workName}</a><a href="${item.link}" target="_blank">새창</a></li>`
+            `<li><a href="${item.link}"><i class="fa-brands fa-${item.fileType}" style="margin-right:5px;color:${item.iconColor}"></i>${item.workName}</a><a href="${item.link}" target="_blank" class="blankBtn">새창</a></li>`
         )
         .join("");
 
@@ -129,8 +148,16 @@
     ids.forEach((selector) => {
       const el = document.querySelector(selector);
       el.addEventListener("click", function (event) {
-        if (event.target.tagName.toLowerCase() === "a") {
+        if (
+          event.target.tagName.toLowerCase() === "a" &&
+          !event.target.classList.contains("blankBtn")
+        ) {
           event.preventDefault();
+
+          const defaultContent = document.querySelector(".defaultContent");
+          if (defaultContent) {
+            defaultContent.style.display = "none";
+          }
 
           const href = event.target.getAttribute("href");
           const clickedText = event.target.textContent.trim();
