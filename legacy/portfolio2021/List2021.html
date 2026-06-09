@@ -1,0 +1,252 @@
+
+
+
+
+
+
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8" />
+<title>[김빛나] 포트폴리오 - 2021 NHN커머스 주요 작업 </title>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@100;300;400;500;700;900&display=swap" rel="stylesheet">
+<style>
+    *{margin:0;padding:0;box-sizing:border-box;}
+    #wrapper{font-family:'Noto Sans KR', sans-serif;}
+    #section01{margin-top:0;}
+    a{color:#000;}
+    caption{display:none;}
+    section{margin-top:30px;}    
+    li{list-style:none;}
+    em{font-style:normal;}
+    small{font-size:11px;}
+
+    .goTotop{padding:20px 8px;border-radius:60px;position:fixed;text-decoration:none;font-weight:bold;color:#fff;background:rgba(0, 0, 0, 0.5);right:20px;bottom:20px;border:1px solid #fff;}
+    .fixed_tit{background:#fff;color:#e83c3f ;font-size:20px;padding:15px 25px;width:100%;transition:all ease .4s;}
+    .fixed_tit.fix{position:fixed;z-index:9;top:0;left:0;box-shadow:0px 6px 5px rgb(0 0 0 / 8%);}
+    .exp{font-size:12px;margin-bottom:5px;height:100px;}
+    .container{padding:25px;display:flex;}
+    .container .title{font-size:17px;font-weight:500;margin:15px 0 5px 0;}
+    .container .title a{font-size:13px;display:inline-block;margin-left:8px;}
+    .container .title a span{color:#fff;background:#e83c3f;width:20px;display:inline-block;height:20px;text-align:center;margin-left: 5px;border-radius: 20px;}
+    .section_tit{background:#505050;color:#fff;font-size:20px;height:55px;line-height:55px;display:flex;padding:0 14%;}    
+    .section_tit>p{width:50%;}
+    .section_tit .now{font-size:14px;vertical-align:middle;text-align:right;width:50%;color:#fff}
+    .section_tit .now>strong{color:#fff;}
+    .section_tbl{width:50%;display:flex;flex-direction:column;padding:0 0;min-width:390px;align-items:center;margin-top:50px;opacity:0;transition:all ease-in-out .5s;margin-right:50px;}
+    .section_tbl.on{opacity:1;margin-top:0;}
+    .section_tbl .tbl{border-top:2px solid #444;border-bottom:1px solid #444;text-align:center;width:100%;margin-top:5px;}
+    .section_tbl .tbl thead tr th{border-bottom:1px solid #444;border-left:1px solid #eee;font-size:14px;height:34px;}
+    .section_tbl .tbl tbody tr td{border-left:1px solid #e2e2e2;border-bottom:1px solid #e2e2e2;height:34px;font-size:13px;}
+    .section_tbl .tbl tbody tr.comple{background:#efefef}
+    .section_tbl .tbl tbody tr.comple .cell7{color:#e83c3f}
+    .section_tbl .tbl tbody tr td.cell2{font-weighT:bold;border-left:1px solid #e2e2e2;}
+    .section_tbl .tbl thead tr th:first-child, .tbl tbody tr td:first-child{border-left:0;}
+    .section_tbl dl dt{font-size:13px;margin-top:30px;color:#505050;display:inline-block;text-align:left;padding:0 15px 0 50px;margin-left:-43px;}
+    .section_tbl dl dt:first-child{margin-top:15px;}
+    .graph{cursor:pointer;width:100%;border-radius:15px;background:#ccc;overflow:hidden;font-size:13px;height:23px;line-height:23px;position:relative;margin-bottom:3px;margin:0;color:#ccc;}
+    .graph span{position:absolute;font-weight:bold;height:25px;left:0;z-index:1;width:0;transition:all ease .8s;text-align:right;padding-right:35px;box-sizing:border-box;font-weight:bold;}
+    .graph.on span{background:#e83c3f;color:#fff;}
+
+    .table_td{border:1px solid #e0e0e0;border-radius:25px;box-shadow:0px 6px 15px rgb(0 0 0 / 20%);width:375px;min-width:375px;overflow:hidden;height:667px;}
+    .info{width:100%;padding:0 5px 10px;max-width:375px;}
+
+    .all_tbl_control {color:#121212;font-size:13px;text-decoration:none;}
+
+    .cell1{width:5%;}
+    .cell2{width:18%}
+    .cell3{width:18%}
+    .cell5{width:20%;border-left:1px solid #e2e2e2 !important;}
+    .cell6{width:5%}
+    .cell7{width:5%}
+    .cell8{width:5%}
+    .cell9{width:auto}
+    ::selection{background:#e83c3f;color:#fff;}
+
+</style>
+<script>
+    $(document).ready(function(){
+        ui.init(); // 스크립트 초기화
+    });
+
+    const ui = {
+        init:function() {
+            ui.graph();
+            ui.scrollEvt();
+            ui.gotoTop();
+        },
+        graph :function(){
+            $(window).on('load',function(){
+                setTimeout(function(){
+                    $('.graph').addClass('on');
+                    $(".graph.on").each(function(i){            
+                        const sectionEq= $(this).find('span').text();
+                        $(this).find('span').css('width', parseInt(sectionEq)+'%').text(parseInt(sectionEq)+'%');
+                        if($(this).find('span').text()=='0%'){
+                            $(this).find('span').hide();
+                        }else{
+                            $(this).find('span').show();
+                        }
+                    });
+                },800);
+            });     
+        },
+        scrollEvt:function(){
+            $(window).on('load', function () {
+                $('.section_tbl').each(function (i) {
+                    setTimeout(function () {
+                        $('.section_tbl').eq(i).addClass('on')
+                    }, i * 200);
+                });
+            });
+            $(window).on('scroll',function(){
+                if($(window).scrollTop()>80){
+                    $('.fixed_tit').addClass('fix');
+                }else{
+                    $('.fixed_tit').removeClass('fix');
+                }
+            });
+        },
+        gotoTop:function(){
+            $('.goTotop').hide();
+    
+            $(window).scroll(function(){
+                if($(window).scrollTop()>0){
+                    $('.goTotop').fadeIn();
+                }else{
+                    $('.goTotop').fadeOut();
+                }
+            });
+
+            $('.goTotop').click(function(){
+                $('html,body').animate({scrollTop :0}, 400);
+            });
+        }
+    };
+</script>
+</head>
+<body>
+    <div id="wrapper">
+        <div class="fixed_tit"><img src="https://img.nhn-commerce.com/godomall_v2/main/img_logo_ci_h1.png" alt="NHN COMMERCE" style="width:200px;"> 작업 주요 페이지</div>
+
+        <div class="container">
+
+            <section class="section_tbl">
+                <div class="info">
+                    <div class="title">마크업 현황 리스트 <a href="inc/path/markup_path.html" target="_blank">크게 보기 <span>+</span></a></div>
+                    <div class="exp">
+                        <ul>
+                            <li><strong>작업내용</strong></li>
+                            <li style="margin-top:5px;"><span>▸</span> 형상관리 : 팀내 공유 파일</li>
+                            <li><span>▸</span> 사용언어 : Jquery, css, html</li>
+                            <li><span>▸</span> 디바이스 : 반응형</li>
+                        </ul>
+                    </div>
+                    <div class="title">참여도</div>
+                    <div class="graph"><span>100%</span></div>
+                </div>
+                <div class="table_td txt_ac" style="">
+                    <iframe src="inc/path/markup_path.html" frameborder="0" style="min-height:667px;height:auto;width:375px"></iframe>
+                </div>
+            </section>
+
+            <section class="section_tbl">
+                <div class="info">
+                    <div class="title">인터렉션 <a href="inc/gradation/teaser.html" target="_blank">크게 보기 <span>+</span></a></div>
+                    <div class="exp">
+                        <ul>
+                            <li><strong>작업내용</strong></li>
+                            <li style="margin-top:5px;"><span>▸</span> 형상관리 : github 사용</li>
+                            <li><span>▸</span> 사용언어 : Jquery, css, html</li>
+                            <li><span>▸</span> 디바이스 : 반응형</li>
+                            <li><span>▸</span> 해당사이트 : <a href="https://shopby.jp">https://shopby.jp</a> </li>
+                        </ul>
+                    </div>
+
+
+                    <div class="title">참여도</div>
+                    <div class="graph"><span>100%</span></div>
+                </div>
+                <div class="table_td txt_ac" style="">
+                    <iframe src="inc/gradation/teaser.html" frameborder="0" style="min-height:667px;height:auto;width:375px"></iframe>
+                </div>
+                
+            </section>
+
+            <section class="section_tbl">
+                <div class="info">
+                    <div class="title">스크롤 반응 인터렉션 <a href="inc/interaction/interaction.html" target="_blank">크게 보기 <span>+</span></a></div>
+                    <div class="exp">
+                        <ul>
+                            <li><strong>작업내용</strong></li>
+                            <li style="margin-top:5px;"><span>▸</span> 형상관리 : github 사용</li>
+                            <li><span>▸</span> 사용언어 : Jquery, css, html</li>
+                            <li><span>▸</span> 디바이스 : PC 전용</li>
+                        </ul>
+                    </div>
+
+
+                    <div class="title">참여도</div>
+                    <div class="graph"><span>100%</span></div>
+                </div>
+                <div class="table_td txt_ac">
+                    <iframe src="inc/interaction/interaction.html" frameborder="0" style="min-height:667px;height:auto;width:390px"></iframe>
+                </div>
+                
+            </section>
+
+            <section class="section_tbl" style="align-items:inherit;min-width:auto;width:auto;">
+                <div class="info" style="width:100%;">
+                    <div class="title">svg 드로잉, 인터렉션 <a href="inc/svg/teaser.html" target="_blank">크게 보기 <span>+</span></a></div>
+                    <div class="exp">
+                        <ul>
+                            <li><strong>작업내용</strong></li>
+                            <li style="margin-top:5px;"><span>▸</span> 형상관리 : github 사용</li>
+                            <li><span>▸</span> 사용언어 : Jquery, css, html</li>
+                            <li><span>▸</span> 디바이스 : PC 전용</li>
+                        </ul>
+                    </div>
+
+
+                    <div class="title">참여도</div>
+                    <div class="graph"><span>100%</span></div>
+                </div>
+                <div class="table_td txt_ac" style="width:800px;">
+                    <iframe src="inc/svg/teaser.html" frameborder="0" style="min-height:667px;height:auto;width:800px"></iframe>
+                </div>
+                
+            </section>
+
+            
+
+            <section class="section_tbl" style="align-items:inherit;min-width:auto;width:auto;">
+                <div class="info">
+                    <div class="title">스크롤 반응 인터렉션 2  <a href="inc/event/index.html" target="_blank">크게 보기 <span>+</span></a></div>
+                    <div class="exp">
+                        <ul>
+                            <li><strong>작업내용</strong></li>
+                            <li style="margin-top:5px;"><span>▸</span> 형상관리 : 없음</li>
+                            <li><span>▸</span> 사용언어 : Jquery, css, html</li>
+                            <li><span>▸</span> 디바이스 : PC 전용</li>
+                        </ul>
+                    </div>
+
+
+                    <div class="title">참여도</div>
+                    <div class="graph"><span>100%</span></div>
+                </div>
+                <div class="table_td txt_ac" style="width:800px">
+                    <iframe src="inc/event/index.html" frameborder="0" style="min-height:667px;height:auto;width:100%"></iframe>
+                </div>
+                
+            </section>
+            
+        </div>
+    </div>
+    <!-- <iframe src="pc/html/solution/solution_shopby_pro.html" width="300" height="500" frameborder="0" style="position:fixed;bottom:0px;left:0px;" class="preview"></iframe> -->
+    <a href="javascript:;" class="goTotop">Top</a>
+    
+</body>
+</html>
