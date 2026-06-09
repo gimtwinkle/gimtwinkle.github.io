@@ -1,0 +1,120 @@
+
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+	<title></title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <meta name="viewport" content="initial-scale=1.0, user-scalable=no, maximum-scale=1, width=device-width, viewport-fit=cover>
+	<meta name="author" content="">
+	<meta name="robots" content="">
+	<meta name="keywords" content="">
+	<meta name="description" content="">
+	<!-- START OPEN GRAPH -->
+	<meta property="og:locale" content=""/>
+	<meta property="og:image" content=""/>
+	<meta property="og:image:width" content=""/>
+	<meta property="og:image:height" content=""/>
+	<meta property="og:type" content="website"/>
+	<meta property="og:url" content=""/>
+	<meta property="og:title" content=""/>
+	<meta property="og:description" content="" />
+	<!-- END OPEN GRAPH -->
+    <!-- <link type="text/css" rel="stylesheet" href="css/intro.css"> -->
+    <script type="text/javascript" src="https://code.jquery.com/jquery-3.6.0.js"></script>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+	<div class="teaser">
+        <div class="teaserTxt">
+            <div class="teaserTxt01"><img src="img/teaser_txt01.png" alt="hello"></div>
+            <div class="teaserTxt02"><img src="img/teaser_txt02.png" alt="shop by"></div>
+            <div class="teaserTxtS">こんなに簡単でしかも無料?!<br>自分だけのネットショップが作れる shop by</div>
+            <div class="teaserTxtDate"><img src="img/teaser_date_txt.png" alt="2020.9.16 受付開始"></div>
+        </div>
+
+        <div class="chatWrap onlyPC">
+            <div class="chatBox00">
+                <div class="chatPic00"><img src="img/teaser_chatPic_none.png" alt=""></div>
+            </div>
+
+            <div class="chatBox01">
+                <div class="chatTxt chatTxt01">猫ちゃんの shop by</div><!--200723 QA 1-12 수정-->
+                <div class="chatPic01"><img src="img/teaser_chatPic01.png" alt=""></div>
+            </div>
+
+            <div class="chatBox02">
+                <div class="chatTxt chatTxt02">ゆうとの shop by</div><!--200723 QA 1-12 수정-->
+                <div class="chatPic02"><img src="img/teaser_chatPic02.png" alt=""></div>
+            </div>
+
+            <div class="chatBox03">
+                <div class="chatTxt chatTxt03">ひろしの shop by</div><!--200723 QA 1-12 수정-->
+                <div class="chatPic03"><img src="img/teaser_chatPic03.png" alt=""></div>
+            </div>
+
+            <div class="chatBox04">
+                <div class="chatTxt chatTxt04">みおさんの shop by</div><!--200723 QA 1-12 수정-->
+                <div class="chatPic04"><img src="img/teaser_chatPic04.png" alt=""></div>
+            </div>
+
+            <div class="chatBox05">
+                <div class="chatPic05"><img src="img/teaser_chatPic_none.png" alt=""></div>
+            </div>
+        </div>
+        <div class="dotWrap">
+            <div class="dotOrange" aria-hidden="true"></div>
+            <div class="dotBlueS" aria-hidden="true"></div>
+            <div class="dotGreen" aria-hidden="true"></div>
+        </div>
+
+        
+        <div class="dotBlue onlyPC" aria-hidden="true"></div>
+        <div class="backObLeft onlyPC" aria-hidden="true"><img src="img/back_chat_left.png" alt=""></div>
+        <div class="backObright onlyPC" aria-hidden="true"><img src="img/back_chat_right.png" alt=""></div>
+        <div class="backObLeftM onlyM" aria-hidden="true"><img src="img/mobile/main/m_back_chat_left.png" alt=""></div>
+        <div class="backObrightM onlyM" aria-hidden="true"><img src="img/mobile/main/m_back_chat_right.png" alt=""></div>
+    </div>
+</body>
+
+<!-- ▼ 메인에서만 실행되어야하는 script-->
+<script>
+    $(document).ready(function(){
+        if ($(".teaser").length > 0) 
+            function teaserheader(){
+                if($(window).outerWidth()<1024){
+                    $(".teaserTxt>div").each(function(i){
+                        setTimeout(function(){
+                            $(".teaserTxt>div").eq(i).addClass("on");
+                        },(i+1)*220);
+                    });
+    
+                    setTimeout(function(){
+                        $(".snsList>li").each(function(i){
+                            setTimeout(function(){
+                                $(".snsList>li").eq(i).addClass("on");
+                            },(i+1)*220);
+                        });
+                    }, 880);
+                }else{
+                    
+                    $(".chatWrap>div").each(function(i){
+                        setTimeout(function(){
+                            $(".chatWrap>div").eq(i).addClass("on");
+                        },(i+1)*220);
+                    });
+                    setTimeout(function(){
+                        $(".teaserTxt>div").each(function(i){
+                            setTimeout(function(){
+                                $(".teaserTxt>div").eq(i).addClass("on");
+                            },(i+1)*220);
+                        });
+                    },1500);   
+                }
+            }
+            teaserheader();
+            $(window).resize(function(){
+                teaserheader();
+            });
+    });
+</script>
+</html>

@@ -1,0 +1,5 @@
+@use '../abstracts/mixins' as m;
+
+.a11y-hidden {
+	@include m.a11y;
+}

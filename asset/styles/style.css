@@ -1,0 +1,167 @@
+/**
+ * Copyright (c) 2019–2025 Lee Minseo (quiple@quiple.dev),
+ * with Reserved Font Name "Galmuri".
+ *
+ * This font software is licensed under the SIL Open Font License, Version 1.1.
+ * This license is available with a FAQ at: https://scripts.sil.org/OFL
+ */
+@font-face {
+	font-family: Galmuri14;
+	font-style: normal;
+	font-stretch: normal;
+	font-weight: 400;
+	font-display: swap;
+	src:
+		local('../font/Galmuri14 Regular'),
+		url('../font/Galmuri14.woff2') format('woff2'),
+		url('../font/Galmuri14.ttf') format('truetype');
+}
+@font-face {
+	font-family: Galmuri11;
+	font-style: normal;
+	font-stretch: normal;
+	font-weight: 400;
+	font-display: swap;
+	src:
+		local('../font/Galmuri11 Regular'),
+		url('../font/Galmuri11.woff2') format('woff2'),
+		url('../font/Galmuri11.ttf') format('truetype');
+}
+@font-face {
+	font-family: Galmuri11;
+	font-style: normal;
+	font-stretch: normal;
+	font-weight: 700;
+	font-display: swap;
+	src:
+		local('../font/Galmuri11 Bold'),
+		url('../font/Galmuri11-Bold.woff2') format('woff2'),
+		url('../font/Galmuri11-Bold.ttf') format('truetype');
+}
+@font-face {
+	font-family: Galmuri11;
+	font-style: normal;
+	font-stretch: condensed;
+	font-weight: 400;
+	font-display: swap;
+	src:
+		local('../font/Galmuri11 Condensed'),
+		url('../font/Galmuri11-Condensed.woff2') format('woff2'),
+		url('../font/Galmuri11-Condensed.ttf') format('truetype');
+}
+@font-face {
+	font-family: Galmuri9;
+	font-style: normal;
+	font-stretch: normal;
+	font-weight: 400;
+	font-display: swap;
+	src:
+		local('../font/Galmuri9 Regular'),
+		url('../font/Galmuri9.woff2') format('woff2'),
+		url('../font/Galmuri9.ttf') format('truetype');
+}
+@font-face {
+	font-family: Galmuri7;
+	font-style: normal;
+	font-stretch: normal;
+	font-weight: 400;
+	font-display: swap;
+	src:
+		local('../font/Galmuri7 Regular'),
+		url('../font/Galmuri7.woff2') format('woff2'),
+		url('../font/Galmuri7.ttf') format('truetype');
+}
+@font-face {
+	font-family: GalmuriMono11;
+	font-style: normal;
+	font-stretch: normal;
+	font-weight: 400;
+	font-display: swap;
+	src:
+		local('../font/GalmuriMono11 Regular'),
+		url('../font/GalmuriMono11.woff2') format('woff2'),
+		url('../font/GalmuriMono11.ttf') format('truetype');
+}
+@font-face {
+	font-family: GalmuriMono9;
+	font-style: normal;
+	font-stretch: normal;
+	font-weight: 400;
+	font-display: swap;
+	src:
+		local('../font/GalmuriMono9 Regular'),
+		url('../font/GalmuriMono9.woff2') format('woff2'),
+		url('../font/GalmuriMono9.ttf') format('truetype');
+}
+@font-face {
+	font-family: GalmuriMono7;
+	font-style: normal;
+	font-stretch: normal;
+	font-weight: 400;
+	font-display: swap;
+	src:
+		local('../font/GalmuriMono7 Regular'),
+		url('../font/GalmuriMono7.woff2') format('woff2'),
+		url('../font/GalmuriMono7.ttf') format('truetype');
+}
+
+html,
+body,
+body * {
+	font-family:
+		Galmuri14, Galmuri11, Galmuri9, Galmuri7, GalmuriMono11, GalmuriMono9,
+		GalmuriMono7, sans-serif;
+}
+
+.title {
+	background: skyblue;
+	padding: 20px;
+}
+
+.balloon {
+	border: 2px solid #000;
+	background: #fff;
+	color: #000;
+	font-weight: bold;
+	padding: 8px 16px;
+	border-radius: 12px;
+	display: inline-block;
+}
+.campaign {
+	color: #000;
+	font-size: 23px;
+	font-weight: bold;
+}
+.campaign2 {
+	color: greenyellow;
+	font-weight: 900;
+	-webkit-text-stroke: 2px #000;
+	paint-order: stroke fill;
+}
+
+@keyframes star-boing {
+	0% {
+		transform: translateY(0);
+	}
+
+	25% {
+		transform: translateY(-18px);
+	}
+
+	50% {
+		transform: translateY(0);
+	}
+
+	/* 착지 후 반동 */
+	60% {
+		transform: translateY(-5px);
+	}
+
+	100% {
+		transform: translateY(0);
+	}
+}
+
+.animate-twinkle-spin {
+	animation: star-boing 1.8s cubic-bezier(0.34, 1.56, 0.64, 1) infinite;
+}
