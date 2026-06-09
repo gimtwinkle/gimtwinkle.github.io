@@ -6,12 +6,7 @@ import Breadcrumb from './BreadCrumb';
 export default function TitleTop() {
 	return (
 		<div className="p-5">
-			<Breadcrumb
-				items={[
-					{ label: 'Home', href: '/', icon: '🏠' },
-					{ label: 'About Me', icon: '⭐' },
-				]}
-			/>
+			<Breadcrumb />
 			<div>
 				<Image src={Cloud} alt="" />
 			</div>
