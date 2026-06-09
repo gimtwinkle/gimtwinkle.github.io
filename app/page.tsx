@@ -5,7 +5,6 @@ import { Swiper, SwiperSlide } from 'swiper/react';
 import 'swiper/css';
 
 import Card from '@/asset/components/Card';
-import '@/asset/styles/style.css';
 
 import reactblogImg from '@/asset/images/jojosonbitna.png';
 import javascriptImg from '@/asset/images/javascript_chrome.png';

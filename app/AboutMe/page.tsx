@@ -1,7 +1,8 @@
 import TypingBox from '@/asset/components/TypingBox';
 import aboutImg from '@/asset/images/aboutme.png';
 import aboutImg_m from '@/asset/images/aboutme_m.png';
-import Image from 'next/image';
+import Image from '@/node_modules/next/image';
+
 export default function Page() {
 	return (
 		<>
