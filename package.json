@@ -2,14 +2,11 @@
 	"name": "gimtwinkle.github.io",
 	"version": "0.1.0",
 	"private": true,
-	
-  "scripts": {
-    "dev": "next dev",
-    "build": "next build",
-    "export": "next build",
-    "deploy": "npm run build && gh-pages -d out"
-  },
-
+	"scripts": {
+		"dev": "next dev",
+		"build": "next build",
+		"deploy": "npm run build && touch out/.nojekyll && gh-pages -d out --dotfiles"
+	},
 	"homepage": "https://gimtwinkle.github.io",
 	"dependencies": {
 		"clsx": "^2.1.1",
