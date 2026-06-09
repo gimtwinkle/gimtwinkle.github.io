@@ -11,8 +11,7 @@
 	font-stretch: normal;
 	font-weight: 400;
 	font-display: swap;
-	src:
-		local('../font/Galmuri14 Regular'),
+	src: local('../font/Galmuri14 Regular'),
 		url('../font/Galmuri14.woff2') format('woff2'),
 		url('../font/Galmuri14.ttf') format('truetype');
 }
@@ -22,8 +21,7 @@
 	font-stretch: normal;
 	font-weight: 400;
 	font-display: swap;
-	src:
-		local('../font/Galmuri11 Regular'),
+	src: local('../font/Galmuri11 Regular'),
 		url('../font/Galmuri11.woff2') format('woff2'),
 		url('../font/Galmuri11.ttf') format('truetype');
 }
@@ -33,8 +31,7 @@
 	font-stretch: normal;
 	font-weight: 700;
 	font-display: swap;
-	src:
-		local('../font/Galmuri11 Bold'),
+	src: local('../font/Galmuri11 Bold'),
 		url('../font/Galmuri11-Bold.woff2') format('woff2'),
 		url('../font/Galmuri11-Bold.ttf') format('truetype');
 }
@@ -44,8 +41,7 @@
 	font-stretch: condensed;
 	font-weight: 400;
 	font-display: swap;
-	src:
-		local('../font/Galmuri11 Condensed'),
+	src: local('../font/Galmuri11 Condensed'),
 		url('../font/Galmuri11-Condensed.woff2') format('woff2'),
 		url('../font/Galmuri11-Condensed.ttf') format('truetype');
 }
@@ -55,8 +51,7 @@
 	font-stretch: normal;
 	font-weight: 400;
 	font-display: swap;
-	src:
-		local('../font/Galmuri9 Regular'),
+	src: local('../font/Galmuri9 Regular'),
 		url('../font/Galmuri9.woff2') format('woff2'),
 		url('../font/Galmuri9.ttf') format('truetype');
 }
@@ -66,8 +61,7 @@
 	font-stretch: normal;
 	font-weight: 400;
 	font-display: swap;
-	src:
-		local('../font/Galmuri7 Regular'),
+	src: local('../font/Galmuri7 Regular'),
 		url('../font/Galmuri7.woff2') format('woff2'),
 		url('../font/Galmuri7.ttf') format('truetype');
 }
@@ -77,8 +71,7 @@
 	font-stretch: normal;
 	font-weight: 400;
 	font-display: swap;
-	src:
-		local('../font/GalmuriMono11 Regular'),
+	src: local('../font/GalmuriMono11 Regular'),
 		url('../font/GalmuriMono11.woff2') format('woff2'),
 		url('../font/GalmuriMono11.ttf') format('truetype');
 }
@@ -88,8 +81,7 @@
 	font-stretch: normal;
 	font-weight: 400;
 	font-display: swap;
-	src:
-		local('../font/GalmuriMono9 Regular'),
+	src: local('../font/GalmuriMono9 Regular'),
 		url('../font/GalmuriMono9.woff2') format('woff2'),
 		url('../font/GalmuriMono9.ttf') format('truetype');
 }
@@ -99,8 +91,7 @@
 	font-stretch: normal;
 	font-weight: 400;
 	font-display: swap;
-	src:
-		local('../font/GalmuriMono7 Regular'),
+	src: local('../font/GalmuriMono7 Regular'),
 		url('../font/GalmuriMono7.woff2') format('woff2'),
 		url('../font/GalmuriMono7.ttf') format('truetype');
 }
@@ -108,9 +99,8 @@
 html,
 body,
 body * {
-	font-family:
-		Galmuri14, Galmuri11, Galmuri9, Galmuri7, GalmuriMono11, GalmuriMono9,
-		GalmuriMono7, sans-serif;
+	font-family: Galmuri14, Galmuri11, Galmuri9, Galmuri7, GalmuriMono11,
+		GalmuriMono9, GalmuriMono7, sans-serif;
 }
 
 .title {
