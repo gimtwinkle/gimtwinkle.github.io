@@ -88,7 +88,7 @@ export default function Card({
 							width={180}
 							height={80}
 							className={clsx(
-								'h-auto w-auto max-h-[80px] object-contain',
+								'h-auto max-h-[80px] object-contain',
 								'drop-shadow-[0_4px_20px_rgba(0,0,0,0.4)]'
 							)}
 						/>
