@@ -1,8 +1,9 @@
-import Vue from 'vue'
-import App from './App.vue'
+// @ts-ignore: suppress missing type declarations for vue in this legacy project
+import Vue from 'vue';
+import App from './App.vue';
 
-Vue.config.productionTip = false
+Vue.config.productionTip = false;
 
 new Vue({
-  render: h => h(App),
-}).$mount('#app')
+	render: (h: any) => h(App),
+}).$mount('#app');
