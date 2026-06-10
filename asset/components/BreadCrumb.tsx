@@ -16,7 +16,7 @@ const iconMap: Record<string, string> = {
 export default function Breadcrumb() {
 	const pathname = usePathname();
 
-	const paths = pathname.split('/').filter(Boolean);
+	const paths = (pathname ?? '').split('/').filter(Boolean);
 
 	return (
 		<nav className="mb-8 text-sm font-black text-slate-800">
