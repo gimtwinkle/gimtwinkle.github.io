@@ -6,7 +6,7 @@ import Image from '@/node_modules/next/image';
 export default function Page() {
 	return (
 		<>
-			<section className="mx-auto py-16">
+			<section className="mx-auto py-8 pb-5">
 				<TypingBox
 					msgText={`이 이미지는 요즘 유행하는 AI 프롬프트로 생성한 RPG 캐릭터 이미지입니다. 현재 사이트의 콘셉트도 이 이미지에서 영감을 받았어요.
 				요즘 제가 가장 많이 생각하는 것들, 관심사, 일하는 방식, 성격이 꽤 잘 담겨 있어서 이 이미지로 저를 소개해도 좋겠다고 생각했습니다.

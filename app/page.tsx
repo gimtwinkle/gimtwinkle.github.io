@@ -108,14 +108,24 @@ export default function Page() {
 			<section>
 				<SectionTitle title="Project" />
 
-				<div className="block md:hidden">
-					<Swiper spaceBetween={16} slidesPerView={1.1} className="-mx-20">
-						{projects.map((project) => (
-							<SwiperSlide key={project.title} className="!h-auto flex">
-								<Card {...project} className="h-full" />
-							</SwiperSlide>
-						))}
-					</Swiper>
+				{/* Mobile Project Swiper */}
+				<div className="block md:hidden -ml-4">
+					<div className="px-4">
+						<Swiper
+							slidesPerView={1.12}
+							spaceBetween={12}
+							className="!overflow-visible !py-4"
+						>
+							{projects.map((project) => (
+								<SwiperSlide
+									key={project.title}
+									className="!h-auto !overflow-visible"
+								>
+									<Card {...project} className="h-full" />
+								</SwiperSlide>
+							))}
+						</Swiper>
+					</div>
 				</div>
 
 				<div className="hidden flex-wrap gap-8 md:flex">
