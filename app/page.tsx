@@ -20,8 +20,27 @@ import etlandLogo from '@/asset/images/etlandlogo.png';
 import nhnLogo from '@/asset/images/nhnlogo.png';
 import shcardLogo from '@/asset/images/shcard_logo01.png';
 import SectionTitle from '@/asset/components/SectionTitle';
+import hapchihapchiImg from '@/asset/images/hapchihapchi.png';
 
 const projects = [
+	{
+		projectType: 'SIDE',
+		title: '프리다이빙 선생님 조공 사이트',
+		company: 'Personal Project',
+		companyLogo: wooriLogo,
+		src: hapchihapchiImg,
+		desc: '[진행중] 선생님이 학생별 스케줄 관리가 힘들다고 하셔서 조공바치고 과제를 쉽게 넘어가려는 프로젝트',
+		href: 'https://hapchihapchiimok.vercel.app/',
+		techStack: [
+			'React',
+			'TypeScript',
+			'nextjs',
+			'TailWind',
+			'vercel',
+			'supabase',
+			'Github',
+		],
+	},
 	{
 		projectType: 'WORK',
 		title: '우리WON뱅킹 APP',
@@ -39,7 +58,15 @@ const projects = [
 		src: reactblogImg,
 		desc: 'React 기반으로 제작한 개인 블로그 프로젝트',
 		href: 'https://react-newwons.vercel.app/',
-		techStack: ['React', 'TypeScript', 'Storybook', 'Styled', 'GitHub'],
+		techStack: [
+			'React',
+			'TypeScript',
+			'Storybook',
+			'Styled',
+			'fireBase',
+			'GitHub',
+			'vercel',
+		],
 	},
 	{
 		projectType: 'WORK',
@@ -108,24 +135,14 @@ export default function Page() {
 			<section>
 				<SectionTitle title="Project" />
 
-				{/* Mobile Project Swiper */}
-				<div className="block md:hidden -ml-4">
-					<div className="px-4">
-						<Swiper
-							slidesPerView={1.12}
-							spaceBetween={12}
-							className="!overflow-visible !py-4"
-						>
-							{projects.map((project) => (
-								<SwiperSlide
-									key={project.title}
-									className="!h-auto !overflow-visible"
-								>
-									<Card {...project} className="h-full" />
-								</SwiperSlide>
-							))}
-						</Swiper>
-					</div>
+				<div className="block md:hidden">
+					<Swiper spaceBetween={16} slidesPerView={1.1} className="-mx-20">
+						{projects.map((project) => (
+							<SwiperSlide key={project.title} className="!h-auto flex">
+								<Card {...project} className="h-full" />
+							</SwiperSlide>
+						))}
+					</Swiper>
 				</div>
 
 				<div className="hidden flex-wrap gap-8 md:flex">
