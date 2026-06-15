@@ -35,14 +35,11 @@ export default function RootLayout({
 					src="https://www.googletagmanager.com/gtag/js?id=G-0E5NZRHB8M"
 					strategy="afterInteractive"
 				/>
-
-				<Script id="google-analytics" strategy="afterInteractive">
-					{`
-						window.dataLayer = window.dataLayer || [];
-						function gtag(){dataLayer.push(arguments);}
-						gtag('js', new Date());
-						gtag('config', 'G-0E5NZRHB8M');
-					`}
+				<Script id="gtag-init" strategy="afterInteractive">
+					{`window.dataLayer = window.dataLayer || [];
+function gtag(){window.dataLayer.push(arguments);}
+gtag('js', new Date());
+gtag('config', 'G-0E5NZRHB8M');`}
 				</Script>
 
 				<div className="title">
