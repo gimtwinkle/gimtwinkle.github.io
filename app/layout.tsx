@@ -1,7 +1,6 @@
 import type { Metadata } from 'next';
-import { Geist, Geist_Mono } from 'next/font/google';
 import Script from 'next/script';
-
+import { Geist, Geist_Mono } from 'next/font/google';
 import '@/app/globals.css';
 import '@/asset/styles/style.css';
 import TitleTop from '@/asset/components/TitleTop';
@@ -17,8 +16,8 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-	title: 'Twinkle',
-	description: 'UI/UX Frontend Developer Portfolio',
+	title: 'UX/UI developer',
+	description: '',
 };
 
 export default function RootLayout({
@@ -28,7 +27,7 @@ export default function RootLayout({
 }>) {
 	return (
 		<html
-			lang="ko"
+			lang="en"
 			className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
 		>
 			<body className="min-h-full flex flex-col">
