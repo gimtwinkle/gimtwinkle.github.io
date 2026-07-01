@@ -68,22 +68,6 @@ export default function Home() {
 			<section id="hero" className="h-screen">
 				<PortfolioWorld />
 			</section>
-
-			<section id="work"></section>
-			<section id="about" className="h-screen bg-pink-100 p-10">
-				<h2 className="text-4xl font-black">About Me</h2>
-				<p>UI Publisher에서 Front-End Developer로 성장 중입니다.</p>
-			</section>
-
-			<section id="skills" className="h-screen bg-green-100 p-10">
-				<h2 className="text-4xl font-black">Skills</h2>
-				<p>React, Next.js, TypeScript, Accessibility.</p>
-			</section>
-
-			<section id="contact" className="h-screen bg-blue-100 p-10">
-				<h2 className="text-4xl font-black">Contact</h2>
-				<p>GitHub / Email / Resume</p>
-			</section>
 		</main>
 	);
 }

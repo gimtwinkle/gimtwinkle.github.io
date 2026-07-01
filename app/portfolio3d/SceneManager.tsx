@@ -8,7 +8,7 @@ import StationScene from './scene/StationScene';
 import VillageScene from './scene/VillageScene';
 import RoomScene from './scene/RoomScene';
 
-import AboutRoom from './rooms/AboutRoom';
+import AboutRoom from './rooms/About/AboutRoom';
 import WorkRoom from './rooms/WorkRoom';
 
 export default function SceneManager() {
@@ -39,14 +39,14 @@ export default function SceneManager() {
 				<RoomScene
 					key="about-room"
 					onBack={() => goScene('village')}
-					startPosition={[0, 1.35, 2.35]}
-					lookAt={[0, 1.35, -3]}
+					startPosition={[0, 1.35, 1.05]}
+					lookAt={[0, 1.35, -1.25]}
 					exitPosition={[0, 0, 3.15]}
 					bounds={{
-						minX: -4.1,
-						maxX: 4.1,
-						minZ: -2.75,
-						maxZ: 2.85,
+						minX: -2.05,
+						maxX: 2.05,
+						minZ: -1.58,
+						maxZ: 1.58,
 					}}
 				>
 					<AboutRoom />

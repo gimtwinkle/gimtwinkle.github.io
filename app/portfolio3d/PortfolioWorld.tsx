@@ -8,7 +8,7 @@ import Character from './objects/Character';
 import CuteCloud from './objects/CuteCloud';
 import CuteMap from './objects/CuteMap';
 
-import AboutRoom from './rooms/AboutRoom';
+import AboutRoom from './rooms/About/AboutRoom';
 import WorkRoom from './rooms/WorkRoom';
 import SkillRoom from './rooms/SkillRoom';
 import ContactRoom from './rooms/ContactRoom';
@@ -27,6 +27,18 @@ const roomSceneConfig = {
 		maxX: 4.1,
 		minZ: -2.75,
 		maxZ: 2.85,
+	},
+};
+
+const aboutRoomSceneConfig = {
+	startPosition: [0, 1.35, 1.05] as [number, number, number],
+	lookAt: [0, 1.35, -1.25] as [number, number, number],
+	exitPosition: [0, 0, 3.15] as [number, number, number],
+	bounds: {
+		minX: -2.05,
+		maxX: 2.05,
+		minZ: -1.58,
+		maxZ: 1.58,
 	},
 };
 
@@ -103,6 +115,9 @@ export default function PortfolioWorld() {
 			<ContactRoom onBack={goBackVillage} />
 		) : null;
 
+	const roomSceneProps =
+		scene === 'about' ? aboutRoomSceneConfig : roomSceneConfig;
+
 	return (
 		<div className="relative h-full w-full overflow-hidden bg-gradient-to-b from-sky-200 via-pink-100 to-yellow-100">
 			{scene === 'village' && (
@@ -143,7 +158,7 @@ export default function PortfolioWorld() {
 				<RoomScene
 					key={`${scene}-room`}
 					onBack={goBackVillage}
-					{...roomSceneConfig}
+					{...roomSceneProps}
 				>
 					{roomScene}
 				</RoomScene>

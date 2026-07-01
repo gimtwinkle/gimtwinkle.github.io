@@ -97,14 +97,52 @@ export default function FirstPersonCamera({
 			onDragChange?.(false);
 		};
 
+		const preventTouchMove = (e: TouchEvent) => {
+			e.preventDefault();
+		};
+
+		const handleWheel = (e: WheelEvent) => {
+			e.preventDefault();
+			if (e.ctrlKey) return;
+
+			const forward = new THREE.Vector3();
+			camera.getWorldDirection(forward);
+			forward.y = 0;
+			forward.normalize();
+
+			const step = e.deltaY < 0 ? 0.16 : -0.16;
+			camera.position.addScaledVector(forward, step);
+
+			const nextX = THREE.MathUtils.clamp(
+				camera.position.x,
+				bounds.minX,
+				bounds.maxX
+			);
+			const nextZ = THREE.MathUtils.clamp(
+				camera.position.z,
+				bounds.minZ,
+				bounds.maxZ
+			);
+			camera.position.set(nextX, height, nextZ);
+		};
+
 		const handleKeyDown = (e: KeyboardEvent) => {
-			if (e.code === 'KeyW' || e.code === 'ArrowUp')
+			if (e.code === 'KeyW' || e.code === 'ArrowUp') {
+				e.preventDefault();
 				keys.current.forward = true;
-			if (e.code === 'KeyS' || e.code === 'ArrowDown')
+			}
+			if (e.code === 'KeyS' || e.code === 'ArrowDown') {
+				e.preventDefault();
 				keys.current.backward = true;
-			if (e.code === 'KeyA' || e.code === 'ArrowLeft') keys.current.left = true;
-			if (e.code === 'KeyD' || e.code === 'ArrowRight')
+			}
+			if (e.code === 'KeyA' || e.code === 'ArrowLeft') {
+				e.preventDefault();
+				keys.current.left = true;
+			}
+			if (e.code === 'KeyD' || e.code === 'ArrowRight') {
+				e.preventDefault();
 				keys.current.right = true;
+			}
 
 			if (e.code === 'KeyE' && isExitNear.current) {
 				onExit?.();
@@ -112,14 +150,22 @@ export default function FirstPersonCamera({
 		};
 
 		const handleKeyUp = (e: KeyboardEvent) => {
-			if (e.code === 'KeyW' || e.code === 'ArrowUp')
+			if (e.code === 'KeyW' || e.code === 'ArrowUp') {
+				e.preventDefault();
 				keys.current.forward = false;
-			if (e.code === 'KeyS' || e.code === 'ArrowDown')
+			}
+			if (e.code === 'KeyS' || e.code === 'ArrowDown') {
+				e.preventDefault();
 				keys.current.backward = false;
-			if (e.code === 'KeyA' || e.code === 'ArrowLeft')
+			}
+			if (e.code === 'KeyA' || e.code === 'ArrowLeft') {
+				e.preventDefault();
 				keys.current.left = false;
-			if (e.code === 'KeyD' || e.code === 'ArrowRight')
+			}
+			if (e.code === 'KeyD' || e.code === 'ArrowRight') {
+				e.preventDefault();
 				keys.current.right = false;
+			}
 		};
 
 		canvas.addEventListener('pointerdown', handlePointerDown);
@@ -127,6 +173,8 @@ export default function FirstPersonCamera({
 		canvas.addEventListener('pointerup', stopDragging);
 		canvas.addEventListener('pointercancel', stopDragging);
 		canvas.addEventListener('lostpointercapture', stopDragging);
+		canvas.addEventListener('wheel', handleWheel, { passive: false });
+		canvas.addEventListener('touchmove', preventTouchMove, { passive: false });
 		window.addEventListener('keydown', handleKeyDown);
 		window.addEventListener('keyup', handleKeyUp);
 
@@ -136,6 +184,8 @@ export default function FirstPersonCamera({
 			canvas.removeEventListener('pointerup', stopDragging);
 			canvas.removeEventListener('pointercancel', stopDragging);
 			canvas.removeEventListener('lostpointercapture', stopDragging);
+			canvas.removeEventListener('wheel', handleWheel);
+			canvas.removeEventListener('touchmove', preventTouchMove);
 			window.removeEventListener('keydown', handleKeyDown);
 			window.removeEventListener('keyup', handleKeyUp);
 			onDragChange?.(false);
@@ -168,19 +218,18 @@ export default function FirstPersonCamera({
 			camera.position.addScaledVector(right, direction.x * speed * delta);
 		}
 
-		camera.position.x = THREE.MathUtils.clamp(
+		const nextX = THREE.MathUtils.clamp(
 			camera.position.x,
 			bounds.minX,
 			bounds.maxX
 		);
-
-		camera.position.z = THREE.MathUtils.clamp(
+		const nextZ = THREE.MathUtils.clamp(
 			camera.position.z,
 			bounds.minZ,
 			bounds.maxZ
 		);
 
-		camera.position.y = height;
+		camera.position.set(nextX, height, nextZ);
 
 		const distance = Math.hypot(
 			camera.position.x - exitPosition[0],

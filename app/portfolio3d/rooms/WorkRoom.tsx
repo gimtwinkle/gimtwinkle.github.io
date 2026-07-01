@@ -706,7 +706,6 @@ function CandyProjectMachine() {
 		const t = clock.getElapsedTime();
 
 		starRef.current.rotation.y = t * 1.4;
-		ref.current.position.y = 0.76 + Math.sin(t * 4 + offset) * 0.006;
 	});
 
 	return (
@@ -1135,7 +1134,8 @@ function MovingBox({
 	onClick: () => void;
 }) {
 	const ref = useRef<THREE.Group>(null);
-	const hasCompanyLogo = !!project.companyLogo;
+	const companyLogo = (project as { companyLogo?: { src: string } }).companyLogo;
+	const hasCompanyLogo = !!companyLogo;
 
 	useFrame(({ clock }) => {
 		if (!ref.current) return;
@@ -1186,7 +1186,7 @@ function MovingBox({
 			</RoundedBox>
 
 			{hasCompanyLogo ? (
-				<CompanyLogoPrint src={project.companyLogo!.src} />
+				<CompanyLogoPrint src={companyLogo.src} />
 			) : (
 				<Text
 					position={[0, 0.04, 0.34]}

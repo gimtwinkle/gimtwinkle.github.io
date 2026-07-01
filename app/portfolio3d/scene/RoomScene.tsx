@@ -32,7 +32,10 @@ export default function RoomScene({
 	const [isDragging, setIsDragging] = useState(false);
 
 	return (
-		<div className="fixed inset-0 z-[9999] h-screen w-screen overflow-hidden bg-[#fff7ed]">
+		<div
+			className="fixed inset-0 z-[9999] h-screen w-screen overflow-hidden bg-[#fff7ed]"
+			style={{ overscrollBehavior: 'none' }}
+		>
 			<Canvas
 				key={startPosition.join('-')}
 				className="h-full w-full"
@@ -64,7 +67,7 @@ export default function RoomScene({
 
 			{!isDragging && (
 				<div className="pointer-events-none absolute left-1/2 top-6 -translate-x-1/2 rounded-full border-4 border-black bg-white/90 px-5 py-2 text-sm font-black shadow-[5px_5px_0_#000]">
-					드래그해서 방 둘러보기
+					WASD / 방향키로 이동 · 드래그로 둘러보기
 				</div>
 			)}
 
