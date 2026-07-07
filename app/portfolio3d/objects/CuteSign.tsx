@@ -1,6 +1,8 @@
 'use client';
 
-import { RoundedBox, Text } from '@react-three/drei';
+import { Text } from '@react-three/drei';
+
+import RoundedBox from '../components/RoundedBox';
 
 type Props = {
 	text: string;

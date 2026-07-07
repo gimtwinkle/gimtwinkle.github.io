@@ -9,6 +9,7 @@ import CuteMushroom from './CuteMushroom';
 import CuteLamp from './CuteLamp';
 import CuteBench from './CuteBench';
 import { RoomName } from '../types';
+import SkillHouseFrontSet from '../rooms/Skill/BookShelf';
 
 type Props = {
 	isNight: boolean;
@@ -127,8 +128,6 @@ const bushPositions = [
 	[-6.2, -3.4],
 	[3.3, -5.7],
 	[6.2, -3.4],
-	[-3.3, 5.7],
-	[-6.2, 3.4],
 	[3.3, 5.7],
 	[6.2, 3.4],
 	[-8.2, -6.2],
@@ -309,6 +308,7 @@ export default function CuteMap({ isNight, onEnterRoom }: Props) {
 				onEnterRoom={onEnterRoom}
 			/>
 
+			<CuteLamp position={[-1.3, 0, 2.5]} />
 			<CuteHouse
 				label="Contact"
 				targetId="contact"

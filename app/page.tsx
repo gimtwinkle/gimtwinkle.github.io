@@ -3,7 +3,7 @@
 import { useEffect, useRef, useState } from 'react';
 import PortfolioWorld from '@/app/portfolio3d/PortfolioWorld';
 
-const sectionIds = ['hero', 'about', 'work', 'skills', 'contact'];
+const sectionIds = ['hero'];
 
 export default function Home() {
 	const [activeIndex, setActiveIndex] = useState(0);
@@ -11,6 +11,8 @@ export default function Home() {
 	const lockedRef = useRef(false);
 
 	useEffect(() => {
+		if (sectionIds.length <= 1) return;
+
 		const moveSection = (direction: 1 | -1) => {
 			if (lockedRef.current) return;
 
@@ -42,12 +44,7 @@ export default function Home() {
 
 		const onWheel = (e: WheelEvent) => {
 			e.preventDefault();
-
-			if (e.deltaY > 0) {
-				moveSection(1);
-			} else {
-				moveSection(-1);
-			}
+			moveSection(e.deltaY > 0 ? 1 : -1);
 		};
 
 		window.addEventListener('wheel', onWheel, { passive: false });
@@ -58,14 +55,14 @@ export default function Home() {
 	}, []);
 
 	return (
-		<main className="overflow-hidden">
+		<main className="scrollbar-hidden h-screen overflow-x-hidden">
 			<div
 				className={`pointer-events-none fixed inset-0 z-[9999] bg-white transition-opacity duration-500 ${
 					isFading ? 'opacity-100' : 'opacity-0'
 				}`}
 			/>
 
-			<section id="hero" className="h-screen">
+			<section id="hero" className="h-screen w-screen">
 				<PortfolioWorld />
 			</section>
 		</main>

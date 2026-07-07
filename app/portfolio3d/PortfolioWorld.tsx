@@ -10,7 +10,7 @@ import CuteMap from './objects/CuteMap';
 
 import AboutRoom from './rooms/About/AboutRoom';
 import WorkRoom from './rooms/WorkRoom';
-import SkillRoom from './rooms/SkillRoom';
+import SkillRoom from './rooms/Skill/SkillRoom';
 import ContactRoom from './rooms/ContactRoom';
 import RoomScene from './scene/RoomScene';
 
@@ -43,9 +43,11 @@ const aboutRoomSceneConfig = {
 };
 
 function SeoulClockUI() {
-	const [now, setNow] = useState(new Date());
+	const [now, setNow] = useState<Date | null>(null);
 
 	useEffect(() => {
+		setNow(new Date());
+
 		const timer = setInterval(() => {
 			setNow(new Date());
 		}, 1000);
@@ -54,6 +56,13 @@ function SeoulClockUI() {
 	}, []);
 
 	const { timeText, isNight } = useMemo(() => {
+		if (!now) {
+			return {
+				timeText: '--:--',
+				isNight: false,
+			};
+		}
+
 		const hourText = new Intl.DateTimeFormat('en-US', {
 			timeZone: 'Asia/Seoul',
 			hour: 'numeric',
@@ -78,7 +87,7 @@ function SeoulClockUI() {
 
 	return (
 		<div className="pointer-events-none fixed left-6 top-20 z-20 rounded-xl border-2 border-white/30 bg-black/45 px-4 py-3 text-sm font-bold text-white backdrop-blur-md">
-			<span className="mr-2">{isNight ? '🌙' : '☀️'}</span>
+			<span className="mr-2">{isNight ? 'Night' : 'Day'}</span>
 			{timeText}
 		</div>
 	);
@@ -104,9 +113,9 @@ export default function PortfolioWorld() {
 		goScene('village');
 	};
 
-	const roomScene =
+	const canvasRoomScene =
 		scene === 'about' ? (
-			<AboutRoom />
+			<AboutRoom onBack={goBackVillage} />
 		) : scene === 'work' ? (
 			<WorkRoom />
 		) : scene === 'skills' ? (
@@ -135,6 +144,7 @@ export default function PortfolioWorld() {
 						castShadow
 						shadow-mapSize={[2048, 2048]}
 					/>
+
 					<pointLight position={[-5, 4, 4]} intensity={1.2} color="#ff8bd1" />
 					<pointLight position={[5, 4, -5]} intensity={1.2} color="#8be9ff" />
 
@@ -154,13 +164,13 @@ export default function PortfolioWorld() {
 				</Canvas>
 			)}
 
-			{roomScene && (
+			{canvasRoomScene && (
 				<RoomScene
 					key={`${scene}-room`}
 					onBack={goBackVillage}
 					{...roomSceneProps}
 				>
-					{roomScene}
+					{canvasRoomScene}
 				</RoomScene>
 			)}
 
@@ -170,7 +180,7 @@ export default function PortfolioWorld() {
 
 			{scene === 'village' && (
 				<div className="pointer-events-none fixed left-6 top-6 z-20 rounded-xl border-2 border-white/30 bg-black/45 px-4 py-3 text-sm font-bold text-white backdrop-blur-md">
-					🎮 WASD / 방향키로 이동
+					WASD / Arrow keys to move
 				</div>
 			)}
 

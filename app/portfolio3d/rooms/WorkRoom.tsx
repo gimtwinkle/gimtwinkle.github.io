@@ -1,11 +1,13 @@
 'use client';
 
 import { projects } from '@/asset/data/projects';
-import { Html, RoundedBox, Text, useTexture } from '@react-three/drei';
+import { Html, Text, useTexture } from '@react-three/drei';
 import { useFrame } from '@react-three/fiber';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useEffect, useMemo, useRef, useState } from 'react';
 import * as THREE from 'three';
+
+import RoundedBox from '../components/RoundedBox';
 const C = {
 	bg: '#2f7edc',
 	wall: '#86d7d8',

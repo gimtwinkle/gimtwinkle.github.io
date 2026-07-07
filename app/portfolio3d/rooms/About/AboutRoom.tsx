@@ -1,9 +1,10 @@
 'use client';
 
-import { Html, RoundedBox, Text } from '@react-three/drei';
+import { Html, Text } from '@react-three/drei';
 import { useFrame, useThree } from '@react-three/fiber';
 import { useState } from 'react';
 import * as THREE from 'three';
+import RoundedBox from '../../components/RoundedBox';
 import AboutObjects from './AboutObjects';
 import Neon3DText from '../../objects/Neon3DText';
 import CeilingFan from '../../objects/CeilingFan';

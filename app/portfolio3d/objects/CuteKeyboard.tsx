@@ -1,6 +1,6 @@
 'use client';
 
-import { RoundedBox } from '@react-three/drei';
+import RoundedBox from '../components/RoundedBox';
 
 type Props = {
 	position: [number, number, number];
