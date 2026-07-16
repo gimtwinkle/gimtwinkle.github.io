@@ -9,7 +9,6 @@ import CuteMushroom from './CuteMushroom';
 import CuteLamp from './CuteLamp';
 import CuteBench from './CuteBench';
 import { RoomName } from '../types';
-import SkillHouseFrontSet from '../rooms/Skill/BookShelf';
 
 type Props = {
 	isNight: boolean;
@@ -265,14 +264,14 @@ export default function CuteMap({ isNight, onEnterRoom }: Props) {
 
 	const flowerColor = (i: number) =>
 		i % 5 === 0
-			? '#ff4fa3'
+			? '#ef86b7'
 			: i % 5 === 1
-				? '#a855f7'
+				? '#b08cf2'
 				: i % 5 === 2
-					? '#38bdf8'
+					? '#76c9f2'
 					: i % 5 === 3
-						? '#fb7185'
-						: '#facc15';
+						? '#ee9fb4'
+						: '#f0c85a';
 
 	return (
 		<group>
@@ -283,8 +282,8 @@ export default function CuteMap({ isNight, onEnterRoom }: Props) {
 				targetId="about"
 				position={[-5.8, 0, -5.35]}
 				rotation={[0, 0.5, 0]}
-				color="#ffd1b8"
-				roofColor="#ff5ca8"
+				color="#f9eef8"
+				roofColor="#e67fb5"
 				onEnterRoom={onEnterRoom}
 			/>
 
@@ -293,8 +292,8 @@ export default function CuteMap({ isNight, onEnterRoom }: Props) {
 				targetId="work"
 				position={[5.8, 0, -5.35]}
 				rotation={[0, -0.5, 0]}
-				color="#bdefff"
-				roofColor="#4da3ff"
+				color="#edf9ff"
+				roofColor="#74bff2"
 				onEnterRoom={onEnterRoom}
 			/>
 
@@ -303,8 +302,8 @@ export default function CuteMap({ isNight, onEnterRoom }: Props) {
 				targetId="skills"
 				position={[-4, 0, 3]}
 				rotation={[0, 0.5, 0]}
-				color="#fff176"
-				roofColor="#ffb703"
+				color="#fff6d8"
+				roofColor="#f0bd5b"
 				onEnterRoom={onEnterRoom}
 			/>
 
@@ -314,8 +313,8 @@ export default function CuteMap({ isNight, onEnterRoom }: Props) {
 				targetId="contact"
 				position={[5, 0, 3]}
 				rotation={[0, -0.5, 0]}
-				color="#f5d0fe"
-				roofColor="#a855f7"
+				color="#f7edff"
+				roofColor="#a97eea"
 				onEnterRoom={onEnterRoom}
 			/>
 
