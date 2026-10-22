@@ -9,6 +9,7 @@ import RoomHud from './components/RoomHud';
 import SceneLoading, { sceneLoadingMessages } from './components/SceneLoading';
 import CanvasLoading from './components/CanvasLoading';
 import useSeoulNight from './useSeoulNight';
+import MobileNotice from './components/MobileNotice';
 
 const Character = lazy(() => import('./objects/Character'));
 const CuteCloud = lazy(() => import('./objects/CuteCloud'));
@@ -85,6 +86,7 @@ export default function PortfolioWorld() {
 
 	return (
 		<div className="relative h-full w-full overflow-hidden bg-gradient-to-b from-sky-200 via-pink-100 to-yellow-100">
+            <MobileNotice />
 			{/* ================================
 			    마을
 			================================ */}

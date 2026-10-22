@@ -1,0 +1,30 @@
+.overlay {
+    position: fixed;
+    inset: 0;
+    z-index: 30000;
+    display: grid;
+    place-items: center;
+    padding: 24px;
+    background: #fff7ed;
+    opacity: 1;
+    transition: opacity 450ms ease;
+}
+.fading { opacity: 0; pointer-events: none; }
+.card {
+    width: min(100%, 360px);
+    padding: 32px 22px;
+    border: 1px solid #dbc4ab;
+    border-radius: 22px;
+    background: #fffdf7;
+    box-shadow: 0 12px 36px #73534412;
+    text-align: center;
+    color: #735344;
+    word-break: keep-all;
+}
+.icon { display: block; margin-bottom: 16px; color: #bd825b; font-size: 28px; }
+.title { margin: 0 0 14px; font-size: 17px; font-weight: 800; }
+.message { margin: 0; font-size: 14px; line-height: 1.8; }
+.hint { display: block; margin-top: 24px; color: #967962; font-size: 11px; }
+@media (prefers-reduced-motion: reduce) {
+    .overlay { transition: none; }
+}
