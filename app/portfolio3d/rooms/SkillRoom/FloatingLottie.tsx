@@ -3,10 +3,11 @@
 import { Html } from '@react-three/drei';
 import { useFrame } from '@react-three/fiber';
 import Lottie, { type LottieRefCurrentProps } from 'lottie-react';
-import { useEffect, useId, useRef, type CSSProperties } from 'react';
+import { useCallback, useId, useRef, type CSSProperties } from 'react';
 import { MathUtils, Vector3, type Group } from 'three';
 import { levelNames, type SkillInfo } from './skillInfo';
 import styles from './SkillDetails.module.css';
+import useMobile from '../../useMobile';
 
 export type FloatingLottieProps = {
     animationData: object;
@@ -28,8 +29,10 @@ export default function FloatingLottie({
     floatAmount = 0.07, delay = 0, distanceFactor = 4, hologramOpacity = 1,
     emphasizeCenter = false, skill,
 }: FloatingLottieProps) {
+    const mobile = useMobile();
     const groupRef = useRef<Group>(null);
     const cardRef = useRef<HTMLDivElement>(null);
+    const observerRef = useRef<ResizeObserver | null>(null);
     const projectsRef = useRef<HTMLDetailsElement>(null);
     const animationRef = useRef<LottieRefCurrentProps | null>(null);
     const playing = useRef<boolean | null>(null);
@@ -40,14 +43,14 @@ export default function FloatingLottie({
     const interactive = useRef(false);
     const projectsId = useId();
 
-    useEffect(() => {
-        const card = cardRef.current;
+    const attachCard = useCallback((card: HTMLDivElement | null) => {
+        observerRef.current?.disconnect();
+        cardRef.current = card;
         if (!card) return;
         const measure = () => { bounds.current = { width: card.offsetWidth, height: card.offsetHeight }; };
         measure();
-        const observer = new ResizeObserver(measure);
-        observer.observe(card);
-        return () => observer.disconnect();
+        observerRef.current = new ResizeObserver(measure);
+        observerRef.current.observe(card);
     }, []);
 
     useFrame(({ clock, camera, size: viewport }, delta) => {
@@ -86,8 +89,8 @@ export default function FloatingLottie({
         // Invisible cards need no layout calculation or CSS transform updates.
         if (!visible) return;
         // Position and scale the whole card together so its contents cannot drift apart.
-        const topInset = 148;
-        const bottomInset = 54;
+        const topInset = mobile ? 76 : 148;
+        const bottomInset = mobile ? 96 : 54;
         const availableHeight = Math.max(80, viewport.height - topInset - bottomInset);
         const scale = Math.min(MathUtils.lerp(MathUtils.clamp(distanceFactor / distance, 0.25, 1), 1, reveal),
             (viewport.width - 32) / bounds.current.width, availableHeight / bounds.current.height);
@@ -105,7 +108,7 @@ export default function FloatingLottie({
     return (
         <group ref={groupRef} position={position}>
             <Html center zIndexRange={[25, 1]} style={{ pointerEvents: 'none', userSelect: 'none' }}>
-                <div ref={cardRef} className={styles.skill}
+                <div ref={attachCard} className={styles.skill}
                     style={{ '--skill-color': skill?.color ?? '#b7caff', opacity: emphasizeCenter ? 0 : hologramOpacity } as CSSProperties}
                     aria-hidden={emphasizeCenter} inert={emphasizeCenter}>
                     <div className={styles.artwork}>

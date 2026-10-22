@@ -2,6 +2,24 @@
 
 import { useEffect, useState } from 'react';
 import { isSeoulNight } from '@/lib/seoulDaylight';
+import useMobile from '../useMobile';
+import styles from './RoomHud.module.css';
+
+const touchControls: Record<string, string[]> = {
+    village: ['캐릭터 이동 : 하단 중앙 조이스틱', '방 입장 : 집 탭', '캐릭터 인사 : 캐릭터 탭'],
+    about: ['이동 : 하단 중앙 조이스틱', '시점 회전 : 한 손가락으로 드래그', '이야기 보기 : 가구 탭', '말풍선 닫기 : 같은 가구 다시 탭'],
+    work: ['이동 : 하단 중앙 조이스틱', '시점 회전 : 한 손가락으로 드래그', '프로젝트 보기 : 박스 탭', '랜덤뽑기 : 캔디머신 탭'],
+    skills: ['다음 / 이전 카드 : 위아래로 스와이프', '관련 프로젝트 : 카드의 목록 탭'],
+    contact: ['이동 : 하단 중앙 조이스틱', '시점 회전 : 한 손가락으로 드래그', '개인 편지 : 분홍 우체통 탭', '공개 방명록 : 방명록 데스크 탭'],
+};
+
+const touchSteps: Record<string, { icon: string; title: string; text: string }[]> = {
+    village: [{ icon: '🏡', title: '조이스틱으로 마을을 걸어보세요!', text: '하단 중앙 조이스틱으로 캐릭터를 움직여 보세요. 집이나 아래 방 이름을 탭하면 바로 들어갈 수 있어요. 캐릭터를 탭하면 인사해요!' }],
+    about: [{ icon: '🛋', title: '물건 속 twinkle을 만나보세요', text: '손가락으로 드래그해 방을 둘러보고, 궁금한 가구를 탭해 보세요. 같은 가구를 다시 탭하면 말풍선이 닫혀요.' }],
+    work: [{ icon: '📦', title: '박스를 탭하면 프로젝트가 열려요', text: '드래그해서 공장을 둘러보세요. 캔디머신을 탭하면 프로젝트를 무작위로 보여줍니다!' }],
+    skills: [{ icon: '🚀', title: '스와이프하며 우주를 탐험해요', text: '위로 밀면 다음 카드, 아래로 밀면 이전 카드로 이동해요. 카드의 관련 프로젝트도 탭해 보세요!' }],
+    contact: [{ icon: '💌', title: 'twinkle에게 마음을 전해 주세요', text: '드래그해 우체국을 둘러보세요. 분홍 우체통을 탭하면 개인 편지, 방명록 데스크를 탭하면 공개 방명록이 열려요.' }],
+};
 
 const clockFormat = new Intl.DateTimeFormat('en-US', {
     timeZone: 'Asia/Seoul', hour: 'numeric', minute: '2-digit', hour12: true,
@@ -94,17 +112,21 @@ function RoomTutorial({ description }: { description: (typeof roomDescriptions)[
 }
 
 export default function RoomHud({ onBack, room }: { onBack?: () => void; room?: string }) {
+    const mobile = useMobile();
+    const [infoOpen, setInfoOpen] = useState(false);
     const [now, setNow] = useState(() => new Date());
     useEffect(() => {
         const timer = window.setInterval(() => setNow(new Date()), 1000);
         return () => window.clearInterval(timer);
     }, []);
     const isNight = isSeoulNight(now);
-    const description = room ? roomDescriptions[room] : undefined;
+    const originalDescription = room ? roomDescriptions[room] : undefined;
+    const description = originalDescription && mobile && room && touchSteps[room]
+        ? { ...originalDescription, steps: touchSteps[room] } : originalDescription;
     const details = room ? roomDetails[room] : undefined;
     return (
         <>
-        <div className="pointer-events-none fixed left-6 top-6 z-[10001] flex flex-col items-start gap-3">
+        <div className={`${styles.left} pointer-events-none fixed left-6 top-6 z-[10001] flex flex-col items-start gap-3`}>
             {onBack ? (
                 <button
                     type="button" onClick={onBack} aria-label="마을로 돌아가기"
@@ -117,19 +139,22 @@ export default function RoomHud({ onBack, room }: { onBack?: () => void; room?: 
                 <span className="mr-2" role="img" aria-label={isNight ? '밤' : '낮'}>{isNight ? '🌙' : '☀️'}</span>
                 <time dateTime={now.toISOString()} suppressHydrationWarning>{clockFormat.format(now)}</time>
             </div>
-            {description && <div className="mt-16 sm:mt-0"><RoomTutorial key={room} description={description} /></div>}
+            {description && <div className={`${styles.tutorial} mt-16 sm:mt-0`}><RoomTutorial key={`${room}-${mobile}`} description={description} /></div>}
         </div>
         {details && (
-            <aside aria-label="현재 위치와 사용 기술, 조작 안내" className="pointer-events-auto fixed right-6 top-6 z-[10001] max-h-44 w-[400px] max-w-[calc(100vw-208px)] overflow-y-auto overscroll-contain rounded-xl border border-white/40 bg-black/65 px-3 py-3 text-white shadow-lg backdrop-blur-md sm:pointer-events-none sm:max-h-none sm:px-4">
+            <>
+            {mobile && <button type="button" className={styles.infoButton} aria-label="방 정보와 조작방법" aria-expanded={infoOpen} aria-controls="room-information" onClick={() => setInfoOpen(!infoOpen)}>ⓘ</button>}
+            <aside id="room-information" hidden={mobile && !infoOpen} aria-label="현재 위치와 사용 기술, 조작 안내" className={`${styles.information} pointer-events-auto fixed right-6 top-6 z-[10001] max-h-44 w-[400px] max-w-[calc(100vw-208px)] overflow-y-auto overscroll-contain rounded-xl border border-white/40 bg-black/65 px-3 py-3 text-white shadow-lg backdrop-blur-md sm:pointer-events-none sm:max-h-none sm:px-4`}>
                 <p className="text-[10px] leading-relaxed text-white/80 sm:text-xs">
                     <strong className="font-bold text-white">{details.name}</strong>은{' '}
                     <span><strong className="font-bold text-white">{details.technologies.join(', ')}</strong>로 만들어졌어요!</span>
                 </p>
                 <div className="mt-2 space-y-1 border-t border-white/20 pt-2 text-[10px] leading-relaxed text-white/90 sm:text-xs">
                     <p className="font-bold text-white">조작방법</p>
-                    {details.controls.map((control) => <p key={control}>{control}</p>)}
+                    {(mobile && room ? touchControls[room] ?? details.controls : details.controls).map((control) => <p key={control}>{control}</p>)}
                 </div>
             </aside>
+            </>
         )}
         </>
     );

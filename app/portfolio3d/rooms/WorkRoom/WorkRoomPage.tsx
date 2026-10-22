@@ -5,6 +5,7 @@ import { projectCatalog } from '@/asset/data/projectCatalog';
 import RoomScene from '../../scene/RoomScene';
 import WorkRoom from './WorkRoom';
 import WorkRoomBoundary from './WorkRoomBoundary';
+import useMobile from '../../useMobile';
 
 const ProjectDetail = lazy(() => import('./WorkProjectDetail'));
 const start: [number, number, number] = [0, 1.35, 2.35];
@@ -17,6 +18,7 @@ export default function WorkRoomPage({ onBack }: { onBack: () => void }) {
 }
 
 function WorkRoomContent({ onBack }: { onBack: () => void }) {
+    const mobile = useMobile();
     const [selected, setSelected] = useState<number | null>(null);
     useEffect(() => () => { document.body.style.cursor = ''; }, []);
     return (
@@ -26,7 +28,7 @@ function WorkRoomContent({ onBack }: { onBack: () => void }) {
             exitPosition={exit} bounds={bounds}
             overlay={
                 <>
-                    <details className="absolute bottom-5 left-5 z-20 max-w-[calc(100vw-40px)] rounded-2xl border-2 border-[#725640] bg-[#fffdf8] px-4 py-3 text-sm text-[#725640] shadow-md">
+                    <details className={`absolute bottom-5 left-5 ${mobile ? 'max-w-[calc(50vw-84px)]' : 'max-w-[calc(100vw-40px)]'} z-20 rounded-2xl border-2 border-[#725640] bg-[#fffdf8] px-4 py-3 text-sm text-[#725640] shadow-md`}>
                         <summary className="cursor-pointer font-bold">프로젝트 목록</summary>
                         <nav aria-label="프로젝트 선택" className="mt-3 grid max-h-[40dvh] gap-1 overflow-y-auto">
                             {projectCatalog.map((project, index) => (

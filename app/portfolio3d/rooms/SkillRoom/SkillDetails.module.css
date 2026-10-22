@@ -60,3 +60,22 @@
     .content { padding: 20px 24px; }
     .name { font-size: 24px; }
 }
+
+@media (max-width: 767px), (pointer: coarse) and (max-width: 1023px) {
+    .skill { width: min(440px, calc(100vw - 32px)); }
+    .skill[aria-hidden="true"] .content { visibility: hidden; }
+    .artwork { min-height: 104px; padding: 8px; }
+    .logo { max-width: 84px; max-height: 84px; }
+    .content { padding: 16px 20px; }
+    .name { margin: 5px 0 7px; font-size: 24px; }
+    .description { margin-top: 10px; line-height: 1.65; }
+    .projects summary, .projects a { min-height: 44px; padding-top: 12px; padding-bottom: 12px; font-size: 13px; }
+    .projectList { max-height: 100px; touch-action: pan-y; }
+}
+@media (max-height: 500px) and (max-width: 1023px) {
+    .skill { grid-template-columns: 100px minmax(0, 1fr); width: min(640px, calc(100vw - 40px)); }
+    .artwork { border-bottom: 0; border-right: 1px solid #ffffff20; }
+    .content { padding: 12px 16px; }
+    .description { font-size: 12px; margin-top: 6px; }
+    .name { font-size: 20px; }
+}

@@ -1,0 +1,17 @@
+.portraitGate { display: none; }
+.navigation { left: auto; right: max(12px, env(safe-area-inset-right)); width: min(300px, calc(50vw - 84px)); }
+.navigation button { font-size: 10px; white-space: nowrap; }
+.fullscreen { position: fixed; top: max(12px, env(safe-area-inset-top)); right: calc(68px + env(safe-area-inset-right)); z-index: 10001; min-height: 44px; padding: 0 14px; border: 1px solid #ffffff60; border-radius: 16px; background: #0009; color: white; font-size: 11px; backdrop-filter: blur(12px); cursor: pointer; }
+.joystick { position: fixed; left: 50%; transform: translateX(-50%); bottom: calc(18px + env(safe-area-inset-bottom)); z-index: 10001; display: grid; place-items: center; width: 116px; height: 116px; border: 2px solid #735344; border-radius: 50%; background: #fffaf0c9; box-shadow: inset 0 2px 12px #fff9, 0 5px 20px #543a2b40; backdrop-filter: blur(8px); pointer-events: auto; touch-action: none; user-select: none; -webkit-user-select: none; cursor: grab; }
+.joystick:active { cursor: grabbing; }
+.joystick:focus-visible, .fullscreen:focus-visible { outline: 3px solid #ffd982; outline-offset: 4px; }
+.arrows { color: #735344; font-size: 16px; line-height: 30px; text-align: center; }
+.knob { position: absolute; width: 46px; height: 46px; border: 2px solid #987451; border-radius: 50%; background: #ffe6a3; box-shadow: inset 0 3px 0 #fff6d8, 0 4px 10px #543a2b55; pointer-events: none; }
+.label { position: absolute; bottom: -14px; border-radius: 8px; padding: 2px 8px; background: #543a2ba0; color: white; font-size: 10px; pointer-events: none; }
+@media (orientation: portrait) {
+    .portraitGate { position: fixed; inset: 0; z-index: 20000; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 24px; padding: 32px; background: #fff6e8; color: #654733; text-align: center; }
+    .phone { display: grid; place-items: center; width: 112px; height: 64px; border: 4px solid #735344; border-radius: 16px; background: #ffe6a3; box-shadow: 5px 5px 0 #d5b79c; font-size: 36px; }
+    .portraitGate h1 { font-size: 21px; font-weight: 800; line-height: 1.6; word-break: keep-all; }
+    .portraitGate p { max-width: 300px; font-size: 14px; line-height: 1.9; word-break: keep-all; }
+    .portraitGate button { min-height: 48px; border: 2px solid #735344; border-radius: 14px; padding: 12px 20px; background: #ffd982; box-shadow: 3px 3px 0 #735344; font-weight: 700; }
+}

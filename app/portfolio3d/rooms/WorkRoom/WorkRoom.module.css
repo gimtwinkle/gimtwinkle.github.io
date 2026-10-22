@@ -21,3 +21,9 @@
 @keyframes enter { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: translateY(0); } }
 @media (max-width: 700px) { .dialog { width: calc(100vw - 24px); max-height: calc(100dvh - 24px); } .project { padding: 20px; } .projectBody { grid-template-columns: 1fr; gap: 24px; padding: 24px 0; } .preview { grid-row: 1; padding: 12px; } .previewImage { max-height: 30dvh; } .description { margin-top: 20px; } .projectFooter { font-size: 7px; letter-spacing: .04em; } }
 @media (prefers-reduced-motion: reduce) { .dialog { animation: none; } }
+@media (max-width: 767px), (pointer: coarse) and (max-width: 1023px) {
+    .dialog { inset: auto 0 0; width: 100%; max-height: 88dvh; margin: 0; border-radius: 24px 24px 0 0; border-bottom: 0; box-shadow: 0 -12px 50px #19252533; overflow-y: auto; }
+    .project { padding: 12px 20px calc(20px + env(safe-area-inset-bottom)); }
+    .projectHeader { position: sticky; top: 0; z-index: 1; padding: 8px 0; background: #fffdf8; }
+    .projectHeader button, .visit { min-height: 44px; }
+}

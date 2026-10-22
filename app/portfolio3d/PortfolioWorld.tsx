@@ -9,6 +9,11 @@ import RoomHud from './components/RoomHud';
 import SceneLoading, { sceneLoadingMessages } from './components/SceneLoading';
 import CanvasLoading from './components/CanvasLoading';
 import useSeoulNight from './useSeoulNight';
+import useMobile from './useMobile';
+import VillageCamera from './components/VillageCamera';
+import MobileControls from './components/MobileControls';
+import mobileControlStyles from './components/MobileControls.module.css';
+import { resetMovement } from './movement';
 
 const Character = lazy(() => import('./objects/Character'));
 const CuteCloud = lazy(() => import('./objects/CuteCloud'));
@@ -46,6 +51,8 @@ const aboutRoomSceneConfig = {
 };
 
 export default function PortfolioWorld() {
+    const mobile = useMobile();
+    const [greetingRequest, setGreetingRequest] = useState(0);
     const isNight = useSeoulNight();
 	const [scene, setScene] = useState<SceneName>('village');
 	const [isFading, setIsFading] = useState(false);
@@ -57,10 +64,12 @@ export default function PortfolioWorld() {
 		}
 
         setDestination(nextScene);
+        resetMovement();
 		setIsFading(true);
 
 		window.setTimeout(() => {
 			setScene(nextScene);
+            setGreetingRequest(0);
 
 			window.setTimeout(() => {
 				setIsFading(false);
@@ -90,8 +99,11 @@ export default function PortfolioWorld() {
 			================================ */}
 			{scene === 'village' && (
 				<Canvas
-					dpr={[1, 1.5]}
-					shadows
+                    tabIndex={0}
+                    aria-label="마을 탐색: 방향키 또는 WASD로 캐릭터 이동"
+                    onPointerDown={(event) => event.currentTarget.focus({ preventScroll: true })}
+					dpr={mobile ? 1 : [1, 1.5]}
+					shadows={!mobile}
 					camera={{
 						position: [0, 9, 12],
 						fov: 45,
@@ -99,11 +111,12 @@ export default function PortfolioWorld() {
 						far: 100,
 					}}
 					gl={{
-						antialias: true,
+						antialias: !mobile,
 						alpha: false,
 					}}
 				>
 					<Suspense fallback={<CanvasLoading scene="village" />}>
+                        <VillageCamera mobile={mobile} greetingRequest={greetingRequest} />
 						<color attach="background" args={[isNight ? '#101a35' : '#bdefff']} />
 
 						<ambientLight intensity={isNight ? 0.4 : 0.9} />
@@ -128,9 +141,11 @@ export default function PortfolioWorld() {
 
 						<CuteMap isNight={isNight} onEnterRoom={goScene} />
 
-						<Character />
+						<Character onGreet={() => setGreetingRequest((request) => request + 1)} />
 
 						<OrbitControls
+                            makeDefault
+                            enableRotate={!mobile}
 							enableZoom={false}
 							enablePan={false}
 							maxPolarAngle={Math.PI / 2.4}
@@ -168,7 +183,7 @@ export default function PortfolioWorld() {
 			{scene === 'skills' && (
 				<div data-skill-room className="absolute inset-0 z-10 bg-black">
 					<Canvas
-						dpr={[1, 1.5]}
+						dpr={mobile ? 1 : [1, 1.5]}
 						camera={{
 							position: [0, 1.72, 5.8],
 							fov: 52,
@@ -192,7 +207,7 @@ export default function PortfolioWorld() {
 
 
                     <div className="pointer-events-none absolute bottom-7 left-1/2 z-30 -translate-x-1/2 whitespace-nowrap text-[10px] tracking-[0.25em] text-white/50">
-                        SCROLL / SWIPE TO EXPLORE
+                        {mobile ? '위로 밀어 다음 카드 · 아래로 밀어 이전 카드' : 'SCROLL / SWIPE TO EXPLORE'}
                     </div>
 				</div>
 			)}
@@ -209,6 +224,15 @@ export default function PortfolioWorld() {
 			>{isFading && <span role="status">{sceneLoadingMessages[destination] ?? '방으로 들어가는 중..'}</span>}</div>
 
 			<RoomHud room={scene} onBack={scene === 'village' ? undefined : goBackVillage} />
+            <MobileControls key={scene} walking={scene !== 'skills'} />
+            {scene === 'village' && greetingRequest > 0 && <button type="button" onClick={() => setGreetingRequest(0)} className={`fixed ${mobile ? 'left-3 top-[calc(68px+env(safe-area-inset-top))]' : 'right-6 bottom-6'} z-[10000] min-h-11 rounded-xl border border-white/60 bg-[#fffaf0]/95 px-4 text-xs font-bold text-[#543a2b] shadow-md`}>마을 전체 보기</button>}
+            {mobile && scene === 'village' && (
+                <nav aria-label="방 바로가기" className={`${mobileControlStyles.navigation} fixed bottom-[max(12px,env(safe-area-inset-bottom))] right-3 z-[10000] ml-auto flex max-w-md gap-1 rounded-2xl border border-white/60 bg-[#fffaf0]/95 p-2 text-[#543a2b] shadow-lg backdrop-blur-md`}>
+                    {(['about', 'work', 'skills', 'contact'] as RoomName[]).map((room) => (
+                        <button key={room} type="button" disabled={isFading} onClick={() => goScene(room)} className="min-h-11 min-w-0 flex-1 rounded-xl px-1 text-xs font-bold capitalize hover:bg-[#ffe6a3] focus-visible:outline-2 focus-visible:outline-[#735344] disabled:opacity-50">{room === 'skills' ? 'Skills' : room}</button>
+                    ))}
+                </nav>
+            )}
 		</div>
 	);
 }

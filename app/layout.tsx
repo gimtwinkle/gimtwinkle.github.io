@@ -1,4 +1,4 @@
-import type { Metadata } from 'next';
+import type { Metadata, Viewport } from 'next';
 import Script from 'next/script';
 import '@/app/globals.css';
 import '@/asset/styles/style.css';
@@ -6,6 +6,12 @@ import '@/asset/styles/style.css';
 export const metadata: Metadata = {
 	title: 'UX/UI developer',
 	description: '',
+};
+
+export const viewport: Viewport = {
+    width: 'device-width',
+    initialScale: 1,
+    viewportFit: 'cover',
 };
 
 export default function RootLayout({

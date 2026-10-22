@@ -2,6 +2,8 @@
 
 import { Bvh, Html, Text } from '@react-three/drei';
 import { useState } from 'react';
+import { createPortal } from 'react-dom';
+import useMobile from '../../useMobile';
 import RoundedBox from '../../components/RoundedBox';
 import AboutObjects from './AboutObjects';
 import Neon3DText from '../../objects/Neon3DText';
@@ -17,12 +19,23 @@ type FurnitureSpeechBubbleProps = {
 	position: [number, number, number];
 };
 
+// This component runs inside Html's DOM renderer, so its portal can target the body.
+function MobileFurnitureSpeech({ label }: { label: string }) {
+    return createPortal(
+        <aside role="status" className="pointer-events-none fixed bottom-[calc(156px+env(safe-area-inset-bottom))] left-4 right-4 z-[10000] rounded-2xl border-[3px] border-[#735344] bg-[#fffaf0] px-5 py-4 text-center text-sm font-bold leading-relaxed text-[#543a2b] shadow-[4px_4px_0_#735344]">
+            {label}
+        </aside>, document.body,
+    );
+}
+
 function FurnitureSpeechBubble({
     active,
 	label,
 	position,
 }: FurnitureSpeechBubbleProps) {
+	const mobile = useMobile();
 	if (!active) return null;
+	if (mobile) return <Html><MobileFurnitureSpeech label={label} /></Html>;
 
 	return (
 		<Html
@@ -39,7 +52,9 @@ function FurnitureSpeechBubble({
 }
 
 export default function AboutRoom({ onBack }: AboutRoomProps) {
+    const mobile = useMobile();
     const [hoveredObject, setHoveredObject] = useState<string | null>(null);
+    const selectObject = (name: string) => setHoveredObject((current) => current === name ? null : name);
 	return (
 		<group>
 			{/* 바닥 */}
@@ -107,8 +122,9 @@ export default function AboutRoom({ onBack }: AboutRoomProps) {
 				EXIT
 			</Text>
             <group
-                onPointerOver={(event) => { event.stopPropagation(); setHoveredObject('ceilingfan'); }}
-                onPointerOut={() => setHoveredObject(null)}>
+                onPointerOver={(event) => { if (!mobile) { event.stopPropagation(); setHoveredObject('ceilingfan'); } }}
+                onPointerOut={() => { if (!mobile) setHoveredObject(null); }}
+                onClick={(event) => { if (mobile && event.delta <= 5) { event.stopPropagation(); selectObject('ceilingfan'); } }}>
 			    <CeilingFan position={[0, 2.3, 0]} scale={[0.5, 0.5, 0.5]} />
             </group>
 
@@ -134,7 +150,7 @@ export default function AboutRoom({ onBack }: AboutRoomProps) {
 
 			{/* GLB 가구 */}
             <Bvh firstHitOnly strategy={0} indirect>
-			    <AboutObjects onHover={setHoveredObject} />
+			    <AboutObjects onHover={setHoveredObject} onSelect={selectObject} />
             </Bvh>
 		</group>
 	);

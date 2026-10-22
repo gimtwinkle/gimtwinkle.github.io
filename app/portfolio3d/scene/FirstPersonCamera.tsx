@@ -3,6 +3,7 @@
 import { useFrame, useThree } from '@react-three/fiber';
 import { useCallback, useEffect, useRef } from 'react';
 import * as THREE from 'three';
+import { attachMovementKeyboard, readMovement, subscribeMovement } from '../movement';
 
 type Bounds = {
 	minX: number;
@@ -12,6 +13,7 @@ type Bounds = {
 };
 
 type FirstPersonCameraProps = {
+    touchOnly?: boolean;
 	startPosition: [number, number, number];
 	lookAt: [number, number, number];
 	height?: number;
@@ -21,6 +23,7 @@ type FirstPersonCameraProps = {
 };
 
 export default function FirstPersonCamera({
+    touchOnly = false,
 	startPosition,
 	lookAt,
 	height = 1.35,
@@ -29,13 +32,10 @@ export default function FirstPersonCamera({
 	onDragChange,
 }: FirstPersonCameraProps) {
 	const { camera, gl, invalidate } = useThree();
+    const pressedKeys = useRef(new Set<string>());
+    useEffect(() => attachMovementKeyboard(pressedKeys.current), []);
 
-	const keys = useRef({
-		forward: false,
-		backward: false,
-		left: false,
-		right: false,
-	});
+    useEffect(() => subscribeMovement(invalidate), [invalidate]);
 
 	const yaw = useRef(0);
 	const pitch = useRef(0);
@@ -108,6 +108,7 @@ export default function FirstPersonCamera({
 		};
 
 		const handleWheel = (e: WheelEvent) => {
+			if (touchOnly) return;
 			e.preventDefault();
 			if (e.ctrlKey) return;
 
@@ -133,46 +134,6 @@ export default function FirstPersonCamera({
             invalidate();
 		};
 
-		const handleKeyDown = (e: KeyboardEvent) => {
-            invalidate();
-			if (e.code === 'KeyW' || e.code === 'ArrowUp') {
-				e.preventDefault();
-				keys.current.forward = true;
-			}
-			if (e.code === 'KeyS' || e.code === 'ArrowDown') {
-				e.preventDefault();
-				keys.current.backward = true;
-			}
-			if (e.code === 'KeyA' || e.code === 'ArrowLeft') {
-				e.preventDefault();
-				keys.current.left = true;
-			}
-			if (e.code === 'KeyD' || e.code === 'ArrowRight') {
-				e.preventDefault();
-				keys.current.right = true;
-			}
-
-		};
-
-		const handleKeyUp = (e: KeyboardEvent) => {
-			if (e.code === 'KeyW' || e.code === 'ArrowUp') {
-				e.preventDefault();
-				keys.current.forward = false;
-			}
-			if (e.code === 'KeyS' || e.code === 'ArrowDown') {
-				e.preventDefault();
-				keys.current.backward = false;
-			}
-			if (e.code === 'KeyA' || e.code === 'ArrowLeft') {
-				e.preventDefault();
-				keys.current.left = false;
-			}
-			if (e.code === 'KeyD' || e.code === 'ArrowRight') {
-				e.preventDefault();
-				keys.current.right = false;
-			}
-		};
-
 		canvas.addEventListener('pointerdown', handlePointerDown);
 		canvas.addEventListener('pointermove', handlePointerMove);
 		canvas.addEventListener('pointerup', stopDragging);
@@ -180,8 +141,6 @@ export default function FirstPersonCamera({
 		canvas.addEventListener('lostpointercapture', stopDragging);
 		canvas.addEventListener('wheel', handleWheel, { passive: false });
 		canvas.addEventListener('touchmove', preventTouchMove, { passive: false });
-		window.addEventListener('keydown', handleKeyDown);
-		window.addEventListener('keyup', handleKeyUp);
 
 		return () => {
 			canvas.removeEventListener('pointerdown', handlePointerDown);
@@ -191,11 +150,9 @@ export default function FirstPersonCamera({
 			canvas.removeEventListener('lostpointercapture', stopDragging);
 			canvas.removeEventListener('wheel', handleWheel);
 			canvas.removeEventListener('touchmove', preventTouchMove);
-			window.removeEventListener('keydown', handleKeyDown);
-			window.removeEventListener('keyup', handleKeyUp);
 			onDragChange?.(false);
 		};
-	}, [camera, gl, invalidate, startPosition, lookAt, onDragChange, bounds, height, constrainView]);
+	}, [camera, gl, invalidate, startPosition, lookAt, onDragChange, bounds, height, constrainView, touchOnly]);
 
 	useFrame((_, frameDelta) => {
         const delta = Math.min(frameDelta, 0.05);
@@ -203,15 +160,9 @@ export default function FirstPersonCamera({
 		camera.rotation.reorder('YXZ');
 		camera.rotation.set(pitch.current, yaw.current, 0);
 
-		const direction = vectors.current.direction.set(0, 0, 0);
-
-		if (keys.current.forward) direction.z -= 1;
-		if (keys.current.backward) direction.z += 1;
-		if (keys.current.left) direction.x -= 1;
-		if (keys.current.right) direction.x += 1;
+		const direction = readMovement(vectors.current.direction.set(0, 0, 0), pressedKeys.current);
 
 		if (direction.lengthSq() > 0) {
-			direction.normalize();
 
 			const forward = vectors.current.forward;
 			camera.getWorldDirection(forward);

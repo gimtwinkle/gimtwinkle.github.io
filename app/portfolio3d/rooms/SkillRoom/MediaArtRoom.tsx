@@ -16,6 +16,7 @@ import lottieLogo from '@/asset/lottie/lottie-logo.json';
 import interaction from '@/asset/lottie/interaction.json';
 import accessibility from '@/asset/lottie/responsive-web.json';
 import { skillInfo } from './skillInfo';
+import useMobile from '../../useMobile';
 
 type MediaArtRoomProps = {
     showPanels?: boolean;
@@ -37,6 +38,7 @@ const TRAVEL_END = (skills.length - 1) * 9 + 3;
 const pathX = (distance: number) => Math.sin(distance * 0.075) * 1.4;
 
 export default function MediaArtRoom({ showPanels = true }: MediaArtRoomProps) {
+    const mobile = useMobile();
     const { gl, size } = useThree();
     const motion = useRef({ target: 0, distance: 0, reduced: false, pointerX: 0, pointerY: 0 });
     const spread = Math.min(1, size.width / size.height / 1.2);
@@ -57,14 +59,37 @@ export default function MediaArtRoom({ showPanels = true }: MediaArtRoomProps) {
             move(event.deltaY * (event.deltaMode === 1 ? 16 : event.deltaMode === 2 ? surface.clientHeight : 1));
         };
         let previousY = 0;
-        const touchStart = (event: TouchEvent) => { previousY = event.touches[0].clientY; };
+        let startY = 0;
+        let swipe = false;
+        let scrollList: HTMLElement | null = null;
+        const touchStart = (event: TouchEvent) => {
+            swipe = event.touches.length === 1;
+            if (!swipe) return;
+            previousY = startY = event.touches[0].clientY;
+            scrollList = mobile && event.target instanceof Element ? event.target.closest<HTMLElement>('[data-skill-details]') : null;
+        };
         const touchMove = (event: TouchEvent) => {
+            if (!swipe || event.touches.length !== 1) return;
             event.preventDefault();
             const nextY = event.touches[0].clientY;
-            move((previousY - nextY) * 2);
+            if (scrollList) scrollList.scrollTop += previousY - nextY;
+            else if (!mobile) move((previousY - nextY) * 2);
             previousY = nextY;
         };
+        const touchEnd = (event: TouchEvent) => {
+            if (mobile && swipe && !scrollList && event.changedTouches.length) {
+                const distance = startY - event.changedTouches[0].clientY;
+                if (Math.abs(distance) > 36) {
+                    motion.current.target = MathUtils.clamp(
+                        (Math.round(motion.current.target / 9) + Math.sign(distance)) * 9, 0, (skills.length - 1) * 9,
+                    );
+                }
+            }
+            swipe = false;
+        };
+        const touchCancel = () => { swipe = false; };
         const pointerMove = (event: PointerEvent) => {
+            if (mobile) return;
             if (event.target instanceof Element && event.target.closest('[data-skill-details]')) return;
             const rect = surface.getBoundingClientRect();
             motion.current.pointerX = MathUtils.clamp(((event.clientX - rect.left) / rect.width - 0.5) * 2, -1, 1);
@@ -74,6 +99,8 @@ export default function MediaArtRoom({ showPanels = true }: MediaArtRoomProps) {
         surface.addEventListener('wheel', wheel, { passive: false });
         surface.addEventListener('touchstart', touchStart, { passive: true });
         surface.addEventListener('touchmove', touchMove, { passive: false });
+        surface.addEventListener('touchend', touchEnd);
+        surface.addEventListener('touchcancel', touchCancel);
         surface.addEventListener('pointermove', pointerMove);
         surface.addEventListener('pointerleave', pointerLeave);
         return () => {
@@ -81,10 +108,12 @@ export default function MediaArtRoom({ showPanels = true }: MediaArtRoomProps) {
             surface.removeEventListener('wheel', wheel);
             surface.removeEventListener('touchstart', touchStart);
             surface.removeEventListener('touchmove', touchMove);
+            surface.removeEventListener('touchend', touchEnd);
+            surface.removeEventListener('touchcancel', touchCancel);
             surface.removeEventListener('pointermove', pointerMove);
             surface.removeEventListener('pointerleave', pointerLeave);
         };
-    }, [gl]);
+    }, [gl, mobile]);
 
     // Move the viewer through stationary planets; run before their screen-space emphasis.
     useFrame(({ camera, clock }, delta) => {
@@ -108,18 +137,18 @@ export default function MediaArtRoom({ showPanels = true }: MediaArtRoomProps) {
             <group position={[0, -8.6, -28]} scale={6}>
                 <GalaxyStars />
             </group>
-            <Stars radius={110} depth={80} count={1000} factor={2} saturation={0.3} fade speed={0.2} />
-            <Sparkles position={[0, 1.72, -38]} scale={[22, 12, 90]} count={100} size={1.3} speed={0.08} opacity={0.5} color="#b7caff" />
+            <Stars radius={110} depth={80} count={mobile ? 450 : 1000} factor={2} saturation={0.3} fade speed={0.2} />
+            <Sparkles position={[0, 1.72, -38]} scale={[22, 12, 90]} count={mobile ? 40 : 100} size={1.3} speed={0.08} opacity={0.5} color="#b7caff" />
             {showPanels && skills.map((skill, index) => {
                 const distance = index * 9;
-                const x = pathX(distance) + [0.3, -1.8, 1.4, -0.6, 1.7, -1.2, 0.8, -0.3][index % 8];
+                const x = pathX(distance) + (mobile ? 0 : [0.3, -1.8, 1.4, -0.6, 1.7, -1.2, 0.8, -0.3][index % 8]);
                 return (
                     <FloatingLottie
                         key={skill.id}
                         emphasizeCenter
                         skill={skillInfo[skill.id]}
                         animationData={skill.data}
-                        position={[x * spread, 1.72 + [0, 0.7, -0.55, 0.45, -0.7, 0.4, 0.65, 0][index % 8], -3 - distance]}
+                        position={[x * spread, 1.72 + (mobile ? 0 : [0, 0.7, -0.55, 0.45, -0.7, 0.4, 0.65, 0][index % 8]), -3 - distance]}
                         size={skill.size}
                         distanceFactor={10}
                         floatSpeed={0.2 + index * 0.02}

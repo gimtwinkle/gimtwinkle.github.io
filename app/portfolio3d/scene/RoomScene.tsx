@@ -4,6 +4,7 @@ import { Canvas, useThree } from '@react-three/fiber';
 import { Suspense, useEffect, useState } from 'react';
 import FirstPersonCamera from './FirstPersonCamera';
 import CanvasLoading from '../components/CanvasLoading';
+import useMobile from '../useMobile';
 
 type Bounds = {
 	minX: number;
@@ -44,28 +45,30 @@ export default function RoomScene({
 	lookAt = [0, 1.35, -3],
 	bounds,
 }: RoomSceneProps) {
+    const mobile = useMobile();
     const [contextLost, setContextLost] = useState(false);
     if (contextLost) throw new Error('그래픽 연결(WebGL)이 끊겼어요. 다시 시도해 주세요.');
 
 	return (
 		<div
-			className="fixed inset-0 z-[9999] h-screen w-screen overflow-hidden bg-[#fff7ed]"
+			className="fixed inset-0 z-[9999] h-dvh w-full overflow-hidden bg-[#fff7ed]"
 			style={{ overscrollBehavior: 'none' }}
 		>
 			<Canvas
+                style={{ touchAction: 'none' }}
                 frameloop={loadingScene === 'contact' ? 'demand' : 'always'}
 				key={startPosition.join('-')}
 				className="h-full w-full"
-				shadows={!lightweight}
-                dpr={lightweight ? 1 : [1, 1.5]}
+				shadows={!lightweight && !mobile}
+                dpr={lightweight || mobile ? 1 : [1, 1.5]}
 				camera={{
 					position: startPosition,
-					fov: 85,
+					fov: mobile ? 95 : 85,
 					near: 0.1,
 					far: 100,
 				}}
 				gl={{
-					antialias: !lightweight,
+					antialias: !lightweight && !mobile,
 				}}
 			>
 				<color attach="background" args={['#fff7ed']} />
@@ -74,6 +77,7 @@ export default function RoomScene({
 				<Suspense fallback={<CanvasLoading scene={loadingScene} />}>{children}</Suspense>
 
 				<FirstPersonCamera
+                    touchOnly={mobile}
 					startPosition={startPosition}
 					lookAt={lookAt}
 					bounds={bounds}
