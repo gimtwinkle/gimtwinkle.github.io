@@ -1,19 +1,7 @@
 import type { Metadata } from 'next';
 import Script from 'next/script';
-import { Geist, Geist_Mono } from 'next/font/google';
 import '@/app/globals.css';
 import '@/asset/styles/style.css';
-import TitleTop from '@/asset/components/TitleTop';
-
-const geistSans = Geist({
-	variable: '--font-geist-sans',
-	subsets: ['latin'],
-});
-
-const geistMono = Geist_Mono({
-	variable: '--font-geist-mono',
-	subsets: ['latin'],
-});
 
 export const metadata: Metadata = {
 	title: 'UX/UI developer',
@@ -28,7 +16,7 @@ export default function RootLayout({
 	return (
 		<html
 			lang="en"
-			className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
+			className="h-full antialiased"
 		>
 			<body className="min-h-full flex flex-col">
 				<Script
@@ -41,11 +29,7 @@ function gtag(){window.dataLayer.push(arguments);}
 gtag('js', new Date());
 gtag('config', 'G-0E5NZRHB8M');`}
 				</Script>
-
-				<div className="title">
-					<TitleTop />
-					{children}
-				</div>
+				<div>{children}</div>
 			</body>
 		</html>
 	);

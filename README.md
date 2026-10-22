@@ -22,6 +22,19 @@ This project uses [`next/font`](https://nextjs.org/docs/app/building-your-applic
 
 ## Learn More
 
+### Contact room
+
+The pink mailbox opens a letter composer for `beingnami2023@gmail.com`. Sending opens the visitor's mail app; the site does not send mail itself.
+The guestbook opens a prefilled GitHub Issue in `gimtwinkle/gimtwinkle.github.io`; visitors sign in and confirm submission on GitHub.
+Open issues whose titles start with `[방명록]` appear in the room's guestbook. Close an issue to hide its entry.
+The guestbook reads the latest 100 open issues, displays up to 12 matching entries, and links to the complete GitHub list. Its public API response is cached in memory for one minute; the refresh button bypasses this cache.
+
+### About room models
+
+Runtime furniture assets are in `public/models/about-optimized/`. Their original GLBs remain in `public/models/about/`.
+After changing a source model, run `npm run optimize:models` to regenerate the runtime assets and size report.
+The script resizes embedded textures to at most 1024px and simplifies meshes above 100,000 triangles with a 0.1% relative geometry error limit, preserving mesh borders and vertex attributes. It leaves furniture transforms unchanged.
+
 To learn more about Next.js, take a look at the following resources:
 
 - [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
