@@ -2,258 +2,140 @@
 
 import { Html } from '@react-three/drei';
 import { useFrame } from '@react-three/fiber';
-import Lottie from 'lottie-react';
-import { useRef } from 'react';
-import * as THREE from 'three';
+import Lottie, { type LottieRefCurrentProps } from 'lottie-react';
+import { useEffect, useId, useRef, type CSSProperties } from 'react';
+import { MathUtils, Vector3, type Group } from 'three';
+import { levelNames, type SkillInfo } from './skillInfo';
+import styles from './SkillDetails.module.css';
 
 export type FloatingLottieProps = {
-	animationData: object;
-	position: [number, number, number];
-	size?: number;
-	floatSpeed?: number;
-	floatAmount?: number;
-	delay?: number;
-	distanceFactor?: number;
-	glowColor?: string;
-	cycleDuration?: number;
-	hologramOpacity?: number;
+    animationData: object;
+    position: [number, number, number];
+    size?: number;
+    floatSpeed?: number;
+    floatAmount?: number;
+    delay?: number;
+    distanceFactor?: number;
+    glowColor?: string;
+    cycleDuration?: number;
+    hologramOpacity?: number;
+    emphasizeCenter?: boolean;
+    skill?: SkillInfo;
 };
 
-function smoothStep(edge0: number, edge1: number, value: number) {
-	const x = THREE.MathUtils.clamp(
-		(value - edge0) / Math.max(edge1 - edge0, 0.0001),
-		0,
-		1
-	);
-
-	return x * x * (3 - 2 * x);
-}
-
 export default function FloatingLottie({
-	animationData,
-	position,
-	size = 90,
-	floatSpeed = 1,
-	floatAmount = 0.07,
-	delay = 0,
-	distanceFactor = 4,
-	glowColor = 'rgba(120,225,255,0.45)',
-	cycleDuration = 7.2,
-	hologramOpacity = 0.72,
+    animationData, position, size = 90, floatSpeed = 0.35,
+    floatAmount = 0.07, delay = 0, distanceFactor = 4, hologramOpacity = 1,
+    emphasizeCenter = false, skill,
 }: FloatingLottieProps) {
-	const groupRef = useRef<THREE.Group>(null);
-	const elementRef = useRef<HTMLDivElement>(null);
-	const ghostRef = useRef<HTMLDivElement>(null);
-	const scanRef = useRef<HTMLDivElement>(null);
+    const groupRef = useRef<Group>(null);
+    const cardRef = useRef<HTMLDivElement>(null);
+    const projectsRef = useRef<HTMLDetailsElement>(null);
+    const animationRef = useRef<LottieRefCurrentProps | null>(null);
+    const playing = useRef<boolean | null>(null);
+    const projected = useRef(new Vector3());
+    const emphasis = useRef(0);
+    const offset = useRef({ x: 0, y: 0 });
+    const bounds = useRef({ width: 640, height: 300 });
+    const interactive = useRef(false);
+    const projectsId = useId();
 
-	const initialY = position[1];
+    useEffect(() => {
+        const card = cardRef.current;
+        if (!card) return;
+        const measure = () => { bounds.current = { width: card.offsetWidth, height: card.offsetHeight }; };
+        measure();
+        const observer = new ResizeObserver(measure);
+        observer.observe(card);
+        return () => observer.disconnect();
+    }, []);
 
-	useFrame((state) => {
-		if (!groupRef.current) return;
+    useFrame(({ clock, camera, size: viewport }, delta) => {
+        if (!groupRef.current || !cardRef.current) return;
+        groupRef.current.position.y = position[1] + Math.sin(clock.elapsedTime * floatSpeed + delay) * floatAmount;
+        if (!emphasizeCenter) return;
+        const dt = Math.min(delta, 0.05);
+        const point = groupRef.current.getWorldPosition(projected.current);
+        const distance = Math.max(0.01, point.distanceTo(camera.position));
+        point.project(camera);
+        const inFront = point.z > -1 && point.z < 1;
+        const foreground = 1 - MathUtils.smoothstep(distance, 8, 16);
+        const centered = Math.exp(-(point.x * point.x + point.y * point.y) * 5);
+        emphasis.current = MathUtils.damp(emphasis.current, inFront ? centered * foreground : 0, 9, dt);
+        const reveal = MathUtils.smoothstep(emphasis.current, 0.12, 0.55);
+        const passFade = MathUtils.smoothstep(distance, 2.5, 5);
+        const visible = inFront && distance < 35;
+        const active = visible && reveal * passFade > 0.35;
+        const card = cardRef.current;
+        card.style.setProperty('--card-top-alpha', String(0.5 + reveal * 0.25));
+        card.style.setProperty('--card-bottom-alpha', String(0.4 + reveal * 0.25));
+        card.style.opacity = String(visible ? hologramOpacity * (0.25 + emphasis.current * 0.75) * passFade * (1 - MathUtils.smoothstep(distance, 26, 35)) : 0);
+        if (interactive.current !== active) {
+            card.inert = !active;
+            card.setAttribute('aria-hidden', String(!active));
+            card.style.pointerEvents = active ? 'auto' : 'none';
+            interactive.current = active;
+            if (!active && projectsRef.current) projectsRef.current.open = false;
+        }
+        const shouldPlay = visible && distance < 20 && Math.abs(point.x) < 1.2 && Math.abs(point.y) < 1.2;
+        if (animationRef.current?.animationLoaded && playing.current !== shouldPlay) {
+            if (shouldPlay) animationRef.current.play();
+            else animationRef.current.pause();
+            playing.current = shouldPlay;
+        }
+        // Invisible cards need no layout calculation or CSS transform updates.
+        if (!visible) return;
+        // Position and scale the whole card together so its contents cannot drift apart.
+        const topInset = 148;
+        const bottomInset = 54;
+        const availableHeight = Math.max(80, viewport.height - topInset - bottomInset);
+        const scale = Math.min(MathUtils.lerp(MathUtils.clamp(distanceFactor / distance, 0.25, 1), 1, reveal),
+            (viewport.width - 32) / bounds.current.width, availableHeight / bounds.current.height);
+        const halfWidth = bounds.current.width * scale / 2;
+        const halfHeight = bounds.current.height * scale / 2;
+        const screenX = (point.x + 1) * viewport.width / 2;
+        const screenY = (1 - point.y) * viewport.height / 2;
+        const centerX = MathUtils.clamp(viewport.width / 2, halfWidth + 16, viewport.width - halfWidth - 16);
+        const centerY = MathUtils.clamp(viewport.height / 2, topInset + halfHeight, viewport.height - bottomInset - halfHeight);
+        offset.current.x = MathUtils.damp(offset.current.x, (centerX - screenX) * reveal, 12, dt);
+        offset.current.y = MathUtils.damp(offset.current.y, (centerY - screenY) * reveal, 12, dt);
+        card.style.transform = 'translate(' + offset.current.x + 'px, ' + offset.current.y + 'px) scale(' + scale + ')';
+    });
 
-		const time = state.clock.elapsedTime;
-
-		// 아이콘별로 서로 다른 속도와 높이로 부유
-		groupRef.current.position.y =
-			initialY + Math.sin((time + delay) * floatSpeed) * floatAmount;
-
-		groupRef.current.rotation.set(0, 0, 0);
-
-		// 아이콘마다 등장 시점을 다르게 하기 위해 delay 포함
-		const localTime =
-			(((time + delay) % cycleDuration) + cycleDuration) % cycleDuration;
-
-		const fadeIn = smoothStep(0, 1.3, localTime);
-		const fadeOut = 1 - smoothStep(4.8, 6.2, localTime);
-		const opacity = Math.min(fadeIn, fadeOut);
-
-		const translateY = (1 - opacity) * 13;
-		const scale = 0.95 + opacity * 0.05;
-		const blur = (1 - opacity) * 2.4 + 0.35;
-
-		const flicker = 0.94 + Math.sin(time * 13 + delay * 2.5) * 0.025;
-
-		const finalOpacity = opacity * hologramOpacity * flicker;
-
-		if (elementRef.current) {
-			elementRef.current.style.opacity = String(finalOpacity);
-
-			elementRef.current.style.transform = `
-				translateY(${translateY}px)
-				scale(${scale})
-			`;
-
-			elementRef.current.style.filter =
-				`brightness(1.35) saturate(1.15) ` +
-				`blur(${blur}px) ` +
-				`drop-shadow(0 0 5px ${glowColor}) ` +
-				`drop-shadow(0 0 14px ${glowColor})`;
-		}
-
-		if (ghostRef.current) {
-			ghostRef.current.style.opacity = String(opacity * 0.18);
-
-			ghostRef.current.style.transform = `
-				translate(
-					${Math.sin(time * 1.8 + delay) * 2}px,
-					${Math.cos(time * 1.4 + delay) * 1.5}px
-				)
-				scale(${1.01 + opacity * 0.015})
-			`;
-
-			ghostRef.current.style.filter =
-				`blur(3px) brightness(1.5) ` + `drop-shadow(0 0 18px ${glowColor})`;
-		}
-
-		if (scanRef.current) {
-			const scanY = ((time * 34 + delay * 18) % 130) - 15;
-
-			scanRef.current.style.transform = `translateY(${scanY}px)`;
-			scanRef.current.style.opacity = String(opacity * 0.28);
-		}
-	});
-
-	return (
-		<group ref={groupRef} position={position}>
-			<Html
-				transform
-				center
-				distanceFactor={distanceFactor}
-				style={{
-					pointerEvents: 'none',
-					userSelect: 'none',
-				}}
-			>
-				<div
-					style={{
-						position: 'relative',
-						width: `${size}px`,
-						height: `${size}px`,
-						display: 'flex',
-						alignItems: 'center',
-						justifyContent: 'center',
-						overflow: 'hidden',
-						borderRadius: '18px',
-						mixBlendMode: 'screen',
-					}}
-				>
-					{/* 흐릿한 잔상 */}
-					<div
-						ref={ghostRef}
-						style={{
-							position: 'absolute',
-							inset: 0,
-							opacity: 0,
-							pointerEvents: 'none',
-							mixBlendMode: 'screen',
-							willChange: 'opacity, transform, filter',
-						}}
-					>
-						<Lottie
-							animationData={animationData}
-							loop
-							autoplay
-							rendererSettings={{
-								preserveAspectRatio: 'xMidYMid meet',
-							}}
-							style={{
-								width: '100%',
-								height: '100%',
-							}}
-						/>
-					</div>
-
-					{/* 메인 홀로그램 아이콘 */}
-					<div
-						ref={elementRef}
-						style={{
-							position: 'absolute',
-							inset: 0,
-							display: 'flex',
-							alignItems: 'center',
-							justifyContent: 'center',
-							opacity: 0,
-							transform: 'translateY(13px) scale(0.95)',
-							filter:
-								`brightness(1.35) blur(2px) ` +
-								`drop-shadow(0 0 6px ${glowColor})`,
-							mixBlendMode: 'screen',
-							willChange: 'opacity, transform, filter',
-						}}
-					>
-						<Lottie
-							animationData={animationData}
-							loop
-							autoplay
-							rendererSettings={{
-								preserveAspectRatio: 'xMidYMid meet',
-							}}
-							style={{
-								width: '100%',
-								height: '100%',
-							}}
-						/>
-					</div>
-
-					{/* 미세한 수평 스캔라인 */}
-					<div
-						style={{
-							position: 'absolute',
-							inset: 0,
-							pointerEvents: 'none',
-							opacity: 0.2,
-							background:
-								'repeating-linear-gradient(' +
-								'to bottom,' +
-								'rgba(180,245,255,0.13) 0px,' +
-								'rgba(180,245,255,0.13) 1px,' +
-								'transparent 1px,' +
-								'transparent 4px' +
-								')',
-							mixBlendMode: 'screen',
-						}}
-					/>
-
-					{/* 위에서 아래로 흐르는 스캔 빛 */}
-					<div
-						ref={scanRef}
-						style={{
-							position: 'absolute',
-							left: '-8%',
-							right: '-8%',
-							top: 0,
-							height: '24px',
-							opacity: 0,
-							pointerEvents: 'none',
-							background:
-								'linear-gradient(' +
-								'to bottom,' +
-								'transparent,' +
-								'rgba(210,252,255,0.38),' +
-								'transparent' +
-								')',
-							filter: 'blur(3px)',
-							mixBlendMode: 'screen',
-							willChange: 'opacity, transform',
-						}}
-					/>
-
-					{/* 외곽의 약한 유리막 */}
-					<div
-						style={{
-							position: 'absolute',
-							inset: '7%',
-							borderRadius: '16px',
-							border: `1px solid ${glowColor}`,
-							opacity: 0.1,
-							boxShadow:
-								`inset 0 0 12px ${glowColor}, ` + `0 0 16px ${glowColor}`,
-							pointerEvents: 'none',
-							mixBlendMode: 'screen',
-						}}
-					/>
-				</div>
-			</Html>
-		</group>
-	);
+    return (
+        <group ref={groupRef} position={position}>
+            <Html center zIndexRange={[25, 1]} style={{ pointerEvents: 'none', userSelect: 'none' }}>
+                <div ref={cardRef} className={styles.skill}
+                    style={{ '--skill-color': skill?.color ?? '#b7caff', opacity: emphasizeCenter ? 0 : hologramOpacity } as CSSProperties}
+                    aria-hidden={emphasizeCenter} inert={emphasizeCenter}>
+                    <div className={styles.artwork}>
+                        <button type="button" className={styles.logo} style={{ width: size, height: size }}
+                            disabled={!skill?.projects.length}
+                            aria-label={skill ? `${skill.name} 관련 프로젝트 보기` : '기술 로고'}
+                            aria-controls={skill?.projects.length ? projectsId : undefined}
+                            onClick={() => { if (projectsRef.current) projectsRef.current.open = !projectsRef.current.open; }}>
+                            <Lottie lottieRef={animationRef} onDOMLoaded={() => { animationRef.current?.setSubframe(false); playing.current = null; }}
+                                animationData={animationData} loop autoplay={!emphasizeCenter} aria-hidden="true"
+                                rendererSettings={{ preserveAspectRatio: 'xMidYMid meet' }} style={{ width: '100%', height: '100%' }} />
+                        </button>
+                    </div>
+                    {skill && <div className={styles.content}>
+                        <span className={styles.category}>{skill.category}</span>
+                        <h2 className={styles.name}>{skill.name}</h2>
+                        <div className={styles.stars} role="img" aria-label={skill.level ? `숙련도 5단계 중 ${skill.level}단계` : '숙련도 미설정'}>
+                            {Array.from({ length: 5 }, (_, index) => <span key={index} aria-hidden="true" className={index < (skill.level ?? 0) ? styles.lit : styles.dim}>★</span>)}
+                        </div>
+                        <p className={styles.level}>{skill.level ? `${skill.level} / 5 · ${levelNames[skill.level - 1]}` : '레벨 설정 전'}</p>
+                        <p className={styles.description}>{skill.description}</p>
+                        {skill.projects.length ? <details ref={projectsRef} id={projectsId} className={styles.projects}>
+                            <summary>관련 프로젝트 · {skill.projects.length}</summary>
+                            <div data-skill-details className={styles.projectList}>
+                                {skill.projects.map((project) => <a key={project.title} href={project.href} target="_blank" rel="noopener noreferrer" aria-label={`${project.title} (새 탭)`}>{project.title} ↗</a>)}
+                            </div>
+                        </details> : <p className={styles.empty}>관련 프로젝트 준비 중</p>}
+                    </div>}
+                </div>
+            </Html>
+        </group>
+    );
 }

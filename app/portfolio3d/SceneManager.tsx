@@ -9,7 +9,8 @@ import VillageScene from './scene/VillageScene';
 import RoomScene from './scene/RoomScene';
 
 import AboutRoom from './rooms/About/AboutRoom';
-import WorkRoom from './rooms/WorkRoom';
+import WorkRoomPage from './rooms/WorkRoom/WorkRoomPage';
+import RoomHud from './components/RoomHud';
 
 export default function SceneManager() {
 	const [scene, setScene] = useState<SceneName>('station');
@@ -53,23 +54,8 @@ export default function SceneManager() {
 				</RoomScene>
 			)}
 
-			{scene === 'work' && (
-				<RoomScene
-					key="work-room"
-					onBack={() => goScene('village')}
-					startPosition={[0, 1.35, 2.35]}
-					lookAt={[0, 1.35, -3]}
-					exitPosition={[0, 0, 3.15]}
-					bounds={{
-						minX: -4.1,
-						maxX: 4.1,
-						minZ: -2.75,
-						maxZ: 2.85,
-					}}
-				>
-					<WorkRoom />
-				</RoomScene>
-			)}
+			{scene === 'work' && <WorkRoomPage onBack={() => goScene('village')} />}
+            {scene !== 'station' && <RoomHud room={scene} onBack={scene === 'village' ? undefined : () => goScene('village')} />}
 
 			<div
 				className={[

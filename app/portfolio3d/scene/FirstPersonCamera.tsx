@@ -1,7 +1,7 @@
 'use client';
 
 import { useFrame, useThree } from '@react-three/fiber';
-import { useEffect, useRef } from 'react';
+import { useCallback, useEffect, useRef } from 'react';
 import * as THREE from 'three';
 
 type Bounds = {
@@ -17,11 +17,7 @@ type FirstPersonCameraProps = {
 	height?: number;
 	speed?: number;
 	bounds: Bounds;
-	exitPosition: [number, number, number];
-	exitDistance?: number;
-	onExitNearChange?: (isNear: boolean) => void;
 	onDragChange?: (isDragging: boolean) => void;
-	onExit?: () => void;
 };
 
 export default function FirstPersonCamera({
@@ -30,13 +26,9 @@ export default function FirstPersonCamera({
 	height = 1.35,
 	speed = 2.2,
 	bounds,
-	exitPosition,
-	exitDistance = 1.15,
-	onExitNearChange,
 	onDragChange,
-	onExit,
 }: FirstPersonCameraProps) {
-	const { camera, gl } = useThree();
+	const { camera, gl, invalidate } = useThree();
 
 	const keys = useRef({
 		forward: false,
@@ -47,17 +39,34 @@ export default function FirstPersonCamera({
 
 	const yaw = useRef(0);
 	const pitch = useRef(0);
+    const initialView = useRef({ yaw: 0, pitch: 0 });
 	const isDragging = useRef(false);
 	const lastPointer = useRef({ x: 0, y: 0 });
-	const isExitNear = useRef(false);
+    const vectors = useRef({ direction: new THREE.Vector3(), forward: new THREE.Vector3(), right: new THREE.Vector3() });
+
+
+    // Keep the entire camera frustum in the furnished half of every room.
+    // Wider windows allow less turning because more of the room is already visible.
+    const constrainView = useCallback(() => {
+        const verticalFov = camera instanceof THREE.PerspectiveCamera
+            ? THREE.MathUtils.degToRad(camera.getEffectiveFOV()) : Math.PI / 3;
+        const horizontalFov = camera instanceof THREE.PerspectiveCamera
+            ? 2 * Math.atan(Math.tan(verticalFov / 2) * camera.aspect) : verticalFov;
+        const yawLimit = Math.max(0.05, Math.min(Math.PI / 3, Math.PI / 2 - horizontalFov / 2 - 0.08));
+        const pitchLimit = Math.max(0.05, Math.min(Math.PI / 6, Math.PI / 2 - verticalFov / 2 - 0.12));
+        yaw.current = THREE.MathUtils.clamp(yaw.current, initialView.current.yaw - yawLimit, initialView.current.yaw + yawLimit);
+        pitch.current = THREE.MathUtils.clamp(pitch.current, initialView.current.pitch - pitchLimit, initialView.current.pitch + pitchLimit);
+    }, [camera]);
 
 	useEffect(() => {
+		camera.rotation.reorder('YXZ');
 		camera.position.set(...startPosition);
 		camera.lookAt(...lookAt);
-		camera.rotation.order = 'YXZ';
+        invalidate();
 
 		yaw.current = camera.rotation.y;
 		pitch.current = camera.rotation.x;
+        initialView.current = { yaw: yaw.current, pitch: pitch.current };
 
 		const canvas = gl.domElement;
 
@@ -80,11 +89,8 @@ export default function FirstPersonCamera({
 			yaw.current -= movementX * 0.0025;
 			pitch.current -= movementY * 0.0025;
 
-			pitch.current = THREE.MathUtils.clamp(
-				pitch.current,
-				-Math.PI / 2.8,
-				Math.PI / 2.8
-			);
+            constrainView();
+            invalidate();
 		};
 
 		const stopDragging = (e?: PointerEvent) => {
@@ -105,7 +111,7 @@ export default function FirstPersonCamera({
 			e.preventDefault();
 			if (e.ctrlKey) return;
 
-			const forward = new THREE.Vector3();
+			const forward = vectors.current.forward;
 			camera.getWorldDirection(forward);
 			forward.y = 0;
 			forward.normalize();
@@ -124,9 +130,11 @@ export default function FirstPersonCamera({
 				bounds.maxZ
 			);
 			camera.position.set(nextX, height, nextZ);
+            invalidate();
 		};
 
 		const handleKeyDown = (e: KeyboardEvent) => {
+            invalidate();
 			if (e.code === 'KeyW' || e.code === 'ArrowUp') {
 				e.preventDefault();
 				keys.current.forward = true;
@@ -144,9 +152,6 @@ export default function FirstPersonCamera({
 				keys.current.right = true;
 			}
 
-			if (e.code === 'KeyE' && isExitNear.current) {
-				onExit?.();
-			}
 		};
 
 		const handleKeyUp = (e: KeyboardEvent) => {
@@ -190,13 +195,15 @@ export default function FirstPersonCamera({
 			window.removeEventListener('keyup', handleKeyUp);
 			onDragChange?.(false);
 		};
-	}, [camera, gl, startPosition, lookAt, onExit, onDragChange]);
+	}, [camera, gl, invalidate, startPosition, lookAt, onDragChange, bounds, height, constrainView]);
 
-	useFrame((_, delta) => {
-		camera.rotation.order = 'YXZ';
+	useFrame((_, frameDelta) => {
+        const delta = Math.min(frameDelta, 0.05);
+        constrainView();
+		camera.rotation.reorder('YXZ');
 		camera.rotation.set(pitch.current, yaw.current, 0);
 
-		const direction = new THREE.Vector3();
+		const direction = vectors.current.direction.set(0, 0, 0);
 
 		if (keys.current.forward) direction.z -= 1;
 		if (keys.current.backward) direction.z += 1;
@@ -206,16 +213,17 @@ export default function FirstPersonCamera({
 		if (direction.lengthSq() > 0) {
 			direction.normalize();
 
-			const forward = new THREE.Vector3();
+			const forward = vectors.current.forward;
 			camera.getWorldDirection(forward);
 			forward.y = 0;
 			forward.normalize();
 
-			const right = new THREE.Vector3();
+			const right = vectors.current.right;
 			right.crossVectors(forward, camera.up).normalize();
 
 			camera.position.addScaledVector(forward, -direction.z * speed * delta);
 			camera.position.addScaledVector(right, direction.x * speed * delta);
+            invalidate();
 		}
 
 		const nextX = THREE.MathUtils.clamp(
@@ -231,16 +239,6 @@ export default function FirstPersonCamera({
 
 		camera.position.set(nextX, height, nextZ);
 
-		const distance = Math.hypot(
-			camera.position.x - exitPosition[0],
-			camera.position.z - exitPosition[2]
-		);
-		const near = distance < exitDistance;
-
-		if (near !== isExitNear.current) {
-			isExitNear.current = near;
-			onExitNearChange?.(near);
-		}
 	});
 
 	return null;

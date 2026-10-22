@@ -1,9 +1,7 @@
 'use client';
 
-import { Html, Text } from '@react-three/drei';
-import { useFrame, useThree } from '@react-three/fiber';
+import { Bvh, Html, Text } from '@react-three/drei';
 import { useState } from 'react';
-import * as THREE from 'three';
 import RoundedBox from '../../components/RoundedBox';
 import AboutObjects from './AboutObjects';
 import Neon3DText from '../../objects/Neon3DText';
@@ -14,34 +12,26 @@ type AboutRoomProps = {
 };
 
 type FurnitureSpeechBubbleProps = {
+    active: boolean;
 	label: string;
 	position: [number, number, number];
-	threshold?: number;
 };
 
 function FurnitureSpeechBubble({
+    active,
 	label,
 	position,
-	threshold = 1.9,
 }: FurnitureSpeechBubbleProps) {
-	const { camera } = useThree();
-	const [isVisible, setIsVisible] = useState(false);
-
-	useFrame(() => {
-		const distance = camera.position.distanceTo(new THREE.Vector3(...position));
-		setIsVisible(distance < threshold);
-	});
-
-	if (!isVisible) return null;
+	if (!active) return null;
 
 	return (
 		<Html
 			center
-			distanceFactor={8}
-			position={[position[0], position[1] + 0.42, position[2]]}
-			occlude
+			position={position}
+            zIndexRange={[100, 100]}
+            style={{ pointerEvents: 'none' }}
 		>
-			<div className="pointer-events-none whitespace-nowrap rounded-[1rem] border-[3px] border-black bg-white/95 px-3 py-2 text-[10px] font-black uppercase tracking-[0.08em] text-[#2f1d3a] shadow-[4px_4px_0_#000]">
+			<div role="tooltip" className="pointer-events-none w-max max-w-[min(260px,calc(100vw-32px))] whitespace-normal break-keep rounded-[1rem] border-[3px] border-black bg-white/95 px-4 py-3 text-center text-[13px] font-bold leading-relaxed text-[#2f1d3a] shadow-[4px_4px_0_#000]">
 				{label}
 			</div>
 		</Html>
@@ -49,6 +39,7 @@ function FurnitureSpeechBubble({
 }
 
 export default function AboutRoom({ onBack }: AboutRoomProps) {
+    const [hoveredObject, setHoveredObject] = useState<string | null>(null);
 	return (
 		<group>
 			{/* 바닥 */}
@@ -115,26 +106,36 @@ export default function AboutRoom({ onBack }: AboutRoomProps) {
 			>
 				EXIT
 			</Text>
-			<CeilingFan position={[0, 2.3, 0]} scale={[0.5, 0.5, 0.5]} />
+            <group
+                onPointerOver={(event) => { event.stopPropagation(); setHoveredObject('ceilingfan'); }}
+                onPointerOut={() => setHoveredObject(null)}>
+			    <CeilingFan position={[0, 2.3, 0]} scale={[0.5, 0.5, 0.5]} />
+            </group>
 
 			{/* 조명 */}
 			<ambientLight intensity={1} />
 			<directionalLight position={[2, 4, 3]} intensity={1.25} castShadow />
 			<pointLight position={[0, 2.15, 0]} intensity={1.3} color="#fff6d6" />
 
-			<FurnitureSpeechBubble position={[-1.45, 0.72, -1.08]} label="내 침대" />
-			<FurnitureSpeechBubble position={[-0.55, 0.72, -1.1]} label="협업 책상" />
-			<FurnitureSpeechBubble position={[1.15, 0.72, -1.08]} label="작업 책상" />
-			<FurnitureSpeechBubble
-				position={[1.05, 0.72, 0.24]}
-				label="편안한 빈백"
+			<FurnitureSpeechBubble active={hoveredObject === 'bed'} position={[-1.5, 0.72, -1]} label="체크무늬 광적으로 좋아함." />
+			<FurnitureSpeechBubble active={hoveredObject === 'bedside'} position={[-0.55, 0.72, -1.7]} label="잠들기 전, 나만의 작은 루틴으로 하루를 마무리해요." />
+			<FurnitureSpeechBubble active={hoveredObject === 'desk'} position={[1.15, 0.72, -1]} label="새로운 거 만들어보기를 좋아해요! 지금 이런 거!" />
+			<FurnitureSpeechBubble active={hoveredObject === 'beanbag'}
+				position={[0.9, 0.72, 0.35]}
+				label="휴식과 집중은 비례한다!"
 			/>
-			<FurnitureSpeechBubble position={[0, 1.78, -1.58]} label="창밖 풍경" />
-			<FurnitureSpeechBubble position={[-2.14, 1.68, -0.1]} label="소개 보드" />
-			<FurnitureSpeechBubble position={[1.92, 0.72, -0.2]} label="책장" />
+			<FurnitureSpeechBubble active={hoveredObject === 'window'} position={[-1, 1.45, -1.5]} label="창밖을 보면, 다음 여행에서 만날 풍경이 궁금해져요." />
+			<FurnitureSpeechBubble active={hoveredObject === 'board'} position={[1.15, 1.65, -1.23]} label="기록은 기억보다 힘이 세다!" />
+			<FurnitureSpeechBubble active={hoveredObject === 'travel'} position={[-1.7, 1, 0.52]} label="프리다이빙과 여행을 좋아합니다!" />
+			<FurnitureSpeechBubble active={hoveredObject === 'rowtable'} position={[0, 0.65, 0]} label="성공보다는 실패를 기록하는 편." />
+			<FurnitureSpeechBubble active={hoveredObject === 'bookcase'} position={[2, 1.25, 0]} label="편독이 심한 편(소설책 안좋아함)" />
+            <FurnitureSpeechBubble active={hoveredObject === 'robot'} position={[2, 1.8, 0]} label="마음이 따뜻한 휴머니스트 로봇 (ISTJ)" />
+            <FurnitureSpeechBubble active={hoveredObject === 'ceilingfan'} position={[0, 2.15, 0]} label="실링팬만 보면 힐링됨(라임 아니고 진짜임..)" />
 
 			{/* GLB 가구 */}
-			<AboutObjects />
+            <Bvh firstHitOnly strategy={0} indirect>
+			    <AboutObjects onHover={setHoveredObject} />
+            </Bvh>
 		</group>
 	);
 }

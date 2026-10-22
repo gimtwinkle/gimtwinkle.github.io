@@ -1,8 +1,9 @@
 'use client';
 
-import { Canvas } from '@react-three/fiber';
-import { useState } from 'react';
+import { Canvas, useThree } from '@react-three/fiber';
+import { Suspense, useEffect, useState } from 'react';
 import FirstPersonCamera from './FirstPersonCamera';
+import CanvasLoading from '../components/CanvasLoading';
 
 type Bounds = {
 	minX: number;
@@ -11,7 +12,21 @@ type Bounds = {
 	maxZ: number;
 };
 
+function ContextMonitor({ onLost }: { onLost: () => void }) {
+    const gl = useThree((state) => state.gl);
+    useEffect(() => {
+        const canvas = gl.domElement;
+        const handleLost = (event: Event) => { event.preventDefault(); onLost(); };
+        canvas.addEventListener('webglcontextlost', handleLost);
+        return () => canvas.removeEventListener('webglcontextlost', handleLost);
+    }, [gl, onLost]);
+    return null;
+}
+
 type RoomSceneProps = {
+    loadingScene?: string;
+    lightweight?: boolean;
+    overlay?: React.ReactNode;
 	children: React.ReactNode;
 	onBack: () => void;
 	startPosition: [number, number, number];
@@ -21,15 +36,16 @@ type RoomSceneProps = {
 };
 
 export default function RoomScene({
+    loadingScene = 'about',
+    lightweight = false,
+    overlay,
 	children,
-	onBack,
 	startPosition,
 	lookAt = [0, 1.35, -3],
-	exitPosition,
 	bounds,
 }: RoomSceneProps) {
-	const [isExitNear, setIsExitNear] = useState(false);
-	const [isDragging, setIsDragging] = useState(false);
+    const [contextLost, setContextLost] = useState(false);
+    if (contextLost) throw new Error('그래픽 연결(WebGL)이 끊겼어요. 다시 시도해 주세요.');
 
 	return (
 		<div
@@ -37,9 +53,11 @@ export default function RoomScene({
 			style={{ overscrollBehavior: 'none' }}
 		>
 			<Canvas
+                frameloop={loadingScene === 'contact' ? 'demand' : 'always'}
 				key={startPosition.join('-')}
 				className="h-full w-full"
-				shadows
+				shadows={!lightweight}
+                dpr={lightweight ? 1 : [1, 1.5]}
 				camera={{
 					position: startPosition,
 					fov: 85,
@@ -47,35 +65,22 @@ export default function RoomScene({
 					far: 100,
 				}}
 				gl={{
-					antialias: true,
+					antialias: !lightweight,
 				}}
 			>
 				<color attach="background" args={['#fff7ed']} />
+                {lightweight && <ContextMonitor onLost={() => setContextLost(true)} />}
 
-				{children}
+				<Suspense fallback={<CanvasLoading scene={loadingScene} />}>{children}</Suspense>
 
 				<FirstPersonCamera
 					startPosition={startPosition}
 					lookAt={lookAt}
 					bounds={bounds}
-					exitPosition={exitPosition}
-					onExitNearChange={setIsExitNear}
-					onDragChange={setIsDragging}
-					onExit={onBack}
 				/>
 			</Canvas>
+            {overlay}
 
-			{!isDragging && (
-				<div className="pointer-events-none absolute left-1/2 top-6 -translate-x-1/2 rounded-full border-4 border-black bg-white/90 px-5 py-2 text-sm font-black shadow-[5px_5px_0_#000]">
-					WASD / 방향키로 이동 · 드래그로 둘러보기
-				</div>
-			)}
-
-			{isExitNear && (
-				<div className="pointer-events-none absolute bottom-10 left-1/2 -translate-x-1/2 rounded-[2rem] border-4 border-black bg-[#ff9ecb] px-6 py-3 text-lg font-black text-white shadow-[6px_6px_0_#000]">
-					E 키를 눌러 나가기
-				</div>
-			)}
 		</div>
 	);
 }

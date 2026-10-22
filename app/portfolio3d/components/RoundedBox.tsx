@@ -1,6 +1,6 @@
 'use client';
 
-import { forwardRef, useMemo } from 'react';
+import { forwardRef, useEffect, useMemo } from 'react';
 import * as THREE from 'three';
 import { toCreasedNormals } from 'three-stdlib';
 import type { ThreeElements } from '@react-three/fiber';
@@ -50,11 +50,11 @@ const RoundedBox = forwardRef<THREE.Mesh, RoundedBoxProps>(
 			const nextGeometry = new THREE.ExtrudeGeometry(shape, {
 				depth: Math.max(depth - safeRadius * 2, eps),
 				bevelEnabled: true,
-				bevelSegments: bevelSegments * 2,
+				bevelSegments: Math.min(bevelSegments, 2) * 2,
 				steps,
 				bevelSize: Math.max(safeRadius - eps, eps),
 				bevelThickness: safeRadius,
-				curveSegments: smoothness,
+				curveSegments: Math.min(smoothness, 4),
 			});
 
 			nextGeometry.center();
@@ -62,6 +62,9 @@ const RoundedBox = forwardRef<THREE.Mesh, RoundedBoxProps>(
 
 			return nextGeometry;
 		}, [bevelSegments, creaseAngle, depth, height, radius, smoothness, steps, width]);
+
+        // R3F does not automatically dispose geometry attached through a primitive.
+        useEffect(() => () => geometry.dispose(), [geometry]);
 
 		return (
 			<mesh ref={ref} {...props}>

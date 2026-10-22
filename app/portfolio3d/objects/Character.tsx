@@ -1,7 +1,8 @@
 'use client';
 
 import { useFrame } from '@react-three/fiber';
-import { useEffect, useMemo, useRef } from 'react';
+import { Html } from '@react-three/drei';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import * as THREE from 'three';
 
 const keys: Record<string, boolean> = {};
@@ -38,7 +39,10 @@ function Skirt() {
 }
 
 export default function Character() {
+	const [hovered, setHovered] = useState(false);
+    const greeting = useRef({ weight: 0, elapsed: 0, reduced: false });
 	const ref = useRef<THREE.Group>(null);
+    const movement = useRef(new THREE.Vector3());
 	const bodyRef = useRef<THREE.Group>(null);
 
 	const headRef = useRef<THREE.Group>(null);
@@ -50,6 +54,10 @@ export default function Character() {
 	const rightFootRef = useRef<THREE.Group>(null);
 
 	useEffect(() => {
+        const preference = window.matchMedia('(prefers-reduced-motion: reduce)');
+        const updatePreference = () => { greeting.current.reduced = preference.matches; };
+        updatePreference();
+        preference.addEventListener('change', updatePreference);
 		const down = (e: KeyboardEvent) => {
 			keys[e.key.toLowerCase()] = true;
 		};
@@ -62,15 +70,17 @@ export default function Character() {
 		window.addEventListener('keyup', up);
 
 		return () => {
+            preference.removeEventListener('change', updatePreference);
 			window.removeEventListener('keydown', down);
 			window.removeEventListener('keyup', up);
 		};
 	}, []);
 
-	useFrame((state, delta) => {
+	useFrame((state, frameDelta) => {
+        const delta = Math.min(frameDelta, 0.05);
 		if (!ref.current) return;
 
-		const move = new THREE.Vector3();
+		const move = movement.current.set(0, 0, 0);
 		const speed = 3.2;
 
 		if (keys['w'] || keys['arrowup']) move.z -= 1;
@@ -147,6 +157,17 @@ export default function Character() {
 			});
 		}
 
+        const wave = greeting.current;
+        wave.weight = wave.reduced ? Number(hovered) : THREE.MathUtils.damp(wave.weight, Number(hovered), 8, delta);
+        wave.elapsed = hovered ? wave.elapsed + delta : 0;
+        if (rightArmRef.current) {
+            rightArmRef.current.rotation.x = THREE.MathUtils.lerp(rightArmRef.current.rotation.x, -0.25, wave.weight);
+            rightArmRef.current.rotation.z = wave.weight * (2.2 + (wave.reduced ? 0 : Math.sin(wave.elapsed * 9) * 0.28));
+        }
+        if (headRef.current) {
+            const walkTilt = isMoving ? Math.sin(time * 8) * 0.025 * 0.85 : 0;
+            headRef.current.rotation.z = THREE.MathUtils.lerp(walkTilt, -0.1, wave.weight);
+        }
 		ref.current.position.x = THREE.MathUtils.clamp(
 			ref.current.position.x,
 			-8,
@@ -160,7 +181,12 @@ export default function Character() {
 	});
 
 	return (
-		<group ref={ref} name="player" position={[0, 0.18, 0]} scale={0.72}>
+		<group ref={ref} name="player" position={[0, 0.18, 0]} scale={0.72}
+            onPointerOver={(event) => { event.stopPropagation(); setHovered(true); }}
+            onPointerOut={() => setHovered(false)}>
+            {hovered && <Html center position={[0, 1.9, 0]} zIndexRange={[40, 40]} style={{ pointerEvents: 'none' }}>
+                <div className="pointer-events-none whitespace-nowrap rounded-2xl border-2 border-[#735344] bg-[#fffaf0] px-4 py-2 text-sm font-bold text-[#735344] shadow-[3px_3px_0_#735344]">안녕! 👋</div>
+            </Html>}
 			<group ref={bodyRef}>
 				{/* 목 */}
 				<mesh position={[0, 0.72, 0]} castShadow>

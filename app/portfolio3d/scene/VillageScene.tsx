@@ -1,27 +1,16 @@
 'use client';
 
-import { useEffect, useMemo, useRef, useState } from 'react';
+import { useMemo, useRef } from 'react';
 import { useFrame } from '@react-three/fiber';
 import * as THREE from 'three';
 
 import CuteMap from '../objects/CuteMap';
 import { RoomName } from '../types';
+import useSeoulNight from '../useSeoulNight';
 
 type Props = {
 	onEnterRoom: (room: RoomName) => void;
 };
-
-const TEST_NIGHT: boolean | null = false;
-
-function getSeoulHour(date: Date) {
-	const hourText = new Intl.DateTimeFormat('en-US', {
-		timeZone: 'Asia/Seoul',
-		hour: '2-digit',
-		hour12: false,
-	}).format(date);
-
-	return Number(hourText);
-}
 
 function SkyDome({ isNight }: { isNight: boolean }) {
 	const material = useMemo(() => {
@@ -85,16 +74,17 @@ function SkyDome({ isNight }: { isNight: boolean }) {
 
 function Stars() {
 	const stars = useMemo(() => {
-		return Array.from({ length: 300 }).map(() => {
+        const sample = (seed: number) => { const n = Math.sin(seed * 127.1 + 311.7) * 43758.5453; return n - Math.floor(n); };
+		return Array.from({ length: 300 }).map((_, index) => {
 			const radius = 70;
-			const theta = Math.random() * Math.PI * 2;
-			const phi = Math.PI * 0.18 + Math.random() * Math.PI * 0.5;
+			const theta = sample(index * 3) * Math.PI * 2;
+			const phi = Math.PI * 0.18 + sample(index * 3 + 1) * Math.PI * 0.5;
 
 			return {
 				x: radius * Math.sin(phi) * Math.cos(theta),
 				y: radius * Math.cos(phi) - 8,
 				z: radius * Math.sin(phi) * Math.sin(theta),
-				size: 0.04 + Math.random() * 0.08,
+				size: 0.04 + sample(index * 3 + 2) * 0.08,
 			};
 		});
 	}, []);
@@ -227,15 +217,7 @@ function Bird({
 }
 
 export default function VillageScene({ onEnterRoom }: Props) {
-	const [now, setNow] = useState(new Date());
-
-	useEffect(() => {
-		const timer = setInterval(() => setNow(new Date()), 60_000);
-		return () => clearInterval(timer);
-	}, []);
-
-	const hour = getSeoulHour(now);
-	const isNight = TEST_NIGHT !== null ? TEST_NIGHT : hour < 6 || hour >= 19;
+	const isNight = useSeoulNight();
 
 	return (
 		<group>

@@ -1,10 +1,9 @@
 'use client';
 
 import CuteHouse from './CuteHouse';
-import CuteTree from './CuteTree';
 import CuteFlower from './CuteFlower';
 import CuteSign from './CuteSign';
-import CuteBush from './CuteBush';
+import { VillageTrees, VillageBushes } from './VillagePlants';
 import CuteMushroom from './CuteMushroom';
 import CuteLamp from './CuteLamp';
 import CuteBench from './CuteBench';
@@ -333,17 +332,8 @@ export default function CuteMap({ isNight, onEnterRoom }: Props) {
 			<CuteBench position={[-2.4, 0, -3.7]} rotation={[0, 0.35, 0]} />
 			<CuteBench position={[2.4, 0, 3.7]} rotation={[0, -2.8, 0]} />
 
-			{treePositions.map(([x, z, scale], i) => (
-				<CuteTree key={i} position={[x, 0, z]} scale={scale} />
-			))}
-
-			{bushPositions.map(([x, z], i) => (
-				<CuteBush
-					key={i}
-					position={[x, 0, z]}
-					scale={i % 3 === 0 ? 1.15 : 0.9}
-				/>
-			))}
+            <VillageTrees placements={treePositions} />
+            <VillageBushes placements={bushPositions} />
 
 			{mushroomPositions.map(([x, z], i) => (
 				<CuteMushroom

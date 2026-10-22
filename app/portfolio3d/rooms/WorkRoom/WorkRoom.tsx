@@ -1,41 +1,40 @@
 'use client';
 
 import { projects } from '@/asset/data/projects';
-import { Html, Text, useTexture } from '@react-three/drei';
+import { projectStats } from './workProjectStats';
+import { Text, useTexture } from '@react-three/drei';
 import { useFrame } from '@react-three/fiber';
-import { motion, AnimatePresence } from 'framer-motion';
-import { useEffect, useMemo, useRef, useState } from 'react';
+import { useEffect, useMemo, useRef, type ComponentProps } from 'react';
 import * as THREE from 'three';
 
-import RoundedBox from '../components/RoundedBox';
+import BaseRoundedBox from '../../components/RoundedBox';
+
+// Keep the many factory decorations inexpensive without changing other rooms.
+function RoundedBox({ smoothness = 4, bevelSegments = 4, ...props }: ComponentProps<typeof BaseRoundedBox>) {
+    return <BaseRoundedBox {...props} smoothness={Math.min(smoothness, 3)} bevelSegments={Math.min(bevelSegments, 1)} />;
+}
 const C = {
-	bg: '#2f7edc',
-	wall: '#86d7d8',
-	wallDark: '#57b8bd',
-	floor: '#8fd46b',
-	floorLine: '#6dbd54',
-	pink: '#ff6fae',
-	pinkDark: '#e94f92',
-	yellow: '#ffd34d',
-	blue: '#42aee8',
-	mint: '#35d6c3',
-	cream: '#fff1c2',
-	belt: '#4b4548',
-	beltDark: '#2f2d31',
-	box: '#f2bf79',
-	green: '#47c96f',
-	red: '#ff5b5b',
-	lavender: '#c7b8ff',
-	white: '#fffaf0',
+	bg: '#74bff2',
+	wall: '#edf9ff',
+	wallDark: '#f7edff',
+	floor: '#fff6d8',
+	floorLine: '#d8ca8d',
+	pink: '#e67fb5',
+	pinkDark: '#a97eea',
+	yellow: '#f0bd5b',
+	blue: '#74bff2',
+	mint: '#edf9ff',
+	cream: '#fff6d8',
+	belt: '#a97eea',
+	beltDark: '#6b4328',
+	box: '#fff6d8',
+	green: '#6ecc52',
+	red: '#e67fb5',
+	lavender: '#a97eea',
+	white: '#fffdf8',
 };
 
-const projectLabels = ['WON', 'NHN', 'SHOPBY', 'ETLAND', 'UI'];
-
-export default function WorkFactoryScene() {
-	const [selectedProject, setSelectedProject] = useState<
-		(typeof projects)[number] | null
-	>(null);
-
+export default function WorkFactoryScene({ onSelect }: { onSelect: (index: number) => void }) {
 	return (
 		<group position={[0, -0.2, 0]}>
 			<ambientLight intensity={0.62} />
@@ -44,12 +43,12 @@ export default function WorkFactoryScene() {
 			<pointLight
 				position={[-3.1, 2.45, -1.1]}
 				intensity={2.2}
-				color="#ff4a4a"
+				color="#e67fb5"
 			/>
 			<pointLight
 				position={[3.1, 2.45, -1.1]}
 				intensity={2.2}
-				color="#ff4a4a"
+				color="#e67fb5"
 			/>
 
 			<FactoryRoom />
@@ -57,18 +56,12 @@ export default function WorkFactoryScene() {
 
 			<InMachine />
 			<OutMachine />
-			<CandyProjectMachine />
+			<CandyProjectMachine onSelect={onSelect} />
 
 			<ConveyorBelt />
 
-			<MovingBoxes onSelectProject={setSelectedProject} />
+			<MovingBoxes onSelectProject={(project) => onSelect(projects.indexOf(project))} />
 
-			{selectedProject && (
-				<ProjectDetailOverlay
-					project={selectedProject}
-					onClose={() => setSelectedProject(null)}
-				/>
-			)}
 		</group>
 	);
 }
@@ -125,13 +118,13 @@ function FactoryRoom() {
 				receiveShadow
 			>
 				<boxGeometry args={[6, 3.6, 0.12]} />
-				<meshStandardMaterial color="#9ae8e7" roughness={0.4} />
+				<meshStandardMaterial color="#f9eef8" roughness={0.4} />
 			</mesh>
 
 			{/* ceiling */}
 			<mesh position={[0, 3.7, 0]} rotation={[Math.PI / 2, 0, 0]} receiveShadow>
 				<planeGeometry args={[9, 6]} />
-				<meshStandardMaterial color="#fff0b8" roughness={0.42} />
+				<meshStandardMaterial color="#fff6d8" roughness={0.42} />
 			</mesh>
 
 			<RoundedBox
@@ -140,7 +133,7 @@ function FactoryRoom() {
 				radius={0.12}
 				smoothness={8}
 			>
-				<meshPhysicalMaterial color={C.pink} roughness={0.12} clearcoat={1} />
+				<meshStandardMaterial color={C.pink} roughness={0.12} />
 			</RoundedBox>
 
 			<RoundedBox
@@ -150,7 +143,7 @@ function FactoryRoom() {
 				radius={0.12}
 				smoothness={8}
 			>
-				<meshPhysicalMaterial color={C.pink} roughness={0.12} clearcoat={1} />
+				<meshStandardMaterial color={C.pink} roughness={0.12} />
 			</RoundedBox>
 
 			<RoundedBox
@@ -160,10 +153,33 @@ function FactoryRoom() {
 				radius={0.12}
 				smoothness={8}
 			>
-				<meshPhysicalMaterial color={C.pink} roughness={0.12} clearcoat={1} />
+				<meshStandardMaterial color={C.pink} roughness={0.12} />
 			</RoundedBox>
 		</group>
 	);
+}
+
+function fitDashboardText(maxWidth: number) {
+    return (mesh: THREE.Mesh) => {
+        mesh.geometry.computeBoundingBox();
+        const box = mesh.geometry.boundingBox;
+        const width = box ? box.max.x - box.min.x : 0;
+        mesh.scale.setScalar(width > 0 ? Math.min(1, maxWidth / width) : 1);
+    };
+}
+
+function DashboardLabel({ children, position, size = 0.085, width = 0.88 }: {
+    children: React.ReactNode;
+    position: [number, number, number];
+    size?: number;
+    width?: number;
+}) {
+    return (
+        <Text position={position} fontSize={size} color="#3d2b24" anchorX="center" anchorY="middle"
+            fontWeight={700} material-toneMapped={false} onSync={fitDashboardText(width)}>
+            {children}
+        </Text>
+    );
 }
 
 function BackWallDecor() {
@@ -177,7 +193,7 @@ function BackWallDecor() {
 				smoothness={14}
 				castShadow
 			>
-				<meshPhysicalMaterial color={C.pink} roughness={0.12} clearcoat={1} />
+				<meshStandardMaterial color={C.pink} roughness={0.12} />
 			</RoundedBox>
 
 			{/* gold trim */}
@@ -187,215 +203,78 @@ function BackWallDecor() {
 				radius={0.16}
 				smoothness={12}
 			>
-				<meshPhysicalMaterial
-					color="#d6a84f"
+				<meshStandardMaterial
+					color={C.yellow}
 					roughness={0.18}
 					metalness={0.35}
-					clearcoat={1}
 				/>
 			</RoundedBox>
 
-			{/* black LED board */}
+			{/* cream village dashboard */}
 			<RoundedBox
 				position={[0, 2.05, -2.64]}
 				args={[4.22, 1.8, 0.08]}
 				radius={0.12}
 				smoothness={10}
 			>
-				<meshStandardMaterial color="#151515" />
+				<meshStandardMaterial color={C.cream} />
 			</RoundedBox>
 
 			{/* title */}
 			<Text
-				position={[0, 2.65, -2.57]}
-				fontSize={0.25}
-				color="#ff7eb6"
+                onSync={fitDashboardText(3.65)} material-toneMapped={false}
+				position={[0, 2.78, -2.53]}
+				fontSize={0.21}
+				color="#3d2b24"
 				anchorX="center"
 				anchorY="middle"
 				fontWeight={900}
 			>
-				★ WORK FACTORY ★
-			</Text>
+                WORK FACTORY
+            </Text>
 
 			<Text
-				position={[0, 2.43, -2.57]}
-				fontSize={0.105}
-				color="#ffd36e"
+                onSync={fitDashboardText(3.4)} material-toneMapped={false}
+				position={[0, 2.54, -2.53]}
+				fontSize={0.085}
+				color="#3d2b24"
 				anchorX="center"
 				anchorY="middle"
 				fontWeight={800}
 			>
-				TWINKLE PROJECT MAKER
+				SELECTED WORKS / MADE BY TWINKLE
 			</Text>
 
-			{/* left panel */}
-			<StatusPanel position={[-1.45, 2.05, -2.55]} title="PRODUCTION">
-				<Text
-					position={[0, 0.16, 0.04]}
-					fontSize={0.28}
-					color="#7cff73"
-					anchorX="center"
-				>
-					1287
-				</Text>
-				<Text
-					position={[0.48, 0.1, 0.04]}
-					fontSize={0.09}
-					color="#7cff73"
-					anchorX="center"
-				>
-					PCS
-				</Text>
-				<Text
-					position={[-0.28, -0.18, 0.04]}
-					fontSize={0.095}
-					color="#ffd36e"
-					anchorX="center"
-				>
-					TARGET
-				</Text>
-				<Text
-					position={[0.35, -0.18, 0.04]}
-					fontSize={0.095}
-					color="#ffd36e"
-					anchorX="center"
-				>
-					2000
-				</Text>
+            <StatusPanel position={[-1.45, 2.05, -2.55]} title="TOTAL PROJECTS">
+                <DashboardLabel position={[0, 0.03, 0.12]} size={0.3}>
+                    {String(projectStats.total).padStart(2, '0')}
+                </DashboardLabel>
+                <DashboardLabel position={[0, -0.2, 0.12]} size={0.075}>전체 프로젝트</DashboardLabel>
+                <DashboardLabel position={[0, -0.33, 0.12]} size={0.055}>지금까지 만들어 온 결과물</DashboardLabel>
+            </StatusPanel>
+            <StatusPanel position={[0, 2.05, -2.55]} title="PERSONAL PROJECTS">
+                <DashboardLabel position={[0, 0.03, 0.12]} size={0.3}>
+                    {String(projectStats.personal).padStart(2, '0')}
+                </DashboardLabel>
+                <DashboardLabel position={[0, -0.2, 0.12]} size={0.075}>개인 프로젝트</DashboardLabel>
+                <DashboardLabel position={[0, -0.33, 0.12]} size={0.055}>아이디어에서 직접 구현까지</DashboardLabel>
+            </StatusPanel>
+            <StatusPanel position={[1.45, 2.05, -2.55]} title="WORK PROJECTS">
+                <DashboardLabel position={[0, 0.03, 0.12]} size={0.3}>
+                    {String(projectStats.work).padStart(2, '0')}
+                </DashboardLabel>
+                <DashboardLabel position={[0, -0.2, 0.12]} size={0.075}>업무 프로젝트</DashboardLabel>
+                <DashboardLabel position={[0, -0.33, 0.12]} size={0.055}>실무에서 쌓아 온 경험</DashboardLabel>
+            </StatusPanel>
 
-				{/* progress bar */}
-				<RoundedBox
-					position={[0, -0.38, 0.04]}
-					args={[0.85, 0.08, 0.03]}
-					radius={0.025}
-				>
-					<meshStandardMaterial color="#1c4c5d" />
-				</RoundedBox>
-				<RoundedBox
-					position={[-0.13, -0.38, 0.07]}
-					args={[0.56, 0.055, 0.03]}
-					radius={0.02}
-				>
-					<meshStandardMaterial color="#54d7ff" />
-				</RoundedBox>
-			</StatusPanel>
-
-			{/* center panel */}
-			<StatusPanel position={[0, 2.05, -2.55]} title="STATUS">
-				<Text
-					position={[0, 0.02, 0.04]}
-					fontSize={0.36}
-					color="#75ff75"
-					anchorX="center"
-					anchorY="middle"
-				>
-					☺
-				</Text>
-				<Text
-					position={[0, -0.34, 0.04]}
-					fontSize={0.095}
-					color="#75ff75"
-					anchorX="center"
-				>
-					ALL SYSTEMS
-				</Text>
-				<Text
-					position={[0, -0.47, 0.04]}
-					fontSize={0.095}
-					color="#75ff75"
-					anchorX="center"
-				>
-					OPERATIONAL
-				</Text>
-			</StatusPanel>
-
-			{/* right panel graph */}
-			<StatusPanel position={[1.45, 2.05, -2.55]} title="SCHEDULE">
-				{[
-					[-0.36, 0.34, '#ff6fae'],
-					[-0.12, 0.5, '#ffd45c'],
-					[0.12, 0.28, '#76e8ff'],
-					[0.36, 0.56, '#b693ff'],
-				].map(([x, h, color], i) => (
-					<RoundedBox
-						key={i}
-						position={[x as number, -0.22 + (h as number) / 2, 0.05]}
-						args={[0.13, h as number, 0.035]}
-						radius={0.02}
-						smoothness={5}
-					>
-						<meshStandardMaterial color={color as string} />
-					</RoundedBox>
-				))}
-
-				<Text
-					position={[-0.36, -0.52, 0.04]}
-					fontSize={0.06}
-					color="#ffffff"
-					anchorX="center"
-				>
-					MON
-				</Text>
-				<Text
-					position={[-0.12, -0.52, 0.04]}
-					fontSize={0.06}
-					color="#ffffff"
-					anchorX="center"
-				>
-					TUE
-				</Text>
-				<Text
-					position={[0.12, -0.52, 0.04]}
-					fontSize={0.06}
-					color="#ffffff"
-					anchorX="center"
-				>
-					WED
-				</Text>
-				<Text
-					position={[0.36, -0.52, 0.04]}
-					fontSize={0.06}
-					color="#ffffff"
-					anchorX="center"
-				>
-					THU
-				</Text>
-			</StatusPanel>
-
-			{/* bottom ticker */}
-			<RoundedBox
-				position={[0, 1.29, -2.55]}
-				args={[3.85, 0.28, 0.06]}
-				radius={0.08}
-				smoothness={8}
-			>
-				<meshStandardMaterial color="#202020" />
-			</RoundedBox>
-
-			<Text
-				position={[-1.25, 1.29, -2.5]}
-				fontSize={0.09}
-				color="#ff7eb6"
-				anchorX="center"
-			>
-				TODAY BEST ★ 15:30
-			</Text>
-			<Text
-				position={[0.1, 1.29, -2.5]}
-				fontSize={0.09}
-				color="#ffd36e"
-				anchorX="center"
-			>
-				EFFICIENCY 92.7%
-			</Text>
-			<Text
-				position={[1.42, 1.29, -2.5]}
-				fontSize={0.09}
-				color="#54d7ff"
-				anchorX="center"
-			>
-				NEXT 14:30
-			</Text>
+            <RoundedBox position={[0, 1.29, -2.55]} args={[3.85, 0.28, 0.06]} radius={0.08} smoothness={8}>
+                <meshStandardMaterial color="#f9eef8" />
+            </RoundedBox>
+            {projectStats.technologies.map((tech, index) => (
+                <DashboardLabel key={tech.name} position={[(index - 1) * 1.22, 1.29, -2.49]} size={0.075} width={1.05}>
+                    {`${tech.name} · ${tech.count}개 프로젝트`}
+                </DashboardLabel>
+            ))}
 
 			{/* right cloud light */}
 			<RoundedBox
@@ -404,7 +283,7 @@ function BackWallDecor() {
 				radius={0.16}
 				smoothness={12}
 			>
-				<meshPhysicalMaterial color={C.yellow} roughness={0.12} clearcoat={1} />
+				<meshStandardMaterial color={C.yellow} roughness={0.12} />
 			</RoundedBox>
 
 			<RoundedBox
@@ -413,18 +292,10 @@ function BackWallDecor() {
 				radius={0.12}
 				smoothness={10}
 			>
-				<meshStandardMaterial color="#8fe9ff" />
+				<meshStandardMaterial color="#edf9ff" />
 			</RoundedBox>
 
-			<Text
-				position={[3.75, 1.75, -2.62]}
-				fontSize={0.3}
-				color="#ffffff"
-				anchorX="center"
-				anchorY="middle"
-			>
-				☁
-			</Text>
+			<DashboardLabel position={[3.75, 1.75, -2.62]} size={0.11} width={0.6}>WORK</DashboardLabel>
 		</group>
 	);
 }
@@ -440,7 +311,7 @@ function StatusPanel({
 	return (
 		<group position={position}>
 			<RoundedBox args={[1.15, 0.95, 0.06]} radius={0.08} smoothness={8}>
-				<meshStandardMaterial color="#242424" />
+				<meshStandardMaterial color={C.blue} />
 			</RoundedBox>
 
 			<RoundedBox
@@ -449,13 +320,14 @@ function StatusPanel({
 				radius={0.06}
 				smoothness={8}
 			>
-				<meshStandardMaterial color="#111111" />
+				<meshStandardMaterial color="#edf9ff" />
 			</RoundedBox>
 
 			<Text
-				position={[0, 0.34, 0.07]}
-				fontSize={0.105}
-				color="#ff7eb6"
+                onSync={fitDashboardText(0.88)} material-toneMapped={false}
+				position={[0, 0.32, 0.11]}
+				fontSize={0.085}
+				color="#3d2b24"
 				anchorX="center"
 				anchorY="middle"
 				fontWeight={900}
@@ -467,10 +339,41 @@ function StatusPanel({
 		</group>
 	);
 }
+const signGlyphs: Record<string, string[]> = {
+    I: ['11111', '00100', '00100', '00100', '00100', '00100', '11111'],
+    N: ['10001', '11001', '11001', '10101', '10011', '10011', '10001'],
+    O: ['01110', '10001', '10001', '10001', '10001', '10001', '01110'],
+    U: ['10001', '10001', '10001', '10001', '10001', '10001', '01110'],
+    T: ['11111', '00100', '00100', '00100', '00100', '00100', '00100'],
+};
+
+function LedLabel({ label, color, x }: { label: string; color: string; x: number }) {
+    const dots = useMemo(() => {
+        const positions: number[] = [];
+        const columns = label.length * 6 - 1;
+        [...label].forEach((letter, letterIndex) => {
+            signGlyphs[letter].forEach((row, y) => {
+                [...row].forEach((pixel, column) => {
+                    if (pixel === '1') positions.push((letterIndex * 6 + column - (columns - 1) / 2) * 0.021, (3 - y) * 0.021, 0);
+                });
+            });
+        });
+        return new Float32Array(positions);
+    }, [label]);
+    return (
+        <points position={[x, 1.38, 0.64]}>
+            <bufferGeometry>
+                <bufferAttribute attach="attributes-position" args={[dots, 3]} />
+            </bufferGeometry>
+            <pointsMaterial color={color} size={0.014} toneMapped={false} />
+        </points>
+    );
+}
+
 function InMachine() {
 	return (
 		<group position={[-2.8, 0, -0.92]} rotation={[0, 0, 0]} scale={1.18}>
-			<MachineBody label="IN" labelColor={C.pinkDark} />
+			<MachineBody label="IN" labelColor="#7dffac" />
 		</group>
 	);
 }
@@ -478,7 +381,7 @@ function InMachine() {
 function OutMachine() {
 	return (
 		<group position={[2.78, 0, -0.92]} rotation={[0, 0, 0]} scale={1.18}>
-			<MachineBody label="OUT" labelColor={C.pinkDark} />
+			<MachineBody label="OUT" labelColor="#ffc875" />
 		</group>
 	);
 }
@@ -499,10 +402,9 @@ function MachineBody({
 				smoothness={8}
 				castShadow
 			>
-				<meshPhysicalMaterial
+				<meshStandardMaterial
 					color={C.lavender}
 					roughness={0.22}
-					clearcoat={0.55}
 				/>
 			</RoundedBox>
 
@@ -513,7 +415,7 @@ function MachineBody({
 				radius={0.11}
 				smoothness={8}
 			>
-				<meshPhysicalMaterial color="#f7e4b8" clearcoat={0.65} />
+				<meshStandardMaterial color="#fff6d8" />
 			</RoundedBox>
 
 			{/* 입구 프레임 */}
@@ -523,10 +425,9 @@ function MachineBody({
 				radius={0.1}
 				smoothness={8}
 			>
-				<meshPhysicalMaterial
+				<meshStandardMaterial
 					color={C.yellow}
 					roughness={0.16}
-					clearcoat={0.75}
 				/>
 			</RoundedBox> */}
 
@@ -537,33 +438,23 @@ function MachineBody({
 				radius={0.06}
 				smoothness={6}
 			>
-				<meshStandardMaterial color="#111116" roughness={0.65} />
+				<meshStandardMaterial color="#6b4328" roughness={0.65} />
 			</RoundedBox>
 
 			{/* 라벨 판 */}
 			<RoundedBox
 				position={[label === 'OUT' ? -0.15 : 0.15, 1.38, 0.6]}
-				args={[0.48, 0.2, 0.06]}
+				args={[0.52, 0.24, 0.06]}
 				radius={0.05}
 				smoothness={6}
 			>
-				<meshPhysicalMaterial
-					color={C.cream}
+				<meshStandardMaterial
+					color="#172820"
 					roughness={0.2}
-					clearcoat={0.65}
 				/>
 			</RoundedBox>
 
-			<Text
-				position={[label === 'OUT' ? -0.25 : 0.25, 1.38, 0.7]}
-				fontSize={0.11}
-				color={labelColor}
-				anchorX="center"
-				anchorY="middle"
-				fontWeight={900}
-			>
-				{label}
-			</Text>
+			<LedLabel label={label} color={labelColor} x={label === 'OUT' ? -0.15 : 0.15} />
 
 			{/* 사이드 버튼 패널 */}
 			<RoundedBox
@@ -572,16 +463,15 @@ function MachineBody({
 				radius={0.04}
 				smoothness={5}
 			>
-				<meshPhysicalMaterial color={C.blue} roughness={0.18} clearcoat={0.7} />
+				<meshStandardMaterial color={C.blue} roughness={0.18} />
 			</RoundedBox>
 
 			{[0.9, 0.72, 0.54].map((y, i) => (
 				<mesh key={i} position={[0.55, y, 0.29]}>
 					<sphereGeometry args={[0.045, 16, 16]} />
-					<meshPhysicalMaterial
+					<meshStandardMaterial
 						color={[C.yellow, C.green, C.red][i]}
 						roughness={0.12}
-						clearcoat={0.9}
 					/>
 				</mesh>
 			))}
@@ -611,27 +501,23 @@ function RealSirenLight({ position }: { position: [number, number, number] }) {
 			{/* blue base */}
 			<mesh position={[0, -0.005, 0]} rotation={[Math.PI / 2, 0, 0]}>
 				<torusGeometry args={[0.24, 0.015, 12, 40]} />
-				<meshPhysicalMaterial color="#ff8aa0" roughness={0.08} clearcoat={1} />
+				<meshStandardMaterial color="#e67fb5" roughness={0.08} />
 			</mesh>
 
 			{/* black inner base */}
 			<mesh position={[0, -0.03, 0]}>
 				<cylinderGeometry args={[0.2, 0.22, 0.12, 40]} />
-				<meshStandardMaterial color="#303038" roughness={0.45} />
+				<meshStandardMaterial color="#6b4328" roughness={0.45} />
 			</mesh>
 
 			<mesh position={[0, 0.13, 0]}>
 				<cylinderGeometry args={[0.13, 0.16, 0.28, 48, 1, true]} />
-				<meshPhysicalMaterial
-					color="#ff3b4f"
+				<meshStandardMaterial
+					color="#e67fb5"
 					transparent
 					opacity={0.68}
 					roughness={0.03}
-					clearcoat={1}
-					transmission={0.85}
-					thickness={0.35}
-					ior={1.45}
-					emissive="#ff1f3d"
+					emissive="#e67fb5"
 					emissiveIntensity={0.45}
 				/>
 			</mesh>
@@ -640,13 +526,13 @@ function RealSirenLight({ position }: { position: [number, number, number] }) {
 			<group ref={spinRef} position={[0, 0.1, 0]}>
 				<mesh position={[0.11, 0, 0]}>
 					<sphereGeometry args={[0.075, 24, 24]} />
-					<meshBasicMaterial color="#fff2a8" />
+					<meshBasicMaterial color="#fff6d8" />
 				</mesh>
 
 				<mesh position={[0.18, 0, 0]} rotation={[0, 0, Math.PI / 2]}>
 					<coneGeometry args={[0.08, 0.45, 24, 1, true]} />
 					<meshBasicMaterial
-						color="#ff6b6b"
+						color="#e67fb5"
 						transparent
 						opacity={0.42}
 						side={THREE.DoubleSide}
@@ -656,7 +542,7 @@ function RealSirenLight({ position }: { position: [number, number, number] }) {
 				<mesh position={[-0.18, 0, 0]} rotation={[0, 0, -Math.PI / 2]}>
 					<coneGeometry args={[0.08, 0.45, 24, 1, true]} />
 					<meshBasicMaterial
-						color="#ff6b6b"
+						color="#e67fb5"
 						transparent
 						opacity={0.28}
 						side={THREE.DoubleSide}
@@ -667,51 +553,109 @@ function RealSirenLight({ position }: { position: [number, number, number] }) {
 			<pointLight
 				ref={pulseRef}
 				position={[0, 0.25, 0]}
-				color="#ff3b3b"
+				color="#e67fb5"
 				intensity={2}
 				distance={2.4}
 			/>
 		</group>
 	);
 }
-function CandyProjectMachine() {
-	const starRef = useRef<THREE.Group>(null);
+function CandyProjectMachine({ onSelect }: { onSelect: (index: number) => void }) {
+    const candyRef = useRef<THREE.Group>(null);
+    const knobRef = useRef<THREE.Mesh>(null);
+    const iconRef = useRef<THREE.Group>(null);
+    const promptRef = useRef<THREE.Group>(null);
+    const draw = useRef({ elapsed: 0, active: false, picked: -1, last: -1, reduced: false });
+    useEffect(() => {
+        const preference = window.matchMedia('(prefers-reduced-motion: reduce)');
+        const update = () => { draw.current.reduced = preference.matches; };
+        update();
+        preference.addEventListener('change', update);
+        return () => { preference.removeEventListener('change', update); document.body.style.cursor = ''; };
+    }, []);
+
+    const startDraw = () => {
+        if (draw.current.active || !projects.length) return;
+        const last = draw.current.last;
+        const picked = projects.length > 1 && last >= 0
+            ? (last + 1 + Math.floor(Math.random() * (projects.length - 1))) % projects.length
+            : Math.floor(Math.random() * projects.length);
+        draw.current.picked = picked;
+        draw.current.active = true;
+        draw.current.elapsed = 0;
+        document.body.style.cursor = 'progress';
+    };
 
 	const candies = useMemo(
 		() =>
 			Array.from({ length: 46 }, (_, i) => {
 				const angle = (i / 46) * Math.PI * 2;
-				const r = 0.12 + Math.random() * 0.43;
+				const sample = (seed: number) => { const value = Math.sin(seed * 127.1 + 311.7) * 43758.5453; return value - Math.floor(value); };
+                const r = 0.12 + sample(i + 1) * 0.43;
 				return {
 					position: [
 						Math.cos(angle) * r,
-						1.32 + Math.random() * 0.38,
+						1.32 + sample(i + 12) * 0.38,
 						Math.sin(angle) * r,
 					] as [number, number, number],
-					scale: 0.07 + Math.random() * 0.045,
+					scale: 0.07 + sample(i + 30) * 0.045,
 					color: [
 						C.pink,
 						C.yellow,
 						C.blue,
 						C.lavender,
-						'#ff8fab',
+						'#e67fb5',
 						'#ffffff',
-						'#9be7ff',
+						'#74bff2',
 					][i % 7],
 				};
 			}),
 		[]
 	);
 
-	useFrame(({ clock }) => {
-		if (!starRef.current) return;
-		const t = clock.getElapsedTime();
-
-		starRef.current.rotation.y = t * 1.4;
-	});
+    useFrame(({ clock }, delta) => {
+        const state = draw.current;
+        const phase = clock.elapsedTime % 2.8;
+        const showIcon = !state.active && !state.reduced && phase < 1.28;
+        const showPrompt = state.active || state.reduced || (phase >= 1.4 && phase < 2.68);
+        if (iconRef.current) iconRef.current.visible = showIcon;
+        if (promptRef.current) promptRef.current.visible = showPrompt;
+        const dt = Math.min(delta, 0.05);
+        if (state.active) state.elapsed += dt;
+        const duration = state.reduced ? 0.35 : 1.8;
+        const progress = Math.min(1, state.elapsed / duration);
+        const energy = state.active && !state.reduced ? Math.sin(progress * Math.PI) : 0;
+        // A short, gently eased invitation followed by a long pause.
+        const idlePhase = clock.elapsedTime % 5.5;
+        const idleProgress = idlePhase / 1.1;
+        const idleEnergy = !state.active && !state.reduced && idlePhase < 1.1
+            ? Math.sin(idleProgress * Math.PI) ** 2
+            : 0;
+        if (candyRef.current) {
+            candyRef.current.rotation.y += dt * energy * 11;
+            candyRef.current.rotation.z = Math.sin(progress * Math.PI * 8) * energy * 0.1;
+            candyRef.current.children.forEach((candy, index) => {
+                const idleBounce = Math.abs(Math.sin(idleProgress * Math.PI * 3 + index * 1.8)) * idleEnergy * 0.075;
+                candy.position.y = candies[index].position[1] - 1.55
+                    + Math.sin(progress * 24 + index * 1.8) * energy * 0.065
+                    + idleBounce;
+            });
+        }
+        if (knobRef.current) knobRef.current.rotation.z += dt * energy * 9;
+        if (state.active && progress >= 1) {
+            state.active = false;
+            state.last = state.picked;
+            document.body.style.cursor = '';
+            onSelect(state.picked);
+        }
+    });
 
 	return (
-		<group position={[0, 0, -1.65]}>
+		<group position={[0, 0, -1.65]}
+            onClick={(event) => { event.stopPropagation(); startDraw(); }}
+            onPointerOver={(event) => { event.stopPropagation(); document.body.style.cursor = draw.current.active ? 'progress' : 'pointer'; }}
+            onPointerOut={() => { document.body.style.cursor = ''; }}
+        >
 			{/* lower metal base */}
 			<RoundedBox
 				position={[0, 0.14, 0]}
@@ -720,7 +664,7 @@ function CandyProjectMachine() {
 				smoothness={12}
 				castShadow
 			>
-				<meshPhysicalMaterial
+				<meshStandardMaterial
 					color="#b9b9b9"
 					roughness={0.22}
 					metalness={0.45}
@@ -735,11 +679,9 @@ function CandyProjectMachine() {
 				smoothness={18}
 				castShadow
 			>
-				<meshPhysicalMaterial
+				<meshStandardMaterial
 					color="#ff9fbd"
 					roughness={0.12}
-					clearcoat={1}
-					clearcoatRoughness={0.08}
 				/>
 			</RoundedBox>
 
@@ -747,10 +689,9 @@ function CandyProjectMachine() {
 			{[-0.57, 0.57].map((x) => (
 				<mesh key={x} position={[x, 0.72, 0.48]}>
 					<boxGeometry args={[0.045, 0.88, 0.035]} />
-					<meshPhysicalMaterial
+					<meshStandardMaterial
 						color="#f586aa"
 						roughness={0.25}
-						clearcoat={0.7}
 					/>
 				</mesh>
 			))}
@@ -758,39 +699,37 @@ function CandyProjectMachine() {
 			{/* dome bottom ring */}
 			<mesh position={[0, 1.18, 0]} rotation={[Math.PI / 2, 0, 0]}>
 				<torusGeometry args={[0.7, 0.055, 18, 64]} />
-				<meshPhysicalMaterial
+				<meshStandardMaterial
 					color="#d7b46a"
 					roughness={0.16}
 					metalness={0.45}
-					clearcoat={1}
 				/>
 			</mesh>
 
 			{/* glass dome */}
 			<mesh position={[0, 1.55, 0]}>
-				<sphereGeometry args={[0.68, 48, 48]} />
-				<meshPhysicalMaterial
+				<sphereGeometry args={[0.68, 24, 16]} />
+				<meshStandardMaterial
 					color="#ffd8ee"
 					roughness={0.02}
-					clearcoat={1}
-					transmission={0.45}
 					transparent
 					opacity={0.42}
+					depthWrite={false}
 				/>
 			</mesh>
 
 			{/* candies inside */}
+            <group ref={candyRef} position={[0, 1.55, 0]}>
 			{candies.map((candy, i) => (
-				<mesh key={i} position={candy.position} scale={candy.scale}>
-					<sphereGeometry args={[1, 24, 24]} />
-					<meshPhysicalMaterial
+				<mesh key={i} position={[candy.position[0], candy.position[1] - 1.55, candy.position[2]]} scale={candy.scale}>
+					<sphereGeometry args={[1, 12, 8]} />
+					<meshStandardMaterial
 						color={candy.color}
 						roughness={0.18}
-						clearcoat={1}
-						clearcoatRoughness={0.08}
 					/>
 				</mesh>
 			))}
+            </group>
 
 			{/* top cap */}
 			<RoundedBox
@@ -800,22 +739,19 @@ function CandyProjectMachine() {
 				smoothness={18}
 				castShadow
 			>
-				<meshPhysicalMaterial
+				<meshStandardMaterial
 					color="#8fd3ff"
 					roughness={0.1}
-					clearcoat={1}
-					clearcoatRoughness={0.06}
 				/>
 			</RoundedBox>
 
 			{/* top metal trim */}
 			<mesh position={[0, 1.94, 0]} rotation={[Math.PI / 2, 0, 0]}>
 				<torusGeometry args={[0.68, 0.035, 16, 64]} />
-				<meshPhysicalMaterial
+				<meshStandardMaterial
 					color="#c7a05a"
 					roughness={0.18}
 					metalness={0.55}
-					clearcoat={1}
 				/>
 			</mesh>
 
@@ -826,24 +762,25 @@ function CandyProjectMachine() {
 				radius={0.045}
 				smoothness={8}
 			>
-				<meshPhysicalMaterial
+				<meshStandardMaterial
 					color="#d6b36b"
 					roughness={0.16}
 					metalness={0.45}
-					clearcoat={1}
 				/>
 			</RoundedBox>
 
-			<Text
-				position={[0, 2.165, 0.54]}
-				fontSize={0.105}
-				color="#5d3c20"
-				anchorX="center"
-				anchorY="middle"
-				fontWeight={900}
-			>
-				조퇴뽑기
-			</Text>
+            {/* Offset layers suggest raised lettering without extruded geometry. */}
+            <group position={[0, 2.165, 0.54]}>
+                <Text position={[0.006, -0.006, 0]} fontSize={0.105} color="#24170f" anchorX="center" anchorY="middle" fontWeight={900} material-toneMapped={false}>
+                    랜덤뽑기
+                </Text>
+                <Text position={[-0.003, 0.004, 0.003]} fontSize={0.105} color="#d8bd85" anchorX="center" anchorY="middle" fontWeight={900} material-toneMapped={false}>
+                    랜덤뽑기
+                </Text>
+                <Text position={[0, 0, 0.007]} fontSize={0.105} color="#3b261b" anchorX="center" anchorY="middle" fontWeight={900} material-toneMapped={false}>
+                    랜덤뽑기
+                </Text>
+            </group>
 
 			{/* face screen frame */}
 			<RoundedBox
@@ -852,11 +789,10 @@ function CandyProjectMachine() {
 				radius={0.13}
 				smoothness={12}
 			>
-				<meshPhysicalMaterial
+				<meshStandardMaterial
 					color="#d7b46a"
 					roughness={0.16}
 					metalness={0.45}
-					clearcoat={1}
 				/>
 			</RoundedBox>
 
@@ -869,15 +805,16 @@ function CandyProjectMachine() {
 				<meshStandardMaterial color="#14241d" />
 			</RoundedBox>
 
-			<Text
-				position={[0, 0.9, 0.63]}
-				fontSize={0.2}
-				color="#75ff75"
-				anchorX="center"
-				anchorY="middle"
-			>
-				☺
-			</Text>
+			<group ref={iconRef}>
+                <Text position={[0, 0.9, 0.63]} fontSize={0.2} color="#75ff75" anchorX="center" anchorY="middle" material-toneMapped={false}>
+                    ☺
+                </Text>
+            </group>
+            <group ref={promptRef} visible={false}>
+                <Text position={[0, 0.9, 0.63]} fontSize={0.095} color="#75ff75" anchorX="center" anchorY="middle" material-toneMapped={false}>
+                    CLICK TO PICK!
+                </Text>
+            </group>
 
 			{/* control panel */}
 			<RoundedBox
@@ -886,22 +823,20 @@ function CandyProjectMachine() {
 				radius={0.075}
 				smoothness={10}
 			>
-				<meshPhysicalMaterial
+				<meshStandardMaterial
 					color="#d8b678"
 					roughness={0.16}
 					metalness={0.35}
-					clearcoat={1}
 				/>
 			</RoundedBox>
 
 			{/* knob */}
-			<mesh position={[-0.33, 0.49, 0.62]} rotation={[Math.PI / 2, 0, 0]}>
+			<mesh ref={knobRef} position={[-0.33, 0.49, 0.62]} rotation={[Math.PI / 2, 0, 0]}>
 				<cylinderGeometry args={[0.12, 0.12, 0.08, 32]} />
-				<meshPhysicalMaterial
+				<meshStandardMaterial
 					color="#b38343"
 					roughness={0.16}
 					metalness={0.6}
-					clearcoat={1}
 				/>
 			</mesh>
 
@@ -913,10 +848,9 @@ function CandyProjectMachine() {
 			].map(([x, color]) => (
 				<mesh key={String(x)} position={[x as number, 0.49, 0.62]}>
 					<sphereGeometry args={[0.055, 24, 24]} />
-					<meshPhysicalMaterial
+					<meshStandardMaterial
 						color={color as string}
 						roughness={0.12}
-						clearcoat={1}
 					/>
 				</mesh>
 			))}
@@ -924,21 +858,19 @@ function CandyProjectMachine() {
 			{/* output pipe */}
 			<mesh position={[0, 0.26, 0.67]} rotation={[Math.PI / 2, 0, 0]}>
 				<cylinderGeometry args={[0.2, 0.26, 0.36, 40]} />
-				<meshPhysicalMaterial
+				<meshStandardMaterial
 					color="#c9913d"
 					roughness={0.15}
 					metalness={0.55}
-					clearcoat={1}
 				/>
 			</mesh>
 
 			<mesh position={[0, 0.26, 0.88]} rotation={[Math.PI / 2, 0, 0]}>
 				<cylinderGeometry args={[0.24, 0.24, 0.08, 40]} />
-				<meshPhysicalMaterial
+				<meshStandardMaterial
 					color="#e0b05a"
 					roughness={0.12}
 					metalness={0.55}
-					clearcoat={1}
 				/>
 			</mesh>
 
@@ -950,7 +882,7 @@ function CandyProjectMachine() {
 				smoothness={12}
 				castShadow
 			>
-				<meshPhysicalMaterial color="#ff9fbd" roughness={0.12} clearcoat={1} />
+				<meshStandardMaterial color="#ff9fbd" roughness={0.12} />
 			</RoundedBox>
 
 			{/* small feet */}
@@ -994,7 +926,7 @@ function ConveyorBelt() {
 				<mesh key={i} position={[-2.72 + i * 0.34, 0.23, -0.38]}>
 					<boxGeometry args={[0.24, 0.035, 0.7]} />
 					<meshStandardMaterial
-						color={i % 2 === 0 ? '#5b5559' : C.belt}
+						color={i % 2 === 0 ? '#a97eea' : C.belt}
 						roughness={0.55}
 					/>
 				</mesh>
@@ -1005,7 +937,7 @@ function ConveyorBelt() {
 				<mesh key={i} position={[-2.8, 0.23, -1.18 + i * 0.28]}>
 					<boxGeometry args={[0.66, 0.035, 0.18]} />
 					<meshStandardMaterial
-						color={i % 2 === 0 ? '#5b5559' : C.belt}
+						color={i % 2 === 0 ? '#a97eea' : C.belt}
 						roughness={0.55}
 					/>
 				</mesh>
@@ -1016,7 +948,7 @@ function ConveyorBelt() {
 				<mesh key={i} position={[2.8, 0.23, -0.35 - i * 0.28]}>
 					<boxGeometry args={[0.66, 0.035, 0.18]} />
 					<meshStandardMaterial
-						color={i % 2 === 0 ? '#5b5559' : C.belt}
+						color={i % 2 === 0 ? '#a97eea' : C.belt}
 						roughness={0.55}
 					/>
 				</mesh>
@@ -1027,19 +959,17 @@ function ConveyorBelt() {
 				<group key={x} position={[x, -0.34, -0.38]}>
 					<mesh position={[0, 0, 0.3]}>
 						<boxGeometry args={[0.12, 0.34, 0.12]} />
-						<meshPhysicalMaterial
+						<meshStandardMaterial
 							color={C.pink}
 							roughness={0.12}
-							clearcoat={1}
 						/>
 					</mesh>
 
 					<mesh position={[0, 0, -0.3]}>
 						<boxGeometry args={[0.12, 0.34, 0.12]} />
-						<meshPhysicalMaterial
+						<meshStandardMaterial
 							color={C.pink}
 							roughness={0.12}
-							clearcoat={1}
 						/>
 					</mesh>
 				</group>
@@ -1066,7 +996,7 @@ function ConveyorBelt() {
 					{[-0.24, 0, 0.24].map((z, i) => (
 						<mesh key={i} position={[0, 0, z]} rotation={[0, Math.PI / 2, 0]}>
 							<torusGeometry args={[0.11, 0.012, 12, 24]} />
-							<meshStandardMaterial color="#5b5559" />
+							<meshStandardMaterial color="#a97eea" />
 						</mesh>
 					))}
 				</group>
@@ -1089,10 +1019,9 @@ function BeltPiece({
 				radius={0.13}
 				smoothness={10}
 			>
-				<meshPhysicalMaterial
+				<meshStandardMaterial
 					color={C.pinkDark}
 					roughness={0.13}
-					clearcoat={1}
 				/>
 			</RoundedBox>
 
@@ -1107,6 +1036,18 @@ function BeltPiece({
 		</group>
 	);
 }
+const parcelStyles = [
+    { width: 0.94, height: 0.54, depth: 0.6, color: C.cream, tape: C.pink },
+    { width: 0.72, height: 0.88, depth: 0.54, color: '#edf9ff', tape: C.blue },
+    { width: 0.9, height: 0.66, depth: 0.64, color: '#f9eef8', tape: C.lavender },
+    { width: 0.95, height: 0.46, depth: 0.62, color: '#f7edff', tape: C.pink },
+    { width: 0.76, height: 0.76, depth: 0.56, color: C.cream, tape: C.yellow },
+    { width: 0.86, height: 0.59, depth: 0.68, color: '#edf9ff', tape: C.lavender },
+    { width: 0.73, height: 0.94, depth: 0.54, color: '#f9eef8', tape: C.blue },
+    { width: 0.93, height: 0.52, depth: 0.6, color: C.cream, tape: C.pink },
+    { width: 0.8, height: 0.72, depth: 0.62, color: '#f7edff', tape: C.yellow },
+];
+
 function MovingBoxes({
 	onSelectProject,
 }: {
@@ -1117,7 +1058,8 @@ function MovingBoxes({
 			{projects.map((project, i) => (
 				<MovingBox
 					key={project.title}
-					offset={i / projects.length}
+					offset={(i / projects.length + Math.sin(i * 2.4) * 0.006 + 1) % 1}
+                    variant={i}
 					project={project}
 					onClick={() => onSelectProject(project)}
 				/>
@@ -1127,17 +1069,22 @@ function MovingBoxes({
 }
 
 function MovingBox({
+    variant,
 	offset,
 	project,
 	onClick,
 }: {
 	offset: number;
+    variant: number;
 	project: (typeof projects)[number];
 	onClick: () => void;
 }) {
 	const ref = useRef<THREE.Group>(null);
 	const companyLogo = (project as { companyLogo?: { src: string } }).companyLogo;
 	const hasCompanyLogo = !!companyLogo;
+    const parcel = parcelStyles[variant % parcelStyles.length];
+    const labelScale = Math.min(parcel.width / 0.95, parcel.height / 0.62, 1);
+    const phase = variant * 1.7;
 
 	useFrame(({ clock }) => {
 		if (!ref.current) return;
@@ -1152,8 +1099,8 @@ function MovingBox({
 
 		ref.current.position.x = p.x;
 		ref.current.position.z = p.z;
-		ref.current.position.y = 0.76 + Math.sin(t * 1.5 + offset) * 0.0015;
-		ref.current.rotation.y = p.rotationY;
+		ref.current.rotation.y = p.rotationY + Math.sin(t * 0.8 + phase) * 0.035;
+        ref.current.rotation.z = Math.sin(t * 1.6 + phase) * 0.018;
 
 		let s = 0.78;
 
@@ -1166,6 +1113,7 @@ function MovingBox({
 		}
 
 		ref.current.scale.setScalar(Math.max(0.02, s));
+        ref.current.position.y = 0.53 + parcel.height * Math.max(0.02, s) / 2 + Math.sin(t * 1.6 + phase) * 0.005;
 	});
 
 	return (
@@ -1173,35 +1121,33 @@ function MovingBox({
 			ref={ref}
 			position={[-3.25, 0.76, -1.35]}
 			scale={0.78}
+            onPointerOver={(e) => {
+                e.stopPropagation();
+                document.body.style.cursor = 'pointer';
+            }}
+            onPointerOut={() => { document.body.style.cursor = ''; }}
 			onClick={(e) => {
 				e.stopPropagation();
+                document.body.style.cursor = '';
 				onClick();
 			}}
 		>
-			<RoundedBox
-				args={[1.05, 0.62, 0.58]}
-				radius={0.07}
-				smoothness={8}
-				castShadow
-			>
-				<meshStandardMaterial color={C.box} roughness={0.55} />
-			</RoundedBox>
-
-			{hasCompanyLogo ? (
-				<CompanyLogoPrint src={companyLogo.src} />
-			) : (
-				<Text
-					position={[0, 0.04, 0.34]}
-					fontSize={0.1}
-					color="#753d12"
-					anchorX="center"
-					anchorY="middle"
-					fontWeight={900}
-					textAlign="center"
-				>
-					{'PERSONAL\nPROJECT'}
-				</Text>
-			)}
+            <RoundedBox args={[parcel.width, parcel.height, parcel.depth]} radius={0.06} smoothness={3} bevelSegments={1} castShadow>
+                <meshStandardMaterial color={parcel.color} roughness={0.55} />
+            </RoundedBox>
+            <group position={[0, -0.015, parcel.depth / 2 + 0.018]} scale={labelScale} rotation={[0, 0, Math.sin(phase) * 0.065]}>
+                <mesh position={[0, 0, -0.006]}>
+                    <boxGeometry args={[0.78, 0.38, 0.01]} />
+                    <meshStandardMaterial color={C.white} roughness={0.8} />
+                </mesh>
+                {hasCompanyLogo ? (
+                    <CompanyLogoPrint src={companyLogo.src} />
+                ) : (
+                    <Text position={[0, 0, 0.005]} fontSize={0.085} color="#6b4328" anchorX="center" anchorY="middle" fontWeight={900} textAlign="center" material-toneMapped={false}>
+                        {'PERSONAL\nPROJECT'}
+                    </Text>
+                )}
+            </group>
 		</group>
 	);
 }
@@ -1232,7 +1178,7 @@ function CompanyLogoPrint({ src }: { src: string }) {
 	}, [logoTexture]);
 
 	return (
-		<mesh position={[0, -0.0019, 0.335]}>
+		<mesh position={[0, 0, 0.005]}>
 			<planeGeometry args={[logoSize.width, logoSize.height]} />
 			<meshBasicMaterial
 				map={logoTexture}
@@ -1296,180 +1242,4 @@ function getBoxPathPoint(progress: number) {
 		// OUT: 정면 → 오른쪽 옆면, 빠르게 회전
 		rotationY: lerp(0, -Math.PI / 2, p),
 	};
-}
-
-function ProjectDetailOverlay({
-	project,
-	onClose,
-}: {
-	project: (typeof projects)[number];
-	onClose: () => void;
-}) {
-	const [typed, setTyped] = useState('');
-
-	const fullText = `${project.desc}`;
-
-	useEffect(() => {
-		setTyped('');
-
-		let i = 0;
-		const timer = window.setInterval(() => {
-			i += 1;
-			setTyped(fullText.slice(0, i));
-
-			if (i >= fullText.length) {
-				window.clearInterval(timer);
-			}
-		}, 16);
-
-		return () => window.clearInterval(timer);
-	}, [fullText]);
-
-	return (
-		<Html
-			position={[0, 1.65, 0.95]}
-			transform={false}
-			center
-			zIndexRange={[100, 0]}
-		>
-			<AnimatePresence>
-				<motion.div
-					key={project.title}
-					className="pointer-events-auto flex h-[90vh] w-[94vw] gap-6"
-					initial={{
-						opacity: 0,
-						scale: 0.18,
-						x: -260,
-						y: 160,
-					}}
-					animate={{
-						opacity: 1,
-						scale: 1,
-						x: 0,
-						y: 0,
-					}}
-					exit={{
-						opacity: 0,
-						scale: 0.25,
-						x: -260,
-						y: 160,
-					}}
-					transition={{
-						type: 'spring',
-						stiffness: 150,
-						damping: 18,
-					}}
-				>
-					{/* ================= LEFT PANEL ================= */}
-
-					<motion.div
-						className="relative h-full w-[340px] shrink-0 rounded-[30px] border-4 border-[#2b1b14] bg-[#fff4c9] p-5 shadow-[8px_8px_0_#2b1b14]"
-						initial={{ scale: 0.8 }}
-						animate={{ scale: 1 }}
-						transition={{
-							delay: 0.05,
-							type: 'spring',
-							stiffness: 220,
-							damping: 16,
-						}}
-					>
-						<div className="absolute -top-5 left-8 rounded-full border-4 border-[#2b1b14] bg-[#ff6fae] px-5 py-1 text-sm font-black text-white shadow-[4px_4px_0_#2b1b14]">
-							PROJECT FILE
-						</div>
-
-						<div className="flex h-full flex-col pt-5">
-							<h2 className="text-[28px] font-black leading-tight text-[#ff5f9f]">
-								{project.title}
-							</h2>
-
-							<div className="mt-2 mb-5 h-1 w-20 rounded-full bg-[#ffbf47]" />
-
-							<div className="mb-4 rounded-2xl border-2 border-[#2b1b14] bg-white/70 p-4">
-								<div className="text-[11px] font-black tracking-[0.18em] text-[#42aee8]">
-									COMPANY
-								</div>
-
-								<div className="mt-1 font-bold text-[#7a4318]">
-									{project.company}
-								</div>
-							</div>
-
-							<div className="mb-4 rounded-2xl border-2 border-[#2b1b14] bg-white/70 p-4">
-								<div className="text-[11px] font-black tracking-[0.18em] text-[#42aee8]">
-									DATE
-								</div>
-
-								<div className="mt-1 font-bold text-[#7a4318]">
-									{project.date}
-								</div>
-							</div>
-
-							<div className="mb-4 flex-1 rounded-2xl border-2 border-[#2b1b14] bg-white/70 p-4">
-								<div className="mb-2 text-[11px] font-black tracking-[0.18em] text-[#42aee8]">
-									DESCRIPTION
-								</div>
-
-								<div className="text-[13px] leading-6 text-[#47352d]">
-									{typed}
-									<span className="animate-pulse">▌</span>
-								</div>
-							</div>
-
-							<div className="mb-5">
-								<div className="mb-2 text-[11px] font-black tracking-[0.18em] text-[#42aee8]">
-									TECH STACK
-								</div>
-
-								<div className="flex flex-wrap gap-2">
-									{project.techStack.map((tech) => (
-										<div
-											key={tech}
-											className="rounded-full border-2 border-[#2b1b14] bg-[#ffe58d] px-3 py-1 text-xs font-black text-[#7a4318] shadow-[2px_2px_0_#2b1b14]"
-										>
-											{tech}
-										</div>
-									))}
-								</div>
-							</div>
-
-							<button
-								onClick={onClose}
-								className="mt-auto w-full rounded-2xl border-2 border-[#2b1b14] bg-[#ff6fae] py-3 font-black text-white shadow-[4px_4px_0_#2b1b14]"
-							>
-								CLOSE
-							</button>
-						</div>
-					</motion.div>
-
-					{/* ================= RIGHT IFRAME ================= */}
-
-					<motion.div
-						className="h-full flex-1 overflow-hidden rounded-[30px] border-4 border-[#2b1b14] bg-white shadow-[8px_8px_0_#2b1b14]"
-						initial={{
-							opacity: 0,
-							x: 80,
-							scale: 0.96,
-						}}
-						animate={{
-							opacity: 1,
-							x: 0,
-							scale: 1,
-						}}
-						transition={{
-							delay: 0.25,
-							type: 'spring',
-							stiffness: 130,
-							damping: 20,
-						}}
-					>
-						<iframe
-							src={project.href}
-							title={project.title}
-							className="h-full w-full bg-white"
-						/>
-					</motion.div>
-				</motion.div>
-			</AnimatePresence>
-		</Html>
-	);
 }

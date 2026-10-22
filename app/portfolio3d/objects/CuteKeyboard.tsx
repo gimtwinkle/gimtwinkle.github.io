@@ -35,7 +35,6 @@ function KeyCap({
 	position,
 	width = 0.13,
 	color = '#e0f2fe',
-	label,
 }: {
 	position: [number, number, number];
 	width?: number;

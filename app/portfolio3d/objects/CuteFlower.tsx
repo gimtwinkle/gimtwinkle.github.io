@@ -3,6 +3,7 @@
 import { useFrame } from '@react-three/fiber';
 import { useMemo, useRef } from 'react';
 import * as THREE from 'three';
+import { getFlowerPetals, getFlowerMaterial } from './flowerGeometry';
 
 type Props = {
 	position: [number, number, number];
@@ -10,77 +11,12 @@ type Props = {
 	scale?: number;
 };
 
-function Petal({
-	position,
-	rotation,
-	color,
-	scale = 1,
-}: {
-	position: [number, number, number];
-	rotation: [number, number, number];
-	color: string;
-	scale?: number;
-}) {
-	const shape = useMemo(() => {
-		const s = new THREE.Shape();
-
-		s.moveTo(0, 0.22);
-		s.bezierCurveTo(0.14, 0.18, 0.18, -0.02, 0, -0.22);
-		s.bezierCurveTo(-0.18, -0.02, -0.14, 0.18, 0, 0.22);
-
-		return s;
-	}, []);
-
-	const geometry = useMemo(() => {
-		const geo = new THREE.ExtrudeGeometry(shape, {
-			depth: 0.035,
-			bevelEnabled: true,
-			bevelSize: 0.01,
-			bevelThickness: 0.01,
-			bevelSegments: 3,
-		});
-
-		const pos = geo.attributes.position;
-
-		for (let i = 0; i < pos.count; i++) {
-			const x = pos.getX(i);
-			const y = pos.getY(i);
-			const z = pos.getZ(i);
-
-			const wave = Math.sin(y * 18) * 0.012;
-			const curl = Math.abs(x) * 0.025;
-
-			pos.setZ(i, z + wave + curl);
-		}
-
-		pos.needsUpdate = true;
-		geo.computeVertexNormals();
-
-		return geo;
-	}, [shape]);
-
-	return (
-		<mesh
-			position={position}
-			rotation={rotation}
-			scale={scale}
-			geometry={geometry}
-			castShadow
-		>
-			<meshPhysicalMaterial
-				color={color}
-				roughness={0.28}
-				clearcoat={0.75}
-				side={THREE.DoubleSide}
-			/>
-		</mesh>
-	);
-}
-
 export default function CuteFlower({ position, color, scale = 1 }: Props) {
-	const stemHeight = useMemo(() => 0.22 + Math.random() * 0.34, []);
+	const petalResources = useMemo(() => ({ geometry: getFlowerPetals(), material: getFlowerMaterial(color) }), [color]);
+    const variation = Math.sin(position[0] * 127.1 + position[2] * 311.7) * 43758.5453;
+    const stemHeight = 0.22 + (variation - Math.floor(variation)) * 0.34;
 	const flowerHeadRef = useRef<THREE.Group>(null);
-	const windSeed = useMemo(() => Math.random() * Math.PI * 2, []);
+    const windSeed = (position[0] * 3.3 + position[2] * 5.7) % (Math.PI * 2);
 
 	useFrame((state) => {
 		if (!flowerHeadRef.current) return;
@@ -118,19 +54,7 @@ export default function CuteFlower({ position, color, scale = 1 }: Props) {
 				{/* 꽃 */}
 				{/* 하늘을 향한 데이지 */}
 				<group position={[0, 0.08, 0]} rotation={[-Math.PI / 2, 0, 0]}>
-					{Array.from({ length: 6 }).map((_, i) => {
-						const angle = (Math.PI * 2 * i) / 6;
-
-						return (
-							<Petal
-								key={i}
-								position={[Math.cos(angle) * 0.22, Math.sin(angle) * 0.22, 0]}
-								rotation={[0, 0, angle - Math.PI / 2]}
-								scale={0.72}
-								color={color}
-							/>
-						);
-					})}
+					<mesh geometry={petalResources.geometry} material={petalResources.material} dispose={null} castShadow />
 
 					<mesh position={[0, 0, 0.045]} castShadow>
 						<sphereGeometry args={[0.085, 20, 20]} />

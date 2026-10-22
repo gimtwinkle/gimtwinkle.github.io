@@ -167,6 +167,8 @@ export default function CuteHouse({
 
 	const doorRef = useRef<THREE.Group>(null);
 	const enterRequestedRef = useRef(false);
+    const playerRef = useRef<THREE.Object3D | undefined>(undefined);
+    const nearRef = useRef(false);
 
 	const [near, setNear] = useState(false);
 	const [hovered, setHovered] = useState(false);
@@ -179,13 +181,17 @@ export default function CuteHouse({
 	const isDoorOpen = near || hovered || clickedOpen;
 
 	useFrame(() => {
-		const player = scene.getObjectByName('player');
+        const player = playerRef.current?.parent ? playerRef.current : scene.getObjectByName('player');
+        playerRef.current = player;
 		if (!player) return;
 
-		const distance = player.position.distanceTo(new THREE.Vector3(...position));
+		const distance = Math.hypot(player.position.x - position[0], player.position.y - position[1], player.position.z - position[2]);
 		const isNearNow = distance < 2.2;
 
-		setNear(isNearNow);
+        if (nearRef.current !== isNearNow) {
+            nearRef.current = isNearNow;
+            setNear(isNearNow);
+        }
 
 		if (!doorRef.current) return;
 

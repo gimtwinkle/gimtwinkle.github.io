@@ -2,20 +2,22 @@
 
 import { OrbitControls } from '@react-three/drei';
 import { Canvas } from '@react-three/fiber';
-import { useEffect, useMemo, useState } from 'react';
-
-import Character from './objects/Character';
-import CuteCloud from './objects/CuteCloud';
-import CuteMap from './objects/CuteMap';
-
-import AboutRoom from './rooms/About/AboutRoom';
-import ContactRoom from './rooms/ContactRoom';
-import SkillMediaArtRoom from './rooms/SkillRoom/MediaArtRoom';
-import WorkRoom from './rooms/WorkRoom';
-
-import RoomScene from './scene/RoomScene';
+import { lazy, Suspense, useState } from 'react';
 
 import { RoomName } from './types';
+import RoomHud from './components/RoomHud';
+import SceneLoading, { sceneLoadingMessages } from './components/SceneLoading';
+import CanvasLoading from './components/CanvasLoading';
+import useSeoulNight from './useSeoulNight';
+
+const Character = lazy(() => import('./objects/Character'));
+const CuteCloud = lazy(() => import('./objects/CuteCloud'));
+const CuteMap = lazy(() => import('./objects/CuteMap'));
+const AboutRoom = lazy(() => import('./rooms/About/AboutRoom'));
+const ContactRoom = lazy(() => import('./rooms/ContactRoom'));
+const WorkRoomPage = lazy(() => import('./rooms/WorkRoom/WorkRoomPage'));
+const RoomScene = lazy(() => import('./scene/RoomScene'));
+const SkillMediaArtRoom = lazy(() => import('./rooms/SkillRoom/MediaArtRoom'));
 
 type SceneName = 'village' | RoomName;
 
@@ -43,80 +45,18 @@ const aboutRoomSceneConfig = {
 	},
 };
 
-function SeoulClockUI() {
-	const [now, setNow] = useState<Date | null>(null);
-
-	useEffect(() => {
-		setNow(new Date());
-
-		const timer = window.setInterval(() => {
-			setNow(new Date());
-		}, 1000);
-
-		return () => {
-			window.clearInterval(timer);
-		};
-	}, []);
-
-	const { timeText, isNight } = useMemo(() => {
-		if (!now) {
-			return {
-				timeText: '--:--',
-				isNight: false,
-			};
-		}
-
-		const hourText = new Intl.DateTimeFormat('en-US', {
-			timeZone: 'Asia/Seoul',
-			hour: 'numeric',
-			hour12: false,
-		}).format(now);
-
-		const hour = Number(hourText);
-		const night = hour < 6 || hour >= 19;
-
-		const time = new Intl.DateTimeFormat('en-US', {
-			timeZone: 'Asia/Seoul',
-			hour: 'numeric',
-			minute: '2-digit',
-			hour12: true,
-		}).format(now);
-
-		return {
-			timeText: time,
-			isNight: night,
-		};
-	}, [now]);
-
-	return (
-		<div className="pointer-events-none fixed left-6 top-20 z-20 rounded-xl border-2 border-white/30 bg-black/45 px-4 py-3 text-sm font-bold text-white backdrop-blur-md">
-			<span className="mr-2">{isNight ? 'Night' : 'Day'}</span>
-			{timeText}
-		</div>
-	);
-}
-
-function VillageBackButton({ onClick }: { onClick: () => void }) {
-	return (
-		<button
-			type="button"
-			onClick={onClick}
-			className="absolute left-6 top-6 z-30 rounded-full border border-white/30 bg-black/40 px-5 py-3 text-sm font-bold text-white shadow-lg backdrop-blur-md transition hover:scale-105 hover:bg-black/60"
-		>
-			← VILLAGE
-		</button>
-	);
-}
-
 export default function PortfolioWorld() {
+    const isNight = useSeoulNight();
 	const [scene, setScene] = useState<SceneName>('village');
 	const [isFading, setIsFading] = useState(false);
+    const [destination, setDestination] = useState<SceneName>('village');
 
 	const goScene = (nextScene: SceneName) => {
 		if (nextScene === scene || isFading) {
 			return;
 		}
 
+        setDestination(nextScene);
 		setIsFading(true);
 
 		window.setTimeout(() => {
@@ -135,8 +75,7 @@ export default function PortfolioWorld() {
 	const canvasRoomScene =
 		scene === 'about' ? (
 			<AboutRoom onBack={goBackVillage} />
-		) : scene === 'work' ? (
-			<WorkRoom />
+
 		) : scene === 'contact' ? (
 			<ContactRoom onBack={goBackVillage} />
 		) : null;
@@ -145,12 +84,13 @@ export default function PortfolioWorld() {
 		scene === 'about' ? aboutRoomSceneConfig : defaultRoomSceneConfig;
 
 	return (
-		<div className="relative h-full min-h-screen w-full overflow-hidden bg-gradient-to-b from-sky-200 via-pink-100 to-yellow-100">
+		<div className="relative h-full w-full overflow-hidden bg-gradient-to-b from-sky-200 via-pink-100 to-yellow-100">
 			{/* ================================
 			    마을
 			================================ */}
 			{scene === 'village' && (
 				<Canvas
+					dpr={[1, 1.5]}
 					shadows
 					camera={{
 						position: [0, 9, 12],
@@ -163,63 +103,72 @@ export default function PortfolioWorld() {
 						alpha: false,
 					}}
 				>
-					<color attach="background" args={['#bdefff']} />
+					<Suspense fallback={<CanvasLoading scene="village" />}>
+						<color attach="background" args={[isNight ? '#101a35' : '#bdefff']} />
 
-					<ambientLight intensity={0.9} />
+						<ambientLight intensity={isNight ? 0.4 : 0.9} />
 
-					<directionalLight
-						position={[5, 10, 6]}
-						intensity={2.4}
-						castShadow
-						shadow-mapSize={[2048, 2048]}
-					/>
+						<directionalLight
+							position={[5, 10, 6]}
+							intensity={isNight ? 0.65 : 2.4}
+                            color={isNight ? '#abc8ff' : '#ffffff'}
+							castShadow
+							shadow-mapSize={[2048, 2048]}
+						/>
 
-					<pointLight position={[-5, 4, 4]} intensity={1.2} color="#ff8bd1" />
+						<pointLight position={[-5, 4, 4]} intensity={1.2} color="#ff8bd1" />
 
-					<pointLight position={[5, 4, -5]} intensity={1.2} color="#8be9ff" />
+						<pointLight position={[5, 4, -5]} intensity={1.2} color="#8be9ff" />
 
-					<CuteCloud position={[-5, 6, -4]} />
+						<CuteCloud position={[-5, 6, -4]} />
 
-					<CuteCloud position={[4, 7, -5]} scale={0.8} />
+						<CuteCloud position={[4, 7, -5]} scale={0.8} />
 
-					<CuteCloud position={[0, 6.5, 4]} scale={0.7} />
+						<CuteCloud position={[0, 6.5, 4]} scale={0.7} />
 
-					<CuteMap isNight={false} onEnterRoom={goScene} />
+						<CuteMap isNight={isNight} onEnterRoom={goScene} />
 
-					<Character />
+						<Character />
 
-					<OrbitControls
-						enableZoom={false}
-						enablePan={false}
-						maxPolarAngle={Math.PI / 2.4}
-						minPolarAngle={Math.PI / 4}
-					/>
+						<OrbitControls
+							enableZoom={false}
+							enablePan={false}
+							maxPolarAngle={Math.PI / 2.4}
+							minPolarAngle={Math.PI / 4}
+						/>
+					</Suspense>
 				</Canvas>
 			)}
 
+			{scene === 'work' && (
+                <Suspense fallback={<SceneLoading scene="work" />}>
+                    <WorkRoomPage onBack={goBackVillage} />
+                </Suspense>
+            )}
+
 			{/* ================================
-			    About / Work / Contact
+			    About / Contact
 			================================ */}
 			{canvasRoomScene && (
-				<RoomScene
-					key={`${scene}-room`}
-					onBack={goBackVillage}
-					{...roomSceneProps}
-				>
-					{canvasRoomScene}
-				</RoomScene>
+				<Suspense fallback={<SceneLoading scene={scene} />}>
+					<RoomScene
+						key={`${scene}-room`}
+						onBack={goBackVillage}
+                        loadingScene={scene}
+						{...roomSceneProps}
+					>
+						{canvasRoomScene}
+					</RoomScene>
+				</Suspense>
 			)}
 
 			{/* ================================
 			    Skill 미디어아트룸
 			================================ */}
 			{scene === 'skills' && (
-				<div className="absolute inset-0 z-10 bg-[#080e1d]">
-					<div className="pointer-events-none fixed bottom-6 left-1/2 z-30 -translate-x-1/2 rounded-full border border-white/20 bg-black/35 px-5 py-2 text-xs font-bold tracking-[0.18em] text-white shadow-lg backdrop-blur-md">
-						SCROLL OR USE ARROW KEYS
-					</div>
+				<div data-skill-room className="absolute inset-0 z-10 bg-black">
 					<Canvas
-						shadows
+						dpr={[1, 1.5]}
 						camera={{
 							position: [0, 1.72, 5.8],
 							fov: 52,
@@ -227,19 +176,24 @@ export default function PortfolioWorld() {
 							far: 100,
 						}}
 						gl={{
-							antialias: true,
+							antialias: false,
 							alpha: false,
 						}}
 						onCreated={({ gl }) => {
-							gl.setClearColor('#080e1d');
+							gl.setClearColor('#000000');
 						}}
 					>
-						<color attach="background" args={['#080e1d']} />
+						<color attach="background" args={['#000000']} />
 
-						<SkillMediaArtRoom />
+						<Suspense fallback={<CanvasLoading scene="skills" />}>
+							<SkillMediaArtRoom />
+						</Suspense>
 					</Canvas>
 
-					<VillageBackButton onClick={goBackVillage} />
+
+                    <div className="pointer-events-none absolute bottom-7 left-1/2 z-30 -translate-x-1/2 whitespace-nowrap text-[10px] tracking-[0.25em] text-white/50">
+                        SCROLL / SWIPE TO EXPLORE
+                    </div>
 				</div>
 			)}
 
@@ -248,31 +202,13 @@ export default function PortfolioWorld() {
 			================================ */}
 			<div
 				className={[
-					'pointer-events-none fixed inset-0 z-[9999] bg-white',
+					'pointer-events-none fixed inset-0 z-[10002] flex items-center justify-center bg-white text-sm text-[#543a2b]',
 					'transition-opacity duration-300',
 					isFading ? 'opacity-90' : 'opacity-0',
 				].join(' ')}
-			/>
+			>{isFading && <span role="status">{sceneLoadingMessages[destination] ?? '방으로 들어가는 중..'}</span>}</div>
 
-			{/* ================================
-			    마을 조작 안내
-			================================ */}
-			{scene === 'village' && (
-				<div className="pointer-events-none fixed left-6 top-6 z-20 rounded-xl border-2 border-white/30 bg-black/45 px-4 py-3 text-sm font-bold text-white backdrop-blur-md">
-					WASD / Arrow keys to move
-				</div>
-			)}
-
-			{/* ================================
-			    스킬룸 안내
-			================================ */}
-			{scene === 'skills' && (
-				<div className="pointer-events-none fixed bottom-6 left-1/2 z-30 -translate-x-1/2 rounded-full border border-white/20 bg-black/35 px-5 py-2 text-xs font-bold tracking-[0.18em] text-white shadow-lg backdrop-blur-md">
-					MOVE CLOSER TO EACH ARTWORK
-				</div>
-			)}
-
-			<SeoulClockUI />
+			<RoomHud room={scene} onBack={scene === 'village' ? undefined : goBackVillage} />
 		</div>
 	);
 }

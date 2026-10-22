@@ -114,23 +114,27 @@ export default function CuteBush({
 
 		return Array.from({ length: 10 }).map((_, i) => {
 			const side = i % 2 === 0 ? -1 : 1;
+			const sample = (offset: number) => {
+				const value = Math.sin((i * 8 + offset) * 127.1 + 311.7) * 43758.5453;
+				return value - Math.floor(value);
+			};
 
 			return {
 				position: [
-					(Math.random() - 0.5) * 1.35,
-					0.34 + Math.random() * 0.65,
-					-0.12 + Math.random() * 0.75,
+					(sample(0) - 0.5) * 1.35,
+					0.34 + sample(1) * 0.65,
+					-0.12 + sample(2) * 0.75,
 				] as [number, number, number],
 
 				rotation: [
-					-0.75 - Math.random() * 0.85,
-					(Math.random() - 0.5) * 0.9,
-					side * (0.25 + Math.random() * 1.8),
+					-0.75 - sample(3) * 0.85,
+					(sample(4) - 0.5) * 0.9,
+					side * (0.25 + sample(5) * 1.8),
 				] as [number, number, number],
 
-				scale: 0.38 + Math.random() * 0.28,
+				scale: 0.38 + sample(6) * 0.28,
 
-				color: colors[Math.floor(Math.random() * colors.length)],
+				color: colors[Math.floor(sample(7) * colors.length)],
 			};
 		});
 	}, []);
