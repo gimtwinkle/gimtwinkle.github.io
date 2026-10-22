@@ -1,0 +1,98 @@
+[
+  {
+    "name": "beanbag.glb",
+    "beforeBytes": 7264652,
+    "afterBytes": 2448412,
+    "beforeTriangles": 34372,
+    "afterTriangles": 34372,
+    "error": 0
+  },
+  {
+    "name": "bed.glb",
+    "beforeBytes": 7997564,
+    "afterBytes": 2878696,
+    "beforeTriangles": 36500,
+    "afterTriangles": 36500,
+    "error": 0
+  },
+  {
+    "name": "bedside.glb",
+    "beforeBytes": 9436032,
+    "afterBytes": 3066628,
+    "beforeTriangles": 39534,
+    "afterTriangles": 39534,
+    "error": 0
+  },
+  {
+    "name": "board.glb",
+    "beforeBytes": 10096064,
+    "afterBytes": 3328964,
+    "beforeTriangles": 37617,
+    "afterTriangles": 37617,
+    "error": 0
+  },
+  {
+    "name": "bookcase.glb",
+    "beforeBytes": 8383392,
+    "afterBytes": 2928860,
+    "beforeTriangles": 38334,
+    "afterTriangles": 38334,
+    "error": 0
+  },
+  {
+    "name": "bookshleve.glb",
+    "beforeBytes": 9311844,
+    "afterBytes": 3221620,
+    "beforeTriangles": 38012,
+    "afterTriangles": 38012,
+    "error": 0
+  },
+  {
+    "name": "desk.glb",
+    "beforeBytes": 9085432,
+    "afterBytes": 3178856,
+    "beforeTriangles": 41014,
+    "afterTriangles": 41014,
+    "error": 0
+  },
+  {
+    "name": "robot.glb",
+    "beforeBytes": 55360228,
+    "afterBytes": 12262600,
+    "beforeTriangles": 999992,
+    "afterTriangles": 116792,
+    "error": 0.000996893155388534
+  },
+  {
+    "name": "rowbookcase.glb",
+    "beforeBytes": 53001668,
+    "afterBytes": 11192128,
+    "beforeTriangles": 999998,
+    "afterTriangles": 107996,
+    "error": 0.0009763736743479967
+  },
+  {
+    "name": "rowtable.glb",
+    "beforeBytes": 50548652,
+    "afterBytes": 7514308,
+    "beforeTriangles": 999998,
+    "afterTriangles": 66282,
+    "error": 0.000997764989733696
+  },
+  {
+    "name": "travel.glb",
+    "beforeBytes": 56758520,
+    "afterBytes": 15801348,
+    "beforeTriangles": 999993,
+    "afterTriangles": 149217,
+    "error": 0.0009974193526431918
+  },
+  {
+    "name": "window.glb",
+    "beforeBytes": 10970772,
+    "afterBytes": 3851948,
+    "beforeTriangles": 41158,
+    "afterTriangles": 41158,
+    "error": 0
+  }
+]
