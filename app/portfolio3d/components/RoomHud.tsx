@@ -12,14 +12,14 @@ const roomDetails: Record<string, { name: string; technologies: string[]; contro
     about: { name: 'About', technologies: ['Next.js', 'TypeScript', 'Three.js', 'React Three Fiber', 'Drei', 'glTF'], controls: ['WASD / 방향키 · 이동', '드래그 · 둘러보기 / 휠 · 앞뒤 이동', '물건에 마우스 올리기 · 이야기 보기'] },
     work: { name: 'Work', technologies: ['Next.js', 'TypeScript', 'Three.js', 'React Three Fiber', 'Drei', 'CSS Modules'], controls: ['WASD / 방향키 · 이동', '드래그 · 둘러보기 / 휠 · 앞뒤 이동', '박스 클릭 · 프로젝트 / 캔디머신 클릭 · 랜덤뽑기'] },
     skills: { name: 'Skills', technologies: ['Next.js', 'TypeScript', 'Three.js', 'React Three Fiber', 'Drei', 'Lottie', 'GLSL', 'CSS Modules'], controls: ['휠 / 위아래 스와이프 · 우주 탐색', '카드 위에서도 스크롤할 수 있어요.', '관련 프로젝트 클릭 · 목록 펼치기'] },
-    contact: { name: 'Contact', technologies: ['Next.js', 'TypeScript', 'Three.js', 'React Three Fiber', 'Drei', 'CSS Modules', 'GitHub API'], controls: ['이동 : 방향키, wasd / 시점 회전 : 드래그', '개인 편지 : 핑크 우체통 클릭', '공개 방명록 : 방명록 데스크 클릭'] },
+    contact: { name: 'Contact', technologies: ['Next.js', 'TypeScript', 'Three.js', 'React Three Fiber', 'Drei', 'CSS Modules', 'GitHub API'], controls: ['이동 : 방향키, wasd / 시점 회전 : 드래그', '개인 편지 : 빨간 우체통 클릭', '공개 방명록 : 방명록 데스크 클릭'] },
 };
 
 const roomDescriptions: Record<string, { title: string; steps: { icon: string; title: string; text: string }[] }> = {
     contact: {
         title: 'TWINKLE POST OFFICE',
         steps: [
-            { icon: '✉️', title: 'twinkle에게 편지를 보내 주세요!', text: '핑크 우체통을 클릭하면 편지를 쓸 수 있어요. 메일 앱에서 내용을 확인하고 전송해 주세요.' },
+            { icon: '✉️', title: 'twinkle에게 편지를 보내 주세요!', text: '빨간 우체통을 클릭하면 편지를 쓸 수 있어요. 메일 앱에서 내용을 확인하고 전송해 주세요.' },
             { icon: '📖', title: '마을에 작은 발자국을 남겨 주세요.', text: '방명록 데스크를 클릭해 인사를 적어 보세요. GitHub에서 등록을 완료하면 다른 방문자도 볼 수 있어요!' },
         ],
     },
