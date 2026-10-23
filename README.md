@@ -31,7 +31,7 @@ The guestbook reads the latest 100 open issues, displays up to 12 matching entri
 
 ### About room models
 
-Runtime furniture assets are in `public/models/about-optimized/`. Their original GLBs remain in `public/models/about/`.
+Runtime furniture assets are in `public/models/about-optimized/`. Original GLBs are preserved in `asset/models-source/about/` so they are not copied into the static export. The unused media-art model is also archived in `asset/models-source/media-art/`.
 After changing a source model, run `npm run optimize:models` to regenerate the runtime assets and size report.
 The script resizes embedded textures to at most 1024px and simplifies meshes above 100,000 triangles with a 0.1% relative geometry error limit, preserving mesh borders and vertex attributes. It leaves furniture transforms unchanged.
 

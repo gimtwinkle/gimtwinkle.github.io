@@ -5,7 +5,7 @@ import sharp from 'sharp';
 import { MeshoptSimplifier } from 'meshoptimizer/simplifier';
 
 // Keep source GLBs untouched. Rebuild the static, single-mesh furniture assets.
-const sourceDirectory = path.resolve('public/models/about');
+const sourceDirectory = path.resolve('asset/models-source/about');
 const outputDirectory = path.resolve('public/models/about-optimized');
 const components = { SCALAR: 1, VEC2: 2, VEC3: 3, VEC4: 4 };
 const componentBytes = { 5123: 2, 5125: 4, 5126: 4 };

@@ -78,6 +78,24 @@ test('PC arrows move the actual Character and animate its legs without a parent 
         key('keyup', '', 'ArrowLeft'); frames(5);
         assert(!player.userData.isMoving);
         console.log('Verified actual player displacement, leg swing, stopping and movement during greeting');
+
+        const entryTarget = player.position.clone().add(new THREE.Vector3(1, 0, -1));
+        player.userData.enteringRoom = true;
+        frames(10);
+        const beforeEntry = player.position.clone();
+        player.userData.entryTarget = entryTarget;
+        player.userData.entrySpeed = 3.8;
+        key('keydown', 'ArrowLeft');
+        frames(10);
+        assert(player.position.distanceTo(beforeEntry) > 0.55, 'the approach must walk slightly faster than normal movement');
+        frames(60);
+        assert(player.position.distanceTo(entryTarget) < 0.02, 'entry must reach the door without overshoot despite manual input');
+        assert(player.position.x > beforeEntry.x, 'entry must override keyboard movement');
+        assert(!player.userData.isMoving, 'walking must settle at the door');
+        key('keyup', 'ArrowLeft');
+        delete player.userData.enteringRoom;
+        delete player.userData.entryTarget;
+        delete player.userData.entrySpeed;
     } finally {
         await act(async () => { root.unmount(); });
         await new Promise(resolve => setTimeout(resolve, 550));

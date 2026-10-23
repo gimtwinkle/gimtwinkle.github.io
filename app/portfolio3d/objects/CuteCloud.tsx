@@ -21,11 +21,12 @@ function getCloudGeometry() {
 }
 
 type Props = {
+	color?: string;
 	position: [number, number, number];
 	scale?: number;
 };
 
-export default function CuteCloud({ position, scale = 1 }: Props) {
+export default function CuteCloud({ position, scale = 1, color = '#fffdf9' }: Props) {
 	const cloudRef = useRef<Group>(null);
 	const reducedMotion = useRef(false);
 	const phase = position[0] * 0.7 + position[2] * 0.4;
@@ -49,7 +50,7 @@ export default function CuteCloud({ position, scale = 1 }: Props) {
 		<group ref={cloudRef} position={position} scale={scale}>
 			<mesh>
 				<primitive object={getCloudGeometry()} attach="geometry" dispose={null} />
-				<meshStandardMaterial color="#fffdf9" roughness={1} metalness={0} />
+				<meshStandardMaterial color={color} roughness={1} metalness={0} />
 			</mesh>
 		</group>
 	);

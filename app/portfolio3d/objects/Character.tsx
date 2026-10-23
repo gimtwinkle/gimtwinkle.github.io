@@ -7,35 +7,153 @@ import * as THREE from 'three';
 import useMobile from '../useMobile';
 import { attachMovementKeyboard, readMovement } from '../movement';
 
+function WalkingDust({ player }: { player: { current: THREE.Group | null } }) {
+    const particles = useRef<(THREE.Mesh<THREE.SphereGeometry, THREE.MeshBasicMaterial> | null)[]>([]);
+    const dust = useRef({ ages: Array<number>(6).fill(1), elapsed: 0, next: 0, reduced: false });
+    useEffect(() => {
+        const preference = window.matchMedia('(prefers-reduced-motion: reduce)');
+        const update = () => { dust.current.reduced = preference.matches; };
+        update();
+        preference.addEventListener('change', update);
+        return () => preference.removeEventListener('change', update);
+    }, []);
+    useFrame((_, frameDelta) => {
+        const character = player.current;
+        if (!character) return;
+        const state = dust.current;
+        const delta = Math.min(frameDelta, 0.05);
+        state.elapsed += delta;
+        if (character.userData.isMoving && !state.reduced && state.elapsed >= 0.24) {
+            const index = state.next;
+            const puff = particles.current[index];
+            if (puff) {
+                const side = index % 2 ? 1 : -1;
+                const angle = character.rotation.y;
+                puff.position.copy(character.position);
+                puff.position.x += Math.cos(angle) * side * 0.09 - Math.sin(angle) * 0.12;
+                puff.position.z -= Math.sin(angle) * side * 0.09 + Math.cos(angle) * 0.12;
+                puff.position.y -= character.scale.y * 0.22;
+                state.ages[index] = 0;
+            }
+            state.next = (index + 1) % 6;
+            state.elapsed = 0;
+        }
+        particles.current.forEach((puff, index) => {
+            if (!puff) return;
+            state.ages[index] += delta;
+            const life = state.ages[index] / 0.55;
+            puff.visible = life < 1 && !state.reduced;
+            if (!puff.visible) return;
+            puff.position.y += delta * 0.08;
+            puff.scale.setScalar(0.55 + life * 0.9);
+            puff.material.opacity = Math.sin(life * Math.PI) * 0.4;
+        });
+    });
+    return <group name="walking-dust">
+        {Array.from({ length: 6 }, (_, index) => <mesh
+            key={index} ref={(mesh: THREE.Mesh<THREE.SphereGeometry, THREE.MeshBasicMaterial> | null) => { particles.current[index] = mesh; }}
+            visible={false} raycast={() => {}}
+        >
+            <sphereGeometry args={[0.055, 10, 8]} />
+            <meshBasicMaterial color="#c5a078" transparent opacity={0} depthWrite={false} />
+        </mesh>)}
+    </group>;
+}
+
+function DressMaterial({ repeatX = 8, repeatY = 5, doubleSided = false }: { repeatX?: number; repeatY?: number; doubleSided?: boolean }) {
+    const texture = useMemo(() => {
+        const size = 64;
+        const pixels = new Uint8Array(size * size * 4);
+        const colors = [[255, 245, 229], [230, 170, 177], [182, 104, 121]];
+        for (let y = 0; y < size; y++) {
+            for (let x = 0; x < size; x++) {
+                const stripeX = x >= size / 2 ? 1 : 0;
+                const stripeY = y >= size / 2 ? 1 : 0;
+                const color = colors[stripeX + stripeY];
+                const offset = (y * size + x) * 4;
+                pixels.set([...color, 255], offset);
+            }
+        }
+        const map = new THREE.DataTexture(pixels, size, size, THREE.RGBAFormat);
+        map.colorSpace = THREE.SRGBColorSpace;
+        map.wrapS = map.wrapT = THREE.RepeatWrapping;
+        map.repeat.set(repeatX, repeatY);
+        map.magFilter = THREE.LinearFilter;
+        map.minFilter = THREE.LinearMipmapLinearFilter;
+        map.generateMipmaps = true;
+        map.needsUpdate = true;
+        return map;
+    }, [repeatX, repeatY]);
+    useEffect(() => () => texture.dispose(), [texture]);
+    return <meshStandardMaterial map={texture} roughness={0.92} side={doubleSided ? THREE.DoubleSide : THREE.FrontSide} />;
+}
+
+function InnerTShirt() {
+    const geometry = useMemo(() => {
+        const profile = new THREE.CatmullRomCurve3([
+            new THREE.Vector3(0.17, 0.3, 0),
+            new THREE.Vector3(0.19, 0.42, 0),
+            new THREE.Vector3(0.205, 0.55, 0),
+            new THREE.Vector3(0.225, 0.615, 0),
+            new THREE.Vector3(0.19, 0.65, 0),
+            new THREE.Vector3(0.075, 0.69, 0),
+        ]);
+        return new THREE.LatheGeometry(profile.getPoints(40).map((p) => new THREE.Vector2(p.x, p.y)), 64);
+    }, []);
+    useEffect(() => () => geometry.dispose(), [geometry]);
+    return <mesh name="inner-tshirt" geometry={geometry} scale={[1, 1, 0.75]} castShadow>
+        <meshStandardMaterial color="#fffdf8" roughness={0.95} side={THREE.DoubleSide} />
+    </mesh>;
+}
+
 function Skirt() {
 	const geometry = useMemo(() => {
 		const points = [
-			new THREE.Vector2(0.13, 0.16),
-			new THREE.Vector2(0.2, 0.05),
+			new THREE.Vector2(0.25, 0.23),
+			new THREE.Vector2(0.26, 0.08),
 			new THREE.Vector2(0.28, -0.1),
 			new THREE.Vector2(0.34, -0.22),
 		];
 
-		return new THREE.LatheGeometry(points, 40);
+		return new THREE.LatheGeometry(points, 64);
 	}, []);
 
 	return (
-		<group scale={[1, 1, 0.58]}>
+		<group scale={[1, 1, 0.77]}>
 			<mesh geometry={geometry} castShadow>
-				<meshPhysicalMaterial
-					color="#749df5"
-					roughness={0.38}
-					clearcoat={0.28}
-					side={THREE.DoubleSide}
-				/>
+                <DressMaterial repeatX={10} repeatY={3} doubleSided />
 			</mesh>
 
 			<mesh position={[0, -0.22, 0]} scale={[1, 0.1, 1]} castShadow>
 				<torusGeometry args={[0.34, 0.012, 12, 40]} />
-				<meshStandardMaterial color="#749df5" />
+				<meshStandardMaterial color="#fff5e5" roughness={0.9} />
 			</mesh>
 		</group>
 	);
+}
+
+function Bustier() {
+    const straps = useMemo(() => [-0.145, 0.145].map((x) => new THREE.CatmullRomCurve3([
+        new THREE.Vector3(x, 0.55, 0.17),
+        new THREE.Vector3(x, 0.64, 0.145),
+        new THREE.Vector3(x, 0.675, 0),
+        new THREE.Vector3(x, 0.64, -0.145),
+        new THREE.Vector3(x, 0.55, -0.17),
+    ])), []);
+    return <group name="check-bustier">
+        <mesh position={[0, 0.49, 0]} scale={[1, 1, 0.77]} castShadow>
+            <cylinderGeometry args={[0.255, 0.25, 0.2, 64, 1, true]} />
+            <DressMaterial repeatX={8} repeatY={2} doubleSided />
+        </mesh>
+        {straps.map((curve, index) => <mesh key={index} castShadow>
+            <tubeGeometry args={[curve, 32, 0.016, 12, false]} />
+            <DressMaterial repeatX={2} repeatY={3} />
+        </mesh>)}
+        <mesh position={[0, 0.4, 0]} scale={[1, 1, 0.77]}>
+            <cylinderGeometry args={[0.254, 0.254, 0.018, 32, 1, true]} />
+            <meshStandardMaterial color="#b66879" roughness={0.92} side={THREE.DoubleSide} />
+        </mesh>
+    </group>;
 }
 
 function Hair() {
@@ -45,12 +163,20 @@ function Hair() {
             <sphereGeometry args={[0.42, 32, 32]} />
             <meshStandardMaterial color={chestnut} roughness={0.78} />
         </mesh>
+        <mesh position={[0, -0.35, -0.19]} scale={[0.36, 0.55, 0.22]} castShadow>
+            <sphereGeometry args={[1, 28, 28]} />
+            <meshStandardMaterial color={chestnut} roughness={0.78} />
+        </mesh>
         {[-1, 1].map((side) => <group key={side}>
-            <mesh position={[side * 0.32, -0.13, 0.03]} scale={[0.105, 0.26, 0.19]} rotation={[0, 0, side * -0.07]} castShadow>
+            <mesh position={[side * 0.27, -0.36, -0.12]} scale={[0.16, 0.47, 0.2]} rotation={[0, 0, side * -0.09]} castShadow>
                 <sphereGeometry args={[1, 24, 24]} />
                 <meshStandardMaterial color={chestnut} roughness={0.78} />
             </mesh>
-            <mesh position={[side * 0.29, -0.30, 0.02]} scale={[0.14, 0.1, 0.17]} castShadow>
+            <mesh position={[side * 0.34, -0.26, 0.015]} scale={[0.105, 0.37, 0.16]} rotation={[0, 0, side * -0.13]} castShadow>
+                <sphereGeometry args={[1, 24, 24]} />
+                <meshStandardMaterial color={chestnut} roughness={0.78} />
+            </mesh>
+            <mesh position={[side * 0.315, -0.13, 0.16]} scale={[0.075, 0.27, 0.115]} rotation={[0, 0, side * -0.18]} castShadow>
                 <sphereGeometry args={[1, 20, 20]} />
                 <meshStandardMaterial color={chestnut} roughness={0.78} />
             </mesh>
@@ -59,14 +185,16 @@ function Hair() {
             <sphereGeometry args={[1, 28, 28]} />
             <meshStandardMaterial color={chestnut} roughness={0.78} />
         </mesh>
-        <mesh position={[-0.105, 0.19, 0.29]} scale={[0.24, 0.09, 0.11]} rotation={[0, 0, -0.35]} castShadow>
-            <sphereGeometry args={[1, 24, 24]} />
+        {[-2, -1, 0, 1, 2].map((strand) => <mesh
+            key={strand}
+            position={[strand * 0.105, 0.15 + Math.abs(strand) * 0.012, 0.365 - Math.abs(strand) * 0.019]}
+            scale={[0.075, 0.135, 0.075]}
+            rotation={[0, 0, strand * 0.09]}
+            castShadow
+        >
+            <sphereGeometry args={[1, 20, 20]} />
             <meshStandardMaterial color={chestnut} roughness={0.78} />
-        </mesh>
-        <mesh position={[0.18, 0.21, 0.25]} scale={[0.145, 0.085, 0.1]} rotation={[0, 0, 0.5]} castShadow>
-            <sphereGeometry args={[1, 24, 24]} />
-            <meshStandardMaterial color={chestnut} roughness={0.78} />
-        </mesh>
+        </mesh>)}
         {[0.09, 0.13].map((y) => <mesh key={y} position={[0.335, y, 0.21]} rotation={[0, 0, -0.3]}>
             <boxGeometry args={[0.075, 0.012, 0.025]} />
             <meshStandardMaterial color="#e4bf81" roughness={0.55} metalness={0.2} />
@@ -74,7 +202,7 @@ function Hair() {
     </group>;
 }
 
-export default function Character({ onGreet }: { onGreet?: () => void }) {
+export default function Character({ onGreet, message }: { onGreet?: () => void; message?: string }) {
     const pressedKeys = useRef(new Set<string>());
     useEffect(() => attachMovementKeyboard(pressedKeys.current), []);
     const mobile = useMobile();
@@ -110,7 +238,17 @@ export default function Character({ onGreet }: { onGreet?: () => void }) {
 		if (!ref.current) return;
 
 		const move = readMovement(movement.current.set(0, 0, 0), pressedKeys.current);
-		const speed = 3.2;
+        const speed = ref.current.userData.enteringRoom ? (ref.current.userData.entrySpeed ?? 2.7) : 2.7;
+        if (ref.current.userData.enteringRoom) {
+            const target = ref.current.userData.entryTarget as THREE.Vector3 | undefined;
+            move.set(0, 0, 0);
+            if (target) {
+                move.subVectors(target, ref.current.position).setY(0);
+                const distance = move.length();
+                if (distance > 0.015) move.normalize().multiplyScalar(Math.min(1, distance / (speed * Math.max(delta, 0.001))));
+                else move.set(0, 0, 0);
+            }
+        }
 
         greeting.current.remaining = Math.max(0, greeting.current.remaining - delta);
 		const isMoving = move.lengthSq() > 0.001;
@@ -122,13 +260,13 @@ export default function Character({ onGreet }: { onGreet?: () => void }) {
 			ref.current.position.add(move.multiplyScalar(speed * delta));
 			ref.current.rotation.y = Math.atan2(move.x, move.z);
 
-			const walk = Math.sin(time * 11);
-			const opposite = Math.sin(time * 11 + Math.PI);
-			const bounce = Math.abs(Math.sin(time * 11)) * 0.035;
+			const walk = Math.sin(time * 9.3);
+			const opposite = Math.sin(time * 9.3 + Math.PI);
+			const bounce = Math.abs(Math.sin(time * 9.3)) * 0.035;
 
 			if (bodyRef.current) {
 				bodyRef.current.position.y = bounce;
-				bodyRef.current.rotation.z = Math.sin(time * 11) * 0.025;
+				bodyRef.current.rotation.z = Math.sin(time * 9.3) * 0.025;
 			}
 			if (headRef.current) {
 				headRef.current.rotation.z = Math.sin(time * 8) * 0.025;
@@ -207,10 +345,11 @@ export default function Character({ onGreet }: { onGreet?: () => void }) {
 	});
 
 	return (
-		<group ref={ref} name="player" position={[0, 0.18, 0]} scale={mobile ? 1 : 0.72}
+		<><group ref={ref} name="player" position={[0, 0.18, 0]} scale={mobile ? 1 : 0.72}
             onPointerOver={(event) => { if (!mobile) { event.stopPropagation(); setHovered(true); } }}
             onPointerOut={() => { if (!mobile) setHovered(false); }}
             onClick={(event) => {
+                if (ref.current?.userData.enteringRoom) return;
                 if (event.delta > 5) return;
                 event.stopPropagation();
                 setHovered(true);
@@ -223,8 +362,11 @@ export default function Character({ onGreet }: { onGreet?: () => void }) {
                 <sphereGeometry args={[0.8, 12, 8]} />
                 <meshBasicMaterial transparent opacity={0} depthWrite={false} />
             </mesh>}
-            {hovered && <Html center position={[0, 1.9, 0]} zIndexRange={[40, 40]} style={{ pointerEvents: 'none' }}>
-                <div className="pointer-events-none whitespace-nowrap rounded-2xl border-2 border-[#735344] bg-[#fffaf0] px-4 py-2 text-sm font-bold text-[#735344] shadow-[3px_3px_0_#735344]">안녕! 👋</div>
+            {(hovered || message) && <Html center position={[0, 1.9, 0]} zIndexRange={[40, 40]} style={{ pointerEvents: 'none' }}>
+                <div role="status" className="pointer-events-none relative whitespace-nowrap rounded-2xl border-2 border-[#735344] bg-[#fffaf0] px-4 py-2 text-sm font-bold text-[#735344] shadow-[3px_3px_0_#735344]">
+                    {message ?? '안녕! 👋'}
+                    <span aria-hidden="true" className="absolute -bottom-2 left-1/2 h-3 w-3 -translate-x-1/2 rotate-45 border-b-2 border-r-2 border-[#735344] bg-[#fffaf0]" />
+                </div>
             </Html>}
 			<group ref={bodyRef}>
 				{/* 목 */}
@@ -238,29 +380,15 @@ export default function Character({ onGreet }: { onGreet?: () => void }) {
 				</mesh>
 
 				{/* 몸통 - 동물의 숲처럼 짧고 통통 */}
-				<mesh position={[0, 0.47, 0]} scale={[1.15, 1, 0.75]} castShadow>
-					<capsuleGeometry args={[0.22, 0.22, 8, 24]} />
-					<meshPhysicalMaterial
-						color="#dfdfdf"
-						roughness={0.3}
-						clearcoat={0.55}
-					/>
-				</mesh>
+                <InnerTShirt />
+                <Bustier />
 
 				{/* 어깨 */}
-				<mesh position={[0, 0.63, 0]} scale={[1.35, 0.24, 0.72]} castShadow>
-					<sphereGeometry args={[0.2, 24, 24]} />
-					<meshPhysicalMaterial
-						color="#fa9ec3"
-						roughness={0.3}
-						clearcoat={0.45}
-					/>
-				</mesh>
 
 				{/* 목 라운드 */}
-				<mesh position={[0, 0.65, 0]} scale={[1, 0.2, 0.72]} castShadow>
-					<torusGeometry args={[0.105, 0.014, 12, 32]} />
-					<meshStandardMaterial color="#ff4f9a" />
+				<mesh position={[0, 0.69, 0]} rotation={[Math.PI / 2, 0, 0]} scale={[1, 0.75, 1]} castShadow>
+					<torusGeometry args={[0.075, 0.009, 12, 48]} />
+					<meshStandardMaterial color="#fffdf8" roughness={0.95} />
 				</mesh>
 
 				{/* 머리 - 크게 */}
@@ -310,6 +438,16 @@ export default function Character({ onGreet }: { onGreet?: () => void }) {
 						<meshStandardMaterial color="#382723" roughness={0.45} />
 					</mesh>
 
+                    {[-0.115, 0.115].map((x) => <mesh
+                        key={x}
+                        position={[x, -0.02, 0.422]}
+                        scale={[0.042, 0.005, 0.007]}
+                        rotation={[0, 0, x < 0 ? 0.08 : -0.08]}
+                    >
+                        <sphereGeometry args={[1, 16, 12]} />
+                        <meshStandardMaterial color="#674438" roughness={0.85} />
+                    </mesh>)}
+
                     {[-0.115, 0.115].map((x) => <mesh key={x} position={[x - 0.006, -0.077, 0.435]}>
                         <sphereGeometry args={[0.006, 10, 10]} />
                         <meshBasicMaterial color="#fffaf0" />
@@ -340,14 +478,14 @@ export default function Character({ onGreet }: { onGreet?: () => void }) {
 
 				{/* 왼팔 */}
 				<group ref={leftArmRef} position={[-0.24, 0.61, 0]}>
-                    <mesh castShadow><sphereGeometry args={[0.065, 16, 16]} /><meshStandardMaterial color="#ff6fa9" /></mesh>
+                    <mesh castShadow><sphereGeometry args={[0.065, 16, 16]} /><meshStandardMaterial color="#fffdf8" roughness={0.95} /></mesh>
 					<mesh
 						position={[-0.025, -0.065, 0]}
 						rotation={[0, 0, -Math.PI / 12]}
 						castShadow
 					>
 						<capsuleGeometry args={[0.055, 0.12, 6, 12]} />
-						<meshStandardMaterial color="#ff6fa9" />
+						<meshStandardMaterial color="#fffdf8" roughness={0.95} />
 					</mesh>
 
 					<mesh
@@ -367,14 +505,14 @@ export default function Character({ onGreet }: { onGreet?: () => void }) {
 
 				{/* 오른팔 */}
 				<group ref={rightArmRef} position={[0.24, 0.61, 0]}>
-                    <mesh castShadow><sphereGeometry args={[0.065, 16, 16]} /><meshStandardMaterial color="#ff6fa9" /></mesh>
+                    <mesh castShadow><sphereGeometry args={[0.065, 16, 16]} /><meshStandardMaterial color="#fffdf8" roughness={0.95} /></mesh>
 					<mesh
 						position={[0.025, -0.065, 0]}
 						rotation={[0, 0, Math.PI / 12]}
 						castShadow
 					>
 						<capsuleGeometry args={[0.055, 0.12, 6, 12]} />
-						<meshStandardMaterial color="#ff6fa9" />
+						<meshStandardMaterial color="#fffdf8" roughness={0.95} />
 					</mesh>
 
 					<mesh
@@ -454,5 +592,6 @@ export default function Character({ onGreet }: { onGreet?: () => void }) {
 				</group>
 			</group>
 		</group>
+        <WalkingDust player={ref} /></>
 	);
 }

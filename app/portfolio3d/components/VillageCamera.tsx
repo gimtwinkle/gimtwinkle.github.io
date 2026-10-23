@@ -5,7 +5,7 @@ import { useLayoutEffect, useRef } from 'react';
 import { MathUtils, PerspectiveCamera, Vector3 } from 'three';
 import type { OrbitControls } from 'three-stdlib';
 
-export default function VillageCamera({ mobile, greetingRequest = 0 }: { mobile: boolean; greetingRequest?: number }) {
+export default function VillageCamera({ mobile, greetingRequest = 0, entering = false }: { mobile: boolean; greetingRequest?: number; entering?: boolean }) {
     const { camera, size, invalidate, get } = useThree();
     const shot = useRef({
         active: false, elapsed: 0, reduced: false,
@@ -65,6 +65,7 @@ export default function VillageCamera({ mobile, greetingRequest = 0 }: { mobile:
     }, [camera, size.width, size.height, mobile, greetingRequest, invalidate, get]);
 
     useFrame((_, delta) => {
+        if (entering) return;
         const current = shot.current;
         if (!current.active) return;
         const controls = get().controls as OrbitControls | null;

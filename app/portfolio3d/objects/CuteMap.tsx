@@ -277,6 +277,7 @@ export default function CuteMap({ isNight, onEnterRoom }: Props) {
 			<SquareStage isNight={isNight} />
 
 			<CuteHouse
+                isNight={isNight}
 				label="About"
 				targetId="about"
 				position={[-5.8, 0, -5.35]}
@@ -287,6 +288,7 @@ export default function CuteMap({ isNight, onEnterRoom }: Props) {
 			/>
 
 			<CuteHouse
+                isNight={isNight}
 				label="Work"
 				targetId="work"
 				position={[5.8, 0, -5.35]}
@@ -297,6 +299,7 @@ export default function CuteMap({ isNight, onEnterRoom }: Props) {
 			/>
 
 			<CuteHouse
+                isNight={isNight}
 				label="Skills"
 				targetId="skills"
 				position={[-4, 0, 3]}
@@ -308,6 +311,7 @@ export default function CuteMap({ isNight, onEnterRoom }: Props) {
 
 			<CuteLamp position={[-1.3, 0, 2.5]} />
 			<CuteHouse
+                isNight={isNight}
 				label="Contact"
 				targetId="contact"
 				position={[5, 0, 3]}

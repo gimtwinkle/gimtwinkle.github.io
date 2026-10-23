@@ -9,8 +9,12 @@ import RoomHud from './components/RoomHud';
 import SceneLoading, { sceneLoadingMessages } from './components/SceneLoading';
 import CanvasLoading from './components/CanvasLoading';
 import useSeoulNight from './useSeoulNight';
+import useSeoulWeather from './useSeoulWeather';
+import VillageWeather from './objects/VillageWeather';
+import { weatherLabels } from '@/lib/seoulWeather';
 import useMobile from './useMobile';
 import VillageCamera from './components/VillageCamera';
+import HouseEntry from './components/HouseEntry';
 import MobileControls from './components/MobileControls';
 import mobileControlStyles from './components/MobileControls.module.css';
 import { resetMovement } from './movement';
@@ -53,10 +57,21 @@ const aboutRoomSceneConfig = {
 export default function PortfolioWorld() {
     const mobile = useMobile();
     const [greetingRequest, setGreetingRequest] = useState(0);
+    const [entryRoom, setEntryRoom] = useState<RoomName | null>(null);
     const isNight = useSeoulNight();
+    const weather = useSeoulWeather();
+    const overcast = !!weather && weather.kind !== 'clear';
+    const skyColor = isNight ? (overcast ? '#1e293c' : '#101a35') : (overcast ? '#bcc9d5' : '#bdefff');
+    const cloudColor = isNight ? '#7e8aab' : (overcast ? '#c3cad4' : '#fffdf9');
 	const [scene, setScene] = useState<SceneName>('village');
 	const [isFading, setIsFading] = useState(false);
     const [destination, setDestination] = useState<SceneName>('village');
+
+    const enterHouse = (room: RoomName) => {
+        if (entryRoom || isFading) return;
+        resetMovement();
+        setEntryRoom(room);
+    };
 
 	const goScene = (nextScene: SceneName) => {
 		if (nextScene === scene || isFading) {
@@ -69,6 +84,7 @@ export default function PortfolioWorld() {
 
 		window.setTimeout(() => {
 			setScene(nextScene);
+            setEntryRoom(null);
             setGreetingRequest(0);
 
 			window.setTimeout(() => {
@@ -116,14 +132,17 @@ export default function PortfolioWorld() {
 					}}
 				>
 					<Suspense fallback={<CanvasLoading scene="village" />}>
-                        <VillageCamera mobile={mobile} greetingRequest={greetingRequest} />
-						<color attach="background" args={[isNight ? '#101a35' : '#bdefff']} />
+                        <VillageCamera mobile={mobile} greetingRequest={greetingRequest} entering={!!entryRoom} />
+                        {entryRoom && <HouseEntry room={entryRoom} onComplete={() => goScene(entryRoom)} />}
+						<color attach="background" args={[skyColor]} />
+                        <fog attach="fog" args={[skyColor, weather?.kind === 'fog' ? 8 : 28, weather?.kind === 'fog' ? 32 : overcast ? 65 : 120]} />
+                        <VillageWeather weather={weather} mobile={mobile} />
 
-						<ambientLight intensity={isNight ? 0.4 : 0.9} />
+						<ambientLight intensity={isNight ? 0.4 : overcast ? 0.8 : 0.9} />
 
 						<directionalLight
 							position={[5, 10, 6]}
-							intensity={isNight ? 0.65 : 2.4}
+							intensity={isNight ? (overcast ? 0.35 : 0.65) : (overcast ? 1 : 2.4)}
                             color={isNight ? '#abc8ff' : '#ffffff'}
 							castShadow
 							shadow-mapSize={[2048, 2048]}
@@ -133,18 +152,24 @@ export default function PortfolioWorld() {
 
 						<pointLight position={[5, 4, -5]} intensity={1.2} color="#8be9ff" />
 
-						<CuteCloud position={[-5, 6, -4]} />
+						<CuteCloud position={[-5, 6, -4]} color={cloudColor} />
 
-						<CuteCloud position={[4, 7, -5]} scale={0.8} />
+						<CuteCloud position={[4, 7, -5]} scale={0.8} color={cloudColor} />
 
-						<CuteCloud position={[0, 6.5, 4]} scale={0.7} />
+						<CuteCloud position={[0, 6.5, 4]} scale={0.7} color={cloudColor} />
+                        {overcast && <>
+                            <CuteCloud position={[-2, 7.5, -6]} scale={1.7} color={cloudColor} />
+                            <CuteCloud position={[5, 8, 0]} scale={1.6} color={cloudColor} />
+                            <CuteCloud position={[-6, 7, 2]} scale={1.5} color={cloudColor} />
+                        </>}
 
-						<CuteMap isNight={isNight} onEnterRoom={goScene} />
+						<CuteMap isNight={isNight} onEnterRoom={enterHouse} />
 
-						<Character onGreet={() => setGreetingRequest((request) => request + 1)} />
+						<Character message={entryRoom === 'about' ? 'about me!' : undefined} onGreet={() => setGreetingRequest((request) => request + 1)} />
 
 						<OrbitControls
                             makeDefault
+                            enabled={!entryRoom}
                             enableRotate={!mobile}
 							enableZoom={false}
 							enablePan={false}
@@ -224,12 +249,17 @@ export default function PortfolioWorld() {
 			>{isFading && <span role="status">{sceneLoadingMessages[destination] ?? '방으로 들어가는 중..'}</span>}</div>
 
 			<RoomHud room={scene} onBack={scene === 'village' ? undefined : goBackVillage} />
+            {scene === 'village' && <a href="https://open-meteo.com/" target="_blank" rel="noreferrer"
+                title={weather ? `서울 날씨 기준 시각: ${new Date(weather.observedAt).toLocaleString('ko-KR', { timeZone: 'Asia/Seoul' })}` : '서울 날씨 데이터 제공'}
+                className="absolute bottom-3 left-3 z-30 rounded-lg bg-[#fffaf0]/85 px-2 py-1 text-[10px] text-[#735344] shadow-sm">
+                서울 {weather ? weatherLabels[weather.kind] : '날씨'} · Open-Meteo
+            </a>}
             <MobileControls key={scene} walking={scene !== 'skills'} />
             {scene === 'village' && greetingRequest > 0 && <button type="button" onClick={() => setGreetingRequest(0)} className={`fixed ${mobile ? 'left-3 top-[calc(68px+env(safe-area-inset-top))]' : 'right-6 bottom-6'} z-[10000] min-h-11 rounded-xl border border-white/60 bg-[#fffaf0]/95 px-4 text-xs font-bold text-[#543a2b] shadow-md`}>마을 전체 보기</button>}
             {mobile && scene === 'village' && (
                 <nav aria-label="방 바로가기" className={`${mobileControlStyles.navigation} fixed bottom-[max(12px,env(safe-area-inset-bottom))] right-3 z-[10000] ml-auto flex max-w-md gap-1 rounded-2xl border border-white/60 bg-[#fffaf0]/95 p-2 text-[#543a2b] shadow-lg backdrop-blur-md`}>
                     {(['about', 'work', 'skills', 'contact'] as RoomName[]).map((room) => (
-                        <button key={room} type="button" disabled={isFading} onClick={() => goScene(room)} className="min-h-11 min-w-0 flex-1 rounded-xl px-1 text-xs font-bold capitalize hover:bg-[#ffe6a3] focus-visible:outline-2 focus-visible:outline-[#735344] disabled:opacity-50">{room === 'skills' ? 'Skills' : room}</button>
+                        <button key={room} type="button" disabled={isFading || !!entryRoom} onClick={() => enterHouse(room)} className="min-h-11 min-w-0 flex-1 rounded-xl px-1 text-xs font-bold capitalize hover:bg-[#ffe6a3] focus-visible:outline-2 focus-visible:outline-[#735344] disabled:opacity-50">{room === 'skills' ? 'Skills' : room}</button>
                     ))}
                 </nav>
             )}
