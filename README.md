@@ -35,6 +35,10 @@ Runtime furniture assets are in `public/models/about-optimized/`. Original GLBs 
 After changing a source model, run `npm run optimize:models` to regenerate the runtime assets and size report.
 The script resizes embedded textures to at most 1024px and simplifies meshes above 100,000 triangles with a 0.1% relative geometry error limit, preserving mesh borders and vertex attributes. It leaves furniture transforms unchanged.
 
+## Deployment
+
+Pushing or merging a change to `main` runs `.github/workflows/deploy.yml`, builds the static export, and publishes `out/` to the `gh-pages` branch. The workflow can also be started manually from GitHub Actions.
+
 To learn more about Next.js, take a look at the following resources:
 
 - [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
