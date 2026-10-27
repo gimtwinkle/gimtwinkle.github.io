@@ -1,6 +1,6 @@
 'use client';
 
-import { useCallback, useEffect, useRef, useState, useSyncExternalStore, type PointerEvent } from 'react';
+import { useCallback, useEffect, useRef, useSyncExternalStore, type PointerEvent } from 'react';
 import { resetMovement, setJoystick } from '../movement';
 import styles from './MobileControls.module.css';
 
@@ -16,7 +16,6 @@ export default function MobileControls({ walking }: { walking: boolean }) {
     const touchScreen = useSyncExternalStore(subscribeTouch, touchSnapshot, serverSnapshot);
     const knob = useRef<HTMLSpanElement>(null);
     const pointer = useRef<number | null>(null);
-    const [orientationHelp, setOrientationHelp] = useState('휴대폰을 가로로 돌려 주세요. 화면 회전 잠금도 해제해 주세요.');
     const release = useCallback(() => {
         pointer.current = null;
         setJoystick(0, 0);
@@ -47,28 +46,17 @@ export default function MobileControls({ walking }: { walking: boolean }) {
         setJoystick(distance ? x / distance * strength : 0, distance ? z / distance * strength : 0);
     };
 
-    const startLandscape = async () => {
-        resetMovement();
+    const enterFullscreen = async () => {
         try {
             if (!document.fullscreenElement && document.documentElement.requestFullscreen) {
                 await document.documentElement.requestFullscreen();
             }
-            const orientation = screen.orientation as ScreenOrientation & { lock?: (orientation: 'landscape') => Promise<void> };
-            if (orientation?.lock) await orientation.lock('landscape');
-        } catch {
-            setOrientationHelp('이 브라우저에서는 직접 가로로 돌려 주세요. 휴대폰의 화면 회전 잠금을 해제하면 됩니다.');
-        }
+        } catch { /* Fullscreen is optional and may be unavailable in some browsers. */ }
     };
 
     if (!touchScreen) return null;
     return <>
-        {touchScreen && <><section className={styles.portraitGate} aria-label="가로 화면 안내">
-            <div className={styles.phone} aria-hidden="true">↻</div>
-            <h1>가로로 펼쳐지는 twinkle village</h1>
-            <p>{orientationHelp}</p>
-            <button type="button" onClick={startLandscape}>가로 화면으로 시작</button>
-        </section>
-        <button type="button" className={styles.fullscreen} onClick={startLandscape}>전체화면</button></>}
+        <button type="button" className={styles.fullscreen} onClick={enterFullscreen}>전체화면</button>
         {walking && <div className={styles.joystick} role="group" aria-label="이동 조이스틱" tabIndex={0}
             onPointerDown={(event) => {
                 if (pointer.current !== null) return;

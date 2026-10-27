@@ -251,7 +251,7 @@ export default function PortfolioWorld() {
 			<RoomHud room={scene} onBack={scene === 'village' ? undefined : goBackVillage} />
             {scene === 'village' && <a href="https://open-meteo.com/" target="_blank" rel="noreferrer"
                 title={weather ? `서울 날씨 기준 시각: ${new Date(weather.observedAt).toLocaleString('ko-KR', { timeZone: 'Asia/Seoul' })}` : '서울 날씨 데이터 제공'}
-                className="absolute bottom-3 left-3 z-30 rounded-lg bg-[#fffaf0]/85 px-2 py-1 text-[10px] text-[#735344] shadow-sm">
+                className={`absolute ${mobile ? 'left-3 top-[calc(68px+env(safe-area-inset-top))]' : 'bottom-3 left-3'} z-30 rounded-lg bg-[#fffaf0]/85 px-2 py-1 text-[10px] text-[#735344] shadow-sm`}>
                 서울 {weather ? weatherLabels[weather.kind] : '날씨'} · Open-Meteo
             </a>}
             <MobileControls key={scene} walking={scene !== 'skills'} />
