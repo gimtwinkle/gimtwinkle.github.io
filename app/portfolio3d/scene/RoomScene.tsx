@@ -60,15 +60,15 @@ export default function RoomScene({
 				key={startPosition.join('-')}
 				className="h-full w-full"
 				shadows={!lightweight && !mobile}
-                dpr={lightweight || mobile ? 1 : [1, 1.5]}
+                dpr={lightweight ? 1 : mobile ? [1, 1.25] : [1, 1.5]}
 				camera={{
 					position: startPosition,
-					fov: mobile ? 95 : 85,
+					fov: 85,
 					near: 0.1,
 					far: 100,
 				}}
 				gl={{
-					antialias: !lightweight && !mobile,
+					antialias: !lightweight,
 				}}
 			>
 				<color attach="background" args={['#fff7ed']} />

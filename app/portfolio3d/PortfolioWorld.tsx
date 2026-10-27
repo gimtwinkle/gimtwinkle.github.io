@@ -115,10 +115,11 @@ export default function PortfolioWorld() {
 			================================ */}
 			{scene === 'village' && (
 				<Canvas
+                    style={{ touchAction: 'none' }}
                     tabIndex={0}
                     aria-label="마을 탐색: 방향키 또는 WASD로 캐릭터 이동"
                     onPointerDown={(event) => event.currentTarget.focus({ preventScroll: true })}
-					dpr={mobile ? 1 : [1, 1.5]}
+					dpr={mobile ? [1, 1.25] : [1, 1.5]}
 					shadows={!mobile}
 					camera={{
 						position: [0, 9, 12],
@@ -127,7 +128,7 @@ export default function PortfolioWorld() {
 						far: 100,
 					}}
 					gl={{
-						antialias: !mobile,
+						antialias: true,
 						alpha: false,
 					}}
 				>
@@ -170,7 +171,8 @@ export default function PortfolioWorld() {
 						<OrbitControls
                             makeDefault
                             enabled={!entryRoom}
-                            enableRotate={!mobile}
+							enableRotate
+							rotateSpeed={mobile ? 0.55 : 0.8}
 							enableZoom={false}
 							enablePan={false}
 							maxPolarAngle={Math.PI / 2.4}
@@ -208,7 +210,7 @@ export default function PortfolioWorld() {
 			{scene === 'skills' && (
 				<div data-skill-room className="absolute inset-0 z-10 bg-black">
 					<Canvas
-						dpr={mobile ? 1 : [1, 1.5]}
+						dpr={mobile ? [1, 1.25] : [1, 1.5]}
 						camera={{
 							position: [0, 1.72, 5.8],
 							fov: 52,
@@ -216,7 +218,7 @@ export default function PortfolioWorld() {
 							far: 100,
 						}}
 						gl={{
-							antialias: false,
+							antialias: true,
 							alpha: false,
 						}}
 						onCreated={({ gl }) => {
