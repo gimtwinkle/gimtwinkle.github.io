@@ -5,14 +5,14 @@
     .left > button { padding: 10px 12px; min-height: 44px; font-size: 11px; }
     .left > div[aria-label] { padding: 10px; font-size: 11px; white-space: nowrap; min-height: 44px; display: flex; align-items: center; }
     .left > div:empty { display: none; }
-    .tutorial { position: fixed; left: max(12px, env(safe-area-inset-left)); bottom: calc(76px + env(safe-area-inset-bottom)); margin: 0; }
-    .tutorial aside { width: min(360px, calc(100vw - 28px)); max-width: none; max-height: calc(100dvh - 160px - env(safe-area-inset-top) - env(safe-area-inset-bottom)); padding: 14px; }
+    .tutorial { position: fixed; top: calc(64px + env(safe-area-inset-top)); right: max(12px, env(safe-area-inset-right)); left: auto; bottom: auto; margin: 0; }
+    .tutorial aside { width: min(360px, calc(100vw - 28px)); max-width: none; max-height: calc(100dvh - 196px - env(safe-area-inset-top) - env(safe-area-inset-bottom)); padding: 14px; }
     .tutorial button { min-height: 44px; }
     .information { top: calc(64px + env(safe-area-inset-top)); right: 12px; width: min(340px, calc(100vw - 24px)); max-width: none; max-height: calc(100dvh - 160px); pointer-events: auto; }
     .information p { font-size: 12px; }
 }
 @media (orientation: landscape) and (max-width: 1023px) {
-    .tutorial { left: auto; right: max(12px, env(safe-area-inset-right)); bottom: calc(82px + env(safe-area-inset-bottom)); }
+    .tutorial { top: auto; left: auto; right: max(12px, env(safe-area-inset-right)); bottom: calc(82px + env(safe-area-inset-bottom)); }
     .tutorial aside { width: min(340px, calc(100vw - 180px)); max-height: calc(100dvh - 152px); padding: 12px; }
     .tutorial aside > div { margin-bottom: 8px; padding-bottom: 6px; }
 }

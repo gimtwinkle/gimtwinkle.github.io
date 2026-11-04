@@ -46,17 +46,8 @@ export default function MobileControls({ walking }: { walking: boolean }) {
         setJoystick(distance ? x / distance * strength : 0, distance ? z / distance * strength : 0);
     };
 
-    const enterFullscreen = async () => {
-        try {
-            if (!document.fullscreenElement && document.documentElement.requestFullscreen) {
-                await document.documentElement.requestFullscreen();
-            }
-        } catch { /* Fullscreen is optional and may be unavailable in some browsers. */ }
-    };
-
     if (!touchScreen) return null;
     return <>
-        <button type="button" className={styles.fullscreen} onClick={enterFullscreen}>전체화면</button>
         {walking && <div className={styles.joystick} role="group" aria-label="이동 조이스틱" tabIndex={0}
             onPointerDown={(event) => {
                 if (pointer.current !== null) return;

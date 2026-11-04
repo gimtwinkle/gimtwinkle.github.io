@@ -11,7 +11,6 @@ import CanvasLoading from './components/CanvasLoading';
 import useSeoulNight from './useSeoulNight';
 import useSeoulWeather from './useSeoulWeather';
 import VillageWeather from './objects/VillageWeather';
-import { weatherLabels } from '@/lib/seoulWeather';
 import useMobile from './useMobile';
 import VillageCamera from './components/VillageCamera';
 import HouseEntry from './components/HouseEntry';
@@ -173,8 +172,10 @@ export default function PortfolioWorld() {
                             enabled={!entryRoom}
 							enableRotate
 							rotateSpeed={mobile ? 0.55 : 0.8}
-							enableZoom={false}
+							enableZoom={mobile}
 							enablePan={false}
+							minDistance={8}
+							maxDistance={32}
 							maxPolarAngle={Math.PI / 2.4}
 							minPolarAngle={Math.PI / 4}
 						/>
@@ -254,7 +255,7 @@ export default function PortfolioWorld() {
             {scene === 'village' && <a href="https://open-meteo.com/" target="_blank" rel="noreferrer"
                 title={weather ? `서울 날씨 기준 시각: ${new Date(weather.observedAt).toLocaleString('ko-KR', { timeZone: 'Asia/Seoul' })}` : '서울 날씨 데이터 제공'}
                 className={`absolute ${mobile ? 'left-3 top-[calc(68px+env(safe-area-inset-top))]' : 'bottom-3 left-3'} z-30 rounded-lg bg-[#fffaf0]/85 px-2 py-1 text-[10px] text-[#735344] shadow-sm`}>
-                서울 {weather ? weatherLabels[weather.kind] : '날씨'} · Open-Meteo
+                Open-Meteo
             </a>}
             <MobileControls key={scene} walking={scene !== 'skills'} />
             {scene === 'village' && greetingRequest > 0 && <button type="button" onClick={() => setGreetingRequest(0)} className={`fixed ${mobile ? 'left-3 top-[calc(68px+env(safe-area-inset-top))]' : 'right-6 bottom-6'} z-[10000] min-h-11 rounded-xl border border-white/60 bg-[#fffaf0]/95 px-4 text-xs font-bold text-[#543a2b] shadow-md`}>마을 전체 보기</button>}
