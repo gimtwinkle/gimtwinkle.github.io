@@ -428,7 +428,7 @@ export default function CuteHouse({
 			<Roof color={roofColor} />
             {isNight && <pointLight position={[0, 0.95, 1.65]} color="#ffce88" intensity={0.65} distance={3} decay={2} />}
 
-			<mesh geometry={doorFrameGeometry} position={[0, 0, 1.07]} castShadow>
+			<mesh geometry={doorFrameGeometry} position={[0, 0.58, 1.07]} castShadow>
 				<meshPhysicalMaterial color="#fff4d9" roughness={0.65} clearcoat={0.12} />
 			</mesh>
 

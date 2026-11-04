@@ -16,12 +16,16 @@ test('PC arrows move the actual Character and animate its legs without a parent 
         fs.writeFileSync(path.join(directory, name), output.outputText);
     };
     compile(fs.readFileSync('app/portfolio3d/movement.ts', 'utf8'), 'movement.mjs');
+    compile(fs.readFileSync('app/portfolio3d/villageLayout.ts', 'utf8'), 'villageLayout.mjs');
+    compile(fs.readFileSync('app/portfolio3d/villageCollision.ts', 'utf8')
+        .replace("from './villageLayout'", "from './villageLayout.mjs'"), 'villageCollision.mjs');
     // Only DOM-only overlays and responsive detection are stubbed; the Character,
     // Three.js objects, React effects and R3F frame callbacks run unchanged.
     const source = fs.readFileSync('app/portfolio3d/objects/Character.tsx', 'utf8')
         .replace("import { Html } from '@react-three/drei';", 'const Html = () => null;')
         .replace("import useMobile from '../useMobile';", 'const useMobile = () => false;')
-        .replace("from '../movement'", "from './movement.mjs'");
+        .replace("from '../movement'", "from './movement.mjs'")
+        .replace("from '../villageCollision'", "from './villageCollision.mjs'");
     compile(source, 'Character.mjs');
     const { default: Character } = await import(pathToFileURL(path.join(directory, 'Character.mjs')).href);
 
@@ -77,6 +81,17 @@ test('PC arrows move the actual Character and animate its legs without a parent 
         assert(player.position.x < beforeFallback - 1, 'key-only arrow events must also move the character');
         key('keyup', '', 'ArrowLeft'); frames(5);
         assert(!player.userData.isMoving);
+
+        const house = { x: -4, z: 3, rotation: 0.5, halfWidth: 1.52, halfDepth: 1.4, radius: 0.3 };
+        const cosine = Math.cos(house.rotation);
+        const sine = Math.sin(house.rotation);
+        player.position.set(house.x + cosine * -2.2, player.position.y, house.z - sine * -2.2);
+        key('keydown', 'ArrowRight'); key('keydown', 'ArrowUp'); frames(100);
+        key('keyup', 'ArrowRight'); key('keyup', 'ArrowUp'); frames(2);
+        const localX = cosine * (player.position.x - house.x) - sine * (player.position.z - house.z);
+        const localZ = sine * (player.position.x - house.x) + cosine * (player.position.z - house.z);
+        assert(Math.abs(localX) >= house.halfWidth + house.radius - 1e-4 || Math.abs(localZ) >= house.halfDepth + house.radius - 1e-4,
+            'the actual Character must not walk through a house');
         console.log('Verified actual player displacement, leg swing, stopping and movement during greeting');
 
         const entryTarget = player.position.clone().add(new THREE.Vector3(1, 0, -1));

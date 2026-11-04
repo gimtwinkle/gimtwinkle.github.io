@@ -26,7 +26,7 @@ export default function VillageCamera({ mobile, greetingRequest = 0, entering = 
             player.getWorldPosition(current.endTarget);
             current.endTarget.y += 0.55 * player.scale.y;
         }
-        const settledDistance = mobile ? Math.min(distance * 0.6, 18) : distance * 0.72;
+        const settledDistance = mobile ? distance * 0.8 : distance * 0.72;
         current.end.set(0, 0.6, 0.8).multiplyScalar(settledDistance).add(current.endTarget);
         current.reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
         if (greetingRequest && player) {

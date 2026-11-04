@@ -2,7 +2,7 @@
 
 import { OrbitControls } from '@react-three/drei';
 import { Canvas } from '@react-three/fiber';
-import { lazy, Suspense, useState } from 'react';
+import { lazy, Suspense, useEffect, useState } from 'react';
 
 import { RoomName } from './types';
 import RoomHud from './components/RoomHud';
@@ -15,6 +15,7 @@ import useMobile from './useMobile';
 import VillageCamera from './components/VillageCamera';
 import HouseEntry from './components/HouseEntry';
 import MobileControls from './components/MobileControls';
+import PinchZoomHint from './components/PinchZoomHint';
 import mobileControlStyles from './components/MobileControls.module.css';
 import { resetMovement } from './movement';
 
@@ -55,6 +56,7 @@ const aboutRoomSceneConfig = {
 
 export default function PortfolioWorld() {
     const mobile = useMobile();
+    const [showPinchZoomHint, setShowPinchZoomHint] = useState(true);
     const [greetingRequest, setGreetingRequest] = useState(0);
     const [entryRoom, setEntryRoom] = useState<RoomName | null>(null);
     const isNight = useSeoulNight();
@@ -62,6 +64,12 @@ export default function PortfolioWorld() {
     const overcast = !!weather && weather.kind !== 'clear';
     const skyColor = isNight ? (overcast ? '#1e293c' : '#101a35') : (overcast ? '#bcc9d5' : '#bdefff');
     const cloudColor = isNight ? '#7e8aab' : (overcast ? '#c3cad4' : '#fffdf9');
+
+    useEffect(() => {
+        const timeout = window.setTimeout(() => setShowPinchZoomHint(false), 5600);
+        return () => window.clearTimeout(timeout);
+    }, []);
+
 	const [scene, setScene] = useState<SceneName>('village');
 	const [isFading, setIsFading] = useState(false);
     const [destination, setDestination] = useState<SceneName>('village');
@@ -170,7 +178,7 @@ export default function PortfolioWorld() {
 						<OrbitControls
                             makeDefault
                             enabled={!entryRoom}
-							enableRotate
+							enableRotate={!mobile}
 							rotateSpeed={mobile ? 0.55 : 0.8}
 							enableZoom={mobile}
 							enablePan={false}
@@ -252,7 +260,8 @@ export default function PortfolioWorld() {
 			>{isFading && <span role="status">{sceneLoadingMessages[destination] ?? '방으로 들어가는 중..'}</span>}</div>
 
 			<RoomHud room={scene} onBack={scene === 'village' ? undefined : goBackVillage} />
-            {scene === 'village' && <a href="https://open-meteo.com/" target="_blank" rel="noreferrer"
+			{mobile && scene === 'village' && showPinchZoomHint && <PinchZoomHint />}
+			{scene === 'village' && <a href="https://open-meteo.com/" target="_blank" rel="noreferrer"
                 title={weather ? `서울 날씨 기준 시각: ${new Date(weather.observedAt).toLocaleString('ko-KR', { timeZone: 'Asia/Seoul' })}` : '서울 날씨 데이터 제공'}
                 className={`absolute ${mobile ? 'left-3 top-[calc(68px+env(safe-area-inset-top))]' : 'bottom-3 left-3'} z-30 rounded-lg bg-[#fffaf0]/85 px-2 py-1 text-[10px] text-[#735344] shadow-sm`}>
                 Open-Meteo

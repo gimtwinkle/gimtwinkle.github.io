@@ -6,6 +6,7 @@ import { useEffect, useMemo, useRef, useState } from 'react';
 import * as THREE from 'three';
 import useMobile from '../useMobile';
 import { attachMovementKeyboard, readMovement } from '../movement';
+import { resolveVillageMovement } from '../villageCollision';
 
 function WalkingDust({ player }: { player: { current: THREE.Group | null } }) {
     const particles = useRef<(THREE.Mesh<THREE.SphereGeometry, THREE.MeshBasicMaterial> | null)[]>([]);
@@ -251,13 +252,25 @@ export default function Character({ onGreet, message }: { onGreet?: () => void; 
         }
 
         greeting.current.remaining = Math.max(0, greeting.current.remaining - delta);
-		const isMoving = move.lengthSq() > 0.001;
+		let isMoving = move.lengthSq() > 0.001;
+        if (isMoving) {
+            const deltaX = move.x * speed * delta;
+            const deltaZ = move.z * speed * delta;
+            if (ref.current.userData.enteringRoom) {
+                ref.current.position.x += deltaX;
+                ref.current.position.z += deltaZ;
+            } else {
+                const next = resolveVillageMovement(ref.current.position.x, ref.current.position.z, deltaX, deltaZ);
+                isMoving = Math.hypot(next.x - ref.current.position.x, next.z - ref.current.position.z) > 1e-5;
+                ref.current.position.x = next.x;
+                ref.current.position.z = next.z;
+            }
+        }
         ref.current.userData.isMoving = isMoving;
         if (isMoving) greeting.current.remaining = 0;
 		const time = state.clock.elapsedTime;
 
 		if (isMoving) {
-			ref.current.position.add(move.multiplyScalar(speed * delta));
 			ref.current.rotation.y = Math.atan2(move.x, move.z);
 
 			const walk = Math.sin(time * 9.3);

@@ -1,0 +1,51 @@
+.overlay {
+    position: fixed;
+    top: 48%;
+    left: 50%;
+    z-index: 9998;
+    display: flex;
+    width: max-content;
+    max-width: calc(100vw - 32px);
+    transform: translate(-50%, -50%);
+    flex-direction: column;
+    align-items: center;
+    gap: 5px;
+    border: 2px solid #735344;
+    border-radius: 18px;
+    background: #fffaf0ed;
+    padding: 14px 18px;
+    color: #543a2b;
+    text-align: center;
+    box-shadow: 4px 4px 0 #73534470;
+    pointer-events: none;
+    animation: hintFade 5.5s ease forwards;
+}
+
+.overlay strong { font-size: 13px; }
+.overlay span { font-size: 11px; }
+.gesture { width: 88px; height: 58px; overflow: visible; }
+.leftFinger, .rightFinger { fill: #f2c46d; stroke: #735344; stroke-width: 2.5; }
+.leftFinger { animation: pinchLeft 1.6s ease-in-out infinite; transform-origin: 33px 40px; }
+.rightFinger { animation: pinchRight 1.6s ease-in-out infinite; transform-origin: 63px 40px; }
+.arrow { fill: none; stroke: #a16d43; stroke-linecap: round; stroke-linejoin: round; stroke-width: 2.5; }
+
+@keyframes pinchLeft {
+    0%, 100% { transform: translateX(4px); }
+    50% { transform: translateX(-5px); }
+}
+
+@keyframes pinchRight {
+    0%, 100% { transform: translateX(-4px); }
+    50% { transform: translateX(5px); }
+}
+
+@keyframes hintFade {
+    0% { opacity: 0; }
+    8%, 78% { opacity: 1; }
+    100% { opacity: 0; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .overlay { animation: none; }
+    .leftFinger, .rightFinger { animation: none; }
+}
