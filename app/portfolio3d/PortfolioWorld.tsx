@@ -178,7 +178,7 @@ export default function PortfolioWorld() {
 						<OrbitControls
                             makeDefault
                             enabled={!entryRoom}
-							enableRotate={!mobile}
+							enableRotate
 							rotateSpeed={mobile ? 0.55 : 0.8}
 							enableZoom={mobile}
 							enablePan={false}
