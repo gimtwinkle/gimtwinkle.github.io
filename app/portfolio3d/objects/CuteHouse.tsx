@@ -314,7 +314,35 @@ export default function CuteHouse({
 	isNight = false,
 }: Props) {
 	const { scene } = useThree();
-	const doorFrameGeometry = useMemo(() => {
+	const houseGeometry = useMemo(() => {
+		const shape = new THREE.Shape();
+		const halfWidth = 1.31;
+		const halfHeight = 0.86;
+		const radius = 0.36;
+		shape.moveTo(-halfWidth + radius, -halfHeight);
+		shape.lineTo(halfWidth - radius, -halfHeight);
+		shape.quadraticCurveTo(halfWidth, -halfHeight, halfWidth, -halfHeight + radius);
+		shape.lineTo(halfWidth, halfHeight - radius);
+		shape.quadraticCurveTo(halfWidth, halfHeight, halfWidth - radius, halfHeight);
+		shape.lineTo(-halfWidth + radius, halfHeight);
+		shape.quadraticCurveTo(-halfWidth, halfHeight, -halfWidth, halfHeight - radius);
+		shape.lineTo(-halfWidth, -halfHeight + radius);
+		shape.quadraticCurveTo(-halfWidth, -halfHeight, -halfWidth + radius, -halfHeight);
+
+		const opening = new THREE.Path();
+		opening.moveTo(-0.34, -0.7);
+		opening.lineTo(-0.34, 0.08);
+		opening.quadraticCurveTo(-0.34, 0.19, 0, 0.19);
+		opening.quadraticCurveTo(0.34, 0.19, 0.34, 0.08);
+		opening.lineTo(0.34, -0.7);
+		opening.closePath();
+		shape.holes.push(opening);
+
+		const geometry = new THREE.ExtrudeGeometry(shape, { depth: 2.12, bevelEnabled: false, curveSegments: 16 });
+		geometry.translate(0, 0, -1.06);
+		return geometry;
+	}, []);
+	const doorwayGeometry = useMemo(() => {
 		const shape = new THREE.Shape();
 		shape.moveTo(-0.42, -0.53);
 		shape.lineTo(0.42, -0.53);
@@ -322,22 +350,40 @@ export default function CuteHouse({
 		shape.quadraticCurveTo(0.42, 0.53, 0, 0.53);
 		shape.quadraticCurveTo(-0.42, 0.53, -0.42, 0.1);
 		shape.closePath();
-		return new THREE.ExtrudeGeometry(shape, { depth: 0.035, bevelEnabled: false, curveSegments: 16 });
+		const opening = new THREE.Path();
+		opening.moveTo(-0.34, -0.46);
+		opening.lineTo(-0.34, 0.08);
+		opening.quadraticCurveTo(-0.34, 0.43, 0, 0.43);
+		opening.quadraticCurveTo(0.34, 0.43, 0.34, 0.08);
+		opening.lineTo(0.34, -0.46);
+		opening.closePath();
+		shape.holes.push(opening);
+		const frame = new THREE.ExtrudeGeometry(shape, { depth: 0.035, bevelEnabled: false, curveSegments: 16 });
+		const interiorShape = new THREE.Shape();
+		interiorShape.moveTo(-0.34, -0.46);
+		interiorShape.lineTo(-0.34, 0.08);
+		interiorShape.quadraticCurveTo(-0.34, 0.43, 0, 0.43);
+		interiorShape.quadraticCurveTo(0.34, 0.43, 0.34, 0.08);
+		interiorShape.lineTo(0.34, -0.46);
+		interiorShape.closePath();
+		return { frame, interior: new THREE.ShapeGeometry(interiorShape) };
 	}, []);
 	const doorGeometry = useMemo(() => {
 		const shape = new THREE.Shape();
 		shape.moveTo(0, -0.47);
 		shape.lineTo(0.7, -0.47);
 		shape.lineTo(0.7, 0.12);
-		shape.quadraticCurveTo(0.7, 0.47, 0.35, 0.47);
-		shape.quadraticCurveTo(0, 0.47, 0, 0.12);
+		shape.quadraticCurveTo(0.7, 0.56, 0.35, 0.56);
+		shape.quadraticCurveTo(0, 0.56, 0, 0.12);
 		shape.closePath();
 		return new THREE.ExtrudeGeometry(shape, { depth: 0.025, bevelEnabled: false, curveSegments: 16 });
 	}, []);
 	useEffect(() => () => {
-		doorFrameGeometry.dispose();
+		houseGeometry.dispose();
+		doorwayGeometry.frame.dispose();
+		doorwayGeometry.interior.dispose();
 		doorGeometry.dispose();
-	}, [doorFrameGeometry, doorGeometry]);
+	}, [houseGeometry, doorwayGeometry, doorGeometry]);
 
 	const doorRef = useRef<THREE.Group>(null);
 	const enterRequestedRef = useRef(false);
@@ -414,21 +460,84 @@ export default function CuteHouse({
 			}}
 			scale={1.18}
 		>
-			<RoundedBox
-				position={[0, 0.82, 0]}
-				args={[2.62, 1.72, 2.12]}
-				radius={0.36}
-                creaseAngle={0.8}
-				smoothness={10}
-				castShadow
-			>
+			<mesh geometry={houseGeometry} position={[0, 0.82, 0]} castShadow receiveShadow>
 				<BalloonMaterial color={color} />
-			</RoundedBox>
+			</mesh>
 
 			<Roof color={roofColor} />
             {isNight && <pointLight position={[0, 0.95, 1.65]} color="#ffce88" intensity={0.65} distance={3} decay={2} />}
 
-			<mesh geometry={doorFrameGeometry} position={[0, 0.58, 1.07]} castShadow>
+			<mesh geometry={doorwayGeometry.interior} position={[0, 0.58, 0.7]}>
+				<meshStandardMaterial color={isSkills ? '#111b45' : isContact ? '#e5cdb1' : '#f3dfc5'} />
+			</mesh>
+
+			{isSkills ? (
+				<group position={[0, 0.58, 0.72]}>
+					{[
+						[-0.22, 0.3, 0.014], [-0.08, 0.2, 0.01], [0.19, 0.32, 0.012],
+						[0.24, -0.03, 0.009], [-0.24, -0.1, 0.01], [0.08, -0.29, 0.012],
+					].map(([x, y, radius], index) => (
+						<mesh key={index} position={[x, y, 0]}>
+							<sphereGeometry args={[radius, 8, 8]} />
+							<meshBasicMaterial color="#fff4b8" />
+						</mesh>
+					))}
+					<mesh position={[0.12, 0.12, 0]}>
+						<sphereGeometry args={[0.105, 16, 12]} />
+						<meshBasicMaterial color="#f0bd5b" />
+					</mesh>
+					<mesh position={[-0.13, -0.25, 0]}>
+						<sphereGeometry args={[0.075, 16, 12]} />
+						<meshBasicMaterial color="#9b8cff" />
+					</mesh>
+				</group>
+			) : isContact ? (
+				<group position={[0, 0.58, 0.72]}>
+					<mesh position={[0, 0.27, 0]}>
+						<boxGeometry args={[0.43, 0.24, 0.025]} />
+						<meshStandardMaterial color="#8c5b43" />
+					</mesh>
+					{[-0.11, 0, 0.11].map((x, index) => (
+						<mesh key={x} position={[x, 0.28 + (index % 2) * 0.025, 0.016]}>
+							<boxGeometry args={[0.065, 0.1, 0.008]} />
+							<meshBasicMaterial color={index === 1 ? '#f5d987' : '#fff1d2'} />
+						</mesh>
+					))}
+					<mesh position={[0, -0.22, 0.025]}>
+						<boxGeometry args={[0.5, 0.075, 0.13]} />
+						<meshStandardMaterial color="#a57650" />
+					</mesh>
+					<mesh position={[0, -0.29, 0.025]}>
+						<boxGeometry args={[0.08, 0.065, 0.08]} />
+						<meshStandardMaterial color="#805438" />
+					</mesh>
+				</group>
+			) : (
+				<group position={[0, 0.58, 0.72]}>
+					<mesh position={[0, -0.22, 0.025]}>
+						<boxGeometry args={[0.42, 0.065, 0.11]} />
+						<meshStandardMaterial color="#a97850" />
+					</mesh>
+					{[-0.14, 0.14].map((x) => (
+						<mesh key={x} position={[x, -0.32, 0.025]}>
+							<boxGeometry args={[0.035, 0.15, 0.045]} />
+							<meshStandardMaterial color="#805438" />
+						</mesh>
+					))}
+					<mesh position={[0, 0.23, 0.02]}>
+						<boxGeometry args={[0.42, 0.045, 0.08]} />
+						<meshStandardMaterial color="#9b6845" />
+					</mesh>
+					{[-0.13, -0.04, 0.05].map((x, index) => (
+						<mesh key={x} position={[x, 0.28 + index * 0.018, 0.025]}>
+							<boxGeometry args={[0.055, 0.1 + (index % 2) * 0.035, 0.055]} />
+							<meshStandardMaterial color={['#df8b70', '#e7c56e', '#87a98a'][index]} />
+						</mesh>
+					))}
+				</group>
+			)}
+
+			<mesh geometry={doorwayGeometry.frame} position={[0, 0.58, 1.07]} castShadow>
 				<meshPhysicalMaterial color="#fff4d9" roughness={0.65} clearcoat={0.12} />
 			</mesh>
 
