@@ -9,7 +9,7 @@ export default function MediaArtRoomPage() {
             <Canvas
                 dpr={[1, 1.5]}
                 camera={{ position: [0, 1.72, 5.8], fov: 52, near: 0.1, far: 100 }}
-                gl={{ antialias: false, alpha: false }}
+                gl={{ antialias: true, alpha: false }}
             >
                 <MediaArtRoom />
             </Canvas>

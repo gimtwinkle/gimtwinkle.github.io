@@ -68,7 +68,7 @@ export default function RoomScene({
 					far: 100,
 				}}
 				gl={{
-					antialias: !lightweight,
+					antialias: true,
 				}}
 			>
 				<color attach="background" args={['#fff7ed']} />

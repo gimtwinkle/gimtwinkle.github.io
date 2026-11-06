@@ -1,5 +1,12 @@
 @import 'tailwindcss';
 
+*,
+*::before,
+*::after {
+	-webkit-font-smoothing: antialiased;
+	-moz-osx-font-smoothing: grayscale;
+}
+
 :root {
 	--background: #ffffff;
 	--foreground: #171717;
