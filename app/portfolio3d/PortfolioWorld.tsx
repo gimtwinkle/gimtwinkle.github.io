@@ -34,24 +34,12 @@ const defaultRoomSceneConfig = {
 	startPosition: [0, 1.35, 2.35] as [number, number, number],
 	lookAt: [0, 1.35, -3] as [number, number, number],
 	exitPosition: [0, 0, 3.15] as [number, number, number],
-	bounds: {
-		minX: -4.1,
-		maxX: 4.1,
-		minZ: -2.75,
-		maxZ: 2.85,
-	},
 };
 
 const aboutRoomSceneConfig = {
 	startPosition: [0, 1.35, 1.05] as [number, number, number],
 	lookAt: [0, 1.35, -1.25] as [number, number, number],
 	exitPosition: [0, 0, 3.15] as [number, number, number],
-	bounds: {
-		minX: -2.05,
-		maxX: 2.05,
-		minZ: -1.58,
-		maxZ: 1.58,
-	},
 };
 
 export default function PortfolioWorld() {
@@ -266,7 +254,7 @@ export default function PortfolioWorld() {
                 className={`absolute ${mobile ? 'left-3 top-[calc(68px+env(safe-area-inset-top))]' : 'bottom-3 left-3'} z-30 rounded-lg bg-[#fffaf0]/85 px-2 py-1 text-[10px] text-[#735344] shadow-sm`}>
                 Open-Meteo
             </a>}
-            <MobileControls key={scene} walking={scene !== 'skills'} />
+            <MobileControls key={scene} walking={scene === 'village'} />
             {scene === 'village' && greetingRequest > 0 && <button type="button" onClick={() => setGreetingRequest(0)} className={`fixed ${mobile ? 'left-3 top-[calc(68px+env(safe-area-inset-top))]' : 'right-6 bottom-6'} z-[10000] min-h-11 rounded-xl border border-white/60 bg-[#fffaf0]/95 px-4 text-xs font-bold text-[#543a2b] shadow-md`}>마을 전체 보기</button>}
             {mobile && scene === 'village' && (
                 <nav aria-label="방 바로가기" className={`${mobileControlStyles.navigation} fixed bottom-[max(12px,env(safe-area-inset-bottom))] right-3 z-[10000] ml-auto flex max-w-md gap-1 rounded-2xl border border-white/60 bg-[#fffaf0]/95 p-2 text-[#543a2b] shadow-lg backdrop-blur-md`}>

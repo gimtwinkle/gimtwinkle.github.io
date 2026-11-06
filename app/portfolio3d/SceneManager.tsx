@@ -43,12 +43,6 @@ export default function SceneManager() {
 					startPosition={[0, 1.35, 1.05]}
 					lookAt={[0, 1.35, -1.25]}
 					exitPosition={[0, 0, 3.15]}
-					bounds={{
-						minX: -2.05,
-						maxX: 2.05,
-						minZ: -1.58,
-						maxZ: 1.58,
-					}}
 				>
 					<AboutRoom />
 				</RoomScene>

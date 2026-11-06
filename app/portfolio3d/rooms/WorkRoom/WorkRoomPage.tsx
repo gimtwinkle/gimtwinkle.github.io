@@ -12,7 +12,6 @@ const ProjectDetail = lazy(() => import('./WorkProjectDetail'));
 const start: [number, number, number] = [0, 1.35, 2.35];
 const lookAt: [number, number, number] = [0, 1.35, -3];
 const exit: [number, number, number] = [0, 0, 3.15];
-const bounds = { minX: -4.1, maxX: 4.1, minZ: -2.75, maxZ: 2.85 };
 
 export default function WorkRoomPage({ onBack }: { onBack: () => void }) {
     return <WorkRoomBoundary onBack={onBack}><WorkRoomContent onBack={onBack} /></WorkRoomBoundary>;
@@ -26,7 +25,7 @@ function WorkRoomContent({ onBack }: { onBack: () => void }) {
         <RoomScene
             loadingScene="work"
             lightweight onBack={onBack} startPosition={start} lookAt={lookAt}
-            exitPosition={exit} bounds={bounds}
+            exitPosition={exit}
             overlay={
                 <>
                     <details className={`absolute ${mobile ? styles.mobileProjectList : 'bottom-5 left-5 max-w-[calc(100vw-40px)]'} z-20 rounded-2xl border-2 border-[#725640] bg-[#fffdf8] px-4 py-3 text-sm text-[#725640] shadow-md`}>

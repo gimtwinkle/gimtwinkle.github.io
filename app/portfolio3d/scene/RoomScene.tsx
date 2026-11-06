@@ -1,17 +1,10 @@
 'use client';
 
+import { OrbitControls } from '@react-three/drei';
 import { Canvas, useThree } from '@react-three/fiber';
 import { Suspense, useEffect, useState } from 'react';
-import FirstPersonCamera from './FirstPersonCamera';
 import CanvasLoading from '../components/CanvasLoading';
 import useMobile from '../useMobile';
-
-type Bounds = {
-	minX: number;
-	maxX: number;
-	minZ: number;
-	maxZ: number;
-};
 
 function ContextMonitor({ onLost }: { onLost: () => void }) {
     const gl = useThree((state) => state.gl);
@@ -33,7 +26,6 @@ type RoomSceneProps = {
 	startPosition: [number, number, number];
 	lookAt?: [number, number, number];
 	exitPosition: [number, number, number];
-	bounds: Bounds;
 };
 
 export default function RoomScene({
@@ -43,10 +35,14 @@ export default function RoomScene({
 	children,
 	startPosition,
 	lookAt = [0, 1.35, -3],
-	bounds,
 }: RoomSceneProps) {
     const mobile = useMobile();
     const [contextLost, setContextLost] = useState(false);
+    const initialDistance = Math.hypot(
+        startPosition[0] - lookAt[0],
+        startPosition[1] - lookAt[1],
+        startPosition[2] - lookAt[2]
+    );
     if (contextLost) throw new Error('그래픽 연결(WebGL)이 끊겼어요. 다시 시도해 주세요.');
 
 	return (
@@ -76,11 +72,18 @@ export default function RoomScene({
 
 				<Suspense fallback={<CanvasLoading scene={loadingScene} />}>{children}</Suspense>
 
-				<FirstPersonCamera
-                    touchOnly={mobile}
-					startPosition={startPosition}
-					lookAt={lookAt}
-					bounds={bounds}
+				<OrbitControls
+					makeDefault
+					target={lookAt}
+					enablePan={false}
+					minDistance={initialDistance * 0.55}
+					maxDistance={initialDistance * 1.6}
+					minAzimuthAngle={-Math.PI / 7}
+					maxAzimuthAngle={Math.PI / 7}
+					minPolarAngle={Math.PI / 2 - Math.PI / 12}
+					maxPolarAngle={Math.PI / 2 + Math.PI / 12}
+					enableDamping
+					dampingFactor={0.08}
 				/>
 			</Canvas>
             {overlay}
